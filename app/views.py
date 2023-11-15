@@ -46,7 +46,7 @@ def signin(r):
             SeedrAPI(email=r.POST['email'],password=r.POST['password'])
             res.set_cookie('email',r.POST['email'],expires=datetime.now()+timedelta(days=365))
             res.set_cookie('password',r.POST['password'],expires=datetime.now()+timedelta(days=365))
-            return res
+            return redirect ("/")
         except:
             messages.error(r,"Invalid Details")
     return render(r,'login.html')
