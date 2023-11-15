@@ -59,7 +59,7 @@ def signout(r):
 def files(r):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     if r.method=="POST":
         link=r.POST['link']
         res=seedr.add_torrent(link)
@@ -79,7 +79,7 @@ def files(r):
 def player(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     file=seedr.get_file(id)
     drive=seedr.get_drive()
     max=round(drive["space_max"]/1024**3,2)
@@ -88,7 +88,7 @@ def player(r,id):
 def playfolder(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     files=seedr.get_folder(id)['files']
     for i in files:
         if '.mkv' in i['name'] or '.mp4' in i['name']:
@@ -97,13 +97,13 @@ def playfolder(r,id):
 def download(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     file=seedr.get_file(id)['url']
     return redirect(file)
 def downloadfolderfile(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     files=seedr.get_folder(id)['files']
     for i in files:
         if '.mkv' in i['name'] or '.mp4' in i['name']:
@@ -111,19 +111,19 @@ def downloadfolderfile(r,id):
 def deletefolder(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     seedr.delete_folder(id)
     return redirect('/files')
 def deletefile(r,id,fid):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     seedr.delete_file(id)
     return redirect(f'/open/{fid}')
 def openfolder(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     files=seedr.get_folder(id)['files']
     drive=seedr.get_drive()
     max=round(drive["space_max"]/1024**3,2)
@@ -153,7 +153,7 @@ def addtorrent(r):
     link=r.GET.get('link')
     if not "email" in r.COOKIES:
         return redirect('/login')
-    seedr=SeedrAPI(email=r.session['email'],password=r.session['password'])
+    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
     res=seedr.add_torrent(link)
     result=""
     if res['result']==True:
