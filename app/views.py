@@ -194,8 +194,8 @@ def movierulzmovie(r):
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
     for i in items:
-        a=i.findAll('small')
-        links.append({"name":soup.title.get_text()+" "+a[0].get_text()+" "+a[1].get_text(),"link":i.get('href')})
+        b=i.findAll('small')
+        links.append({"name":soup.title.get_text()+" "+b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
     return render(r,'movierulzmovie.html',{"links":links,"a":a})
 def youtube(r):
     a=0
