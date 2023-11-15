@@ -11,7 +11,7 @@ from pytube import YouTube
 def home(r):
     a=0
     if "email" in r.COOKIES:
-        return redirect('/')
+        a=1
     req=requests.get("https://www.1tamilmv.phd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
