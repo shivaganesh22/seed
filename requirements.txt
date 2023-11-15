@@ -1,0 +1,5 @@
+seedr
+requests
+beautifulsoup4
+pytube
+django

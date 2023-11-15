@@ -1,0 +1,19 @@
+{%extends 'index.html'%}
+{%block main%}
+{%if messages%}
+{%for message in messages%}
+<center>{{message}}</center>
+{%endfor%}
+{%endif%}
+<center>
+
+    <table class="table table-striped" style="width: auto;">
+        {%for i in links%}
+        <tr>
+            <td><strong>{{i.name}}</strong></td>
+            <td><a href="/addtorrent/?link={{i.link}}" class="btn btn-success">Upload</a></td>
+        </tr>
+        {%endfor%}
+    </table>
+</center>
+{%endblock%}

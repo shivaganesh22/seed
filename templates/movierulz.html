@@ -1,0 +1,37 @@
+{%extends 'index.html'%}
+{%block main%}
+<style>
+    .card{
+        width: 200px;
+        height:300px;
+        border: 1px solid #ccc;
+        margin:10px;
+        float: left;
+        box-sizing: border-box;
+    }
+    @media (min-width:768px){
+        .card{ width: 15%;}}
+    @media (max-width:767px){
+        .card{ width: 40%;}}
+</style>
+<center>
+    
+    <form action="" method="post">
+      {%csrf_token%}
+      <div class="input-group mb-3 " style="width: 80%;">
+        <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-search" ></i></button>
+      </div>
+    </form>
+  </center>
+{%for i in movies%}
+    
+    <div class="boxed film card">
+        <div class="cont_display">
+            <a href="/movierulz/movie/?link={{i.link}}" title="{{i.name}}"><img width="165" height="220" src="{{i.image}}" class="attachment-full size-full wp-post-image" alt="{{i.name}}"></a>
+        </div>
+        <p><b>{{i.name}}</b></p>
+    </div>
+{%endfor%}
+
+{%endblock%}

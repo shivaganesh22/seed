@@ -1,0 +1,48 @@
+{%extends 'index.html'%}
+{%block main%}
+{%if messages%}
+{%for message in messages%}
+<center>{{message}}</center>
+{%endfor%}
+{%endif%}
+<center>
+    <form action="" method="post">
+        {%csrf_token%}
+        <div class="input-group mb-3 " style="width: 80%;">
+          <input type="text" class="form-control" placeholder="Paste Youtube Url Here" name="query" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-plus" ></i></button>
+        </div>
+      </form>
+  </center>
+  {%if n%}
+  <center>
+    <img src="{{image}}" alt="" srcset="" width="50%" ><br><br>
+    <h2 style="width: 80%;">{{name}}</h2><br>
+    <table class="table table-striped" style="width: auto;">
+        <thead>
+            
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Type</th>
+            <th scope="col">Resolution</th>
+            <th scope="col">Type</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for i in n%} 
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{i.mime_type}}</td>
+            <td>{{i.resolution}}</td>
+            <td>{{i.filesize_mb}}</td>
+            <td><a href="{{i.url}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-play" aria-hidden="true"></i></a></td>
+          </tr>
+          {%endfor%}
+          
+        </tbody>
+      </table>
+      
+  </center>
+  {%endif%}
+{%endblock%}

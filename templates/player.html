@@ -1,0 +1,20 @@
+{%extends 'index.html'%}
+{%block main%}
+<center>
+    <h5>{{name}}</h5> <br>
+    <video src="{{url}}" controls style="width: 60%;"></video>
+    <br>
+    <br>
+    <input  type="text" class="form-control" style="width: 80%;" value="{{url}}" id="down"><br>
+    <a onclick="CopyText()" class="btn btn-info"><i class="fa fa-copy" aria-hidden="true"></i></a>
+    <a href="{{url}}"  class="btn btn-success"><i class="fa fa-download" aria-hidden="true"></i></a>
+    <br>
+</center>
+<script>
+    function CopyText() {
+    var text = document.getElementById("down")
+    text.select()
+    document.execCommand('copy')
+  }
+  </script>
+{%endblock%}
