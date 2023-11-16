@@ -6,7 +6,13 @@
 {%endfor%}
 {%endif%}
 <center>
-
+<h2>{{details.name}}</h2>
+<img src="{{details.image}}" alt="" srcset="">
+</center>
+<hr>
+{{details.inf |safe }}
+{{details.desc |safe }}
+<center>
     <table class="table table-striped" style="width: auto;">
         {%for i in links%}
         <tr>
