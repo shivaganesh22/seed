@@ -1,8 +1,28 @@
 {%extends 'index.html'%}
 {%block main%}
 <center>
+  <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+.video {
+  width: 95%;
+}
+
+#fluid_video_wrapper_video {
+  width: 100% !important;
+  height: 100% !important;
+}
+  </style>
     <h5>{{name}}</h5> <br>
-    <video src="{{url}}" controls style="width: 70%;height:auto"></video>
+    <div class="video">
+      <video id="video"><source src="{{url}}" type="video/mp4" />
+   </div>
     <br>
     <br>
     <input  type="text" class="form-control" style="width: 80%;" value="{{url}}" id="down"><br>
@@ -10,6 +30,37 @@
     <a href="{{url}}"  class="btn btn-success"><i class="fa fa-download" aria-hidden="true"></i></a>
     <br>
 </center>
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+      <script >
+        var myFP = fluidPlayer("video", {
+  layoutControls: {
+    controlBar: {
+      autoHideTimeout: 3,
+      animated: true,
+      autoHide: true,
+    },
+    htmlOnPauseBlock: {
+      html: null,
+      height: null,
+      width: null,
+    },
+    autoPlay: false,
+    mute: true,
+    allowTheatre: true,
+    playPauseAnimation: true,
+    playbackRateEnabled: true,
+    allowDownload: true,
+    playButtonShowing: true,
+    fillToContainer: false,
+    posterImage: "poster.jpg",
+  },
+  vastOptions: {
+    adList: [],
+    adCTAText: false,
+    adCTATextPosition: "",
+  },
+});
+      </script>
 <script>
     function CopyText() {
     var text = document.getElementById("down")
