@@ -41,7 +41,7 @@ def signin(r):
     if "email" in r.COOKIES:
         return redirect('/')
     if r.method=="POST":    
-        res=render(r,'movierulz.html')
+        res=HttpResponseRedirect('/')
         try:
             SeedrAPI(email=r.POST['email'],password=r.POST['password'])
             res.set_cookie('email',r.POST['email'],expires=datetime.now()+timedelta(days=365))
