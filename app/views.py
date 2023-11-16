@@ -142,7 +142,11 @@ def movie(r):
         if i.get_text()=="MAGNET":
             j=i.find_previous_sibling('strong')
             links.append({"name":j.get_text(),"link":i.get('href')})
-    return render(r,"movie.html",{"links":links,"a":a})
+    items=soup.findAll('img',class_='ipsImage')
+    images=[]
+    for i in items:
+        images.append({"link":i.get('src')})
+    return render(r,"movie.html",{"links":links,"a":a,"images":images})
 def addtorrent(r):
     link=r.GET.get('link')
     if not "email" in r.COOKIES:
@@ -189,8 +193,18 @@ def movierulzmovie(r):
     links=[]
     for i in items:
         b=i.findAll('small')
-        links.append({"name":soup.title.get_text()+" "+b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
-    return render(r,'movierulzmovie.html',{"links":links,"a":a})
+        links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
+    items=soup.findAll('p')
+    details={}
+    details["name"]=soup.find('h2',class_='entry-title').get_text()
+    for i in items:
+        if "directed" in i.get_text().lower():
+            details["inf"]=i.prettify()
+            j=i.find_next_sibling()
+            details["desc"]=j.prettify()
+    details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
+
+    return render(r,'movierulzmovie.html',{"links":links,"a":a,"details":details})
 def youtube(r):
     a=0
     n=0
