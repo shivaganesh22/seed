@@ -139,15 +139,9 @@ def movie(r):
     magnets=soup.findAll('a')
     links=[]
     for i in magnets:
-  
         if i.get_text()=="MAGNET":
-            j=i.get('href').replace("%20"," ")
-            j=re.split('-',j)
-            for am in range(len(j)):
-                if "torrent" in j[am]:
-                    j[am]=""
-            links.append({"name":''.join(j[1:-1]),"link":i.get('href')})
-    
+            j=i.find_previous_sibling('strong')
+            links.append({"name":j.get_text(),"link":i.get('href')})
     return render(r,"movie.html",{"links":links,"a":a})
 def addtorrent(r):
     link=r.GET.get('link')
