@@ -15,27 +15,16 @@ def home(r):
     req=requests.get("https://www.1tamilmv.phd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
-    items=items.findAll('strong')
-    movies=[]
-    for i in items:
+    a=items.findAll('a')
+    for i in a:
         try:
-            j=i.previous_element
-            j=j.find_next_sibling()
-            movies.append({"name":i.get_text(),"link":j.a.get('href')})
+            if '/e/' in i['href']:
+                i['href']="/watch/?link="+i['href']
+            else:
+                i['href']="/movie/?link="+i['href']
         except:
             pass
-    if r.method=="POST":
-        query=r.POST['query'].lower()
-        movies.clear()
-        for i in items:
-            try:
-                if query in i.get_text().lower():
-                    j=i.previous_element
-                    j=j.find_next_sibling()
-                    movies.append({"name":i.get_text(),"link":j.a.get('href')})
-            except:
-                pass
-    return render(r,'index.html',{"a":a,"movies":movies})
+    return render(r,'index.html',{"a":a,"items":items.prettify()})
 
 def signin(r):
     if "email" in r.COOKIES:
@@ -220,4 +209,6 @@ def youtube(r):
         n=yt.streams.all()
     return render(r,'youtube.html',{"n":n,"name":name,"image":image,"a":a})
 
-    
+def watch(r):
+    return HttpResponseRedirect(r.GET['link'])
+
