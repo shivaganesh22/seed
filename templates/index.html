@@ -37,26 +37,8 @@
     
     {%block main%}
     <center>
-      
-      <form action="" method="post">
-        {%csrf_token%}
-        <div class="input-group mb-3 " style="width: 80%;">
-          <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" aria-describedby="basic-addon2">
-          <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-search" ></i></button>
-        </div>
-      </form>
-      
+      {{items | safe}}
     </center>
-    <table class="table table-striped" style="width: auto;">
-    {%for i in movies%}
-    <tr>
-<td>
-
-  <center><a href="/movie/?link={{i.link}}"><strong>{{i.name}}</strong></a><br><br></center>
-</td>
-    </tr>
-    {%endfor%}
-  </table>
     {%endblock%}
 </body>
 </html>
