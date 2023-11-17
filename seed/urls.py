@@ -32,6 +32,7 @@ urlpatterns = [
     path('open/<int:id>',openfolder),
 
     path('movie/',movie),
+    path('watch/',watch),
     path('addtorrent/',addtorrent),
     path('tamilmv/',home),
     path('movierulz/movie/',movierulzmovie),
