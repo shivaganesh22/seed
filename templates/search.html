@@ -20,6 +20,7 @@
 </style>
 <center>
     {%if title%}
+    {{title}}
     <div class="table-responsive">
         <table class="table table-striped table-responsive">
           {% for i in items %}
@@ -35,7 +36,21 @@
           {% endfor %}
         </table>
       </div>
-      
+      {%if page%}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item ">
+                <a class="page-link" href="{{se.0}}" tabindex="-1">Previous</a>
+              </li>
+            {%for i in page%}
+            <li class="page-item"><a class="page-link" href="{{i.link}}">{{i.name}}</a></li>
+            {%endfor%}
+            <li class="page-item">
+                <a class="page-link" href="{{se.1}}">Next</a>
+              </li>
+        </ul>
+      </nav>
+      {%endif%}
       {%endif%}
 </center>
 {%endblock%}

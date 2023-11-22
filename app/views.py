@@ -215,7 +215,7 @@ def mainsearch(r):
     a=0
     if "email" in r.COOKIES:
         a=1
-    flag,page,links,title=0,0,0,0
+    flag,page,links,title,se=0,0,0,0,[]
     if r.GET.get('q') is not None:
         query=r.GET.get('q')
         page=r.GET.get('page')
@@ -242,4 +242,21 @@ def mainsearch(r):
                 links.append({"name":name,"url":url,"link":magnet,"date":date,"size":size})
             except:
                 pass
-    return render(r,'search.html',{"page":page,"items":links,"title":title,"a":a})
+        try:
+            pages=soup.find('div',class_="pagination").find_all('a')
+            page=[]
+            for i in pages[1:-1]:
+                page.append({"link":i.get('href'),"name":i.get_text()})
+            se.append(pages[0].get('href'))
+            se.append(pages[-1].get('href'))
+        except:
+            pass
+    return render(r,'search.html',{"page":page,"items":links,"title":title,"a":a,"se":se})
+from selenium import webdriver
+def solidtorrent(r):
+    url="https://solidtorrents.to/torrents/skanda-2023-bolly4u-org-pre-dvdrip-hindi-480p-650m-dfa51/6517f35f1b4e7f6abd17bff5/"
+    driver=webdriver.Firefox()
+    driver.get(url)
+    item=driver.page_source
+    driver.quit()
+    return render(r,'solid.html',{"item":item})
