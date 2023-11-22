@@ -112,11 +112,25 @@ body {
     <img class="mb-4" src="https://static.seedr.cc/images/seed_v2.png" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign into Seedr Account</h1>
     {%if messages%}
-      {%for message in messages%}
-      <font  color=red>{{message}}</font>
-      {%endfor%}
-      {%endif%}
+    {%for message in messages%}
+    <center>
+      {%if 'success' in message.tags %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {%else%}
 
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {%endif%}
+    </center>
+    {%endfor%}
+    {%endif%}
     <div class="form-floating">
       <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
       <label for="floatingInput">Email address</label>

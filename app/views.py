@@ -35,15 +35,16 @@ def signin(r):
             SeedrAPI(email=r.POST['email'],password=r.POST['password'])
             res.set_cookie('email',r.POST['email'],expires=datetime.now()+timedelta(days=365))
             res.set_cookie('password',r.POST['password'],expires=datetime.now()+timedelta(days=365))
+            messages.success(r,"Login Success")
             return res
         except:
-            messages.error(r,"Invalid Details")
+            messages.warning(r,"Invalid Details")
     return render(r,'login.html')
 def signout(r):
     response = HttpResponseRedirect('/')
     response.delete_cookie('email')
     response.delete_cookie('password')
-
+    messages.success(r,'Logout Success')
     return response
 def files(r):
     if not "email" in r.COOKIES:
@@ -57,7 +58,7 @@ def files(r):
             result=f"Added Successfully {res['title']}"
             messages.success(r,result)
         else:
-            messages.success(r,res['result'])
+            messages.warning(r,res['result'])
         return redirect('/files')
     drive=seedr.get_drive()
     max=round(drive["space_max"]/1024**3,2)
@@ -101,13 +102,21 @@ def deletefolder(r,id):
     if not "email" in r.COOKIES:
         return redirect('/login')
     seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    seedr.delete_folder(id)
+    try:
+        seedr.delete_folder(id)
+        messages.success(r,'Deleted Folder')
+    except:
+        messages.error(r,'Failed to Delete')
     return redirect('/files')
 def deletefile(r,id,fid):
     if not "email" in r.COOKIES:
         return redirect('/login')
     seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    seedr.delete_file(id)
+    try:
+        seedr.delete_file(id)
+        messages.success(r,'Deleted File')
+    except:
+        messages.error(r,'Failed to Delete')
     return redirect(f'/open/{fid}')
 def openfolder(r,id):
     if not "email" in r.COOKIES:
@@ -147,7 +156,7 @@ def addtorrent(r):
         result=f"Added Successfully {res['title']}"
         messages.success(r,result)
     else:
-        messages.success(r,res['result'])
+        messages.warning(r,res['result'])
     return redirect('/files')
 def movierulz(r):
     a=0
@@ -252,7 +261,7 @@ def mainsearch(r):
         except:
             pass
     return render(r,'search.html',{"page":page,"items":links,"title":title,"a":a,"se":se})
-from selenium import webdriver
+
 def solidtorrent(r):
     url="https://solidtorrents.to/torrents/skanda-2023-bolly4u-org-pre-dvdrip-hindi-480p-650m-dfa51/6517f35f1b4e7f6abd17bff5/"
     driver=webdriver.Firefox()
