@@ -37,6 +37,7 @@ urlpatterns = [
     path('tamilmv/',home),
     path('movierulz/movie/',movierulzmovie),
     path('youtube/',youtube),
+    path('search/',mainsearch)
 
 
 

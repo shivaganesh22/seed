@@ -22,8 +22,8 @@
           
           {%for i in drive%}
           <tr>
-              <td><a href="/open/{{i.id}}"><strong>{{i.name}}</strong></a></td>
-              <td><center><a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <br><a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a><br> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
+              <td><center><a href="/open/{{i.id}}"><strong>{{i.name}}</strong></a> <br> <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
+              <td></td>
               
             </tr>
             {%endfor%}

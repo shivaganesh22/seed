@@ -23,10 +23,8 @@
           
           {%for i in files%}
           <tr>
-            <td><strong>{{i.name}}</strong></td>
-              <td><a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> </td>
-              <td><a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> </td>
-              <td><a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </td>
+            <td><center><strong>{{i.name}}</strong> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
+              
             </tr>
             {%endfor%}
         </table>

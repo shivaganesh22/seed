@@ -15,8 +15,8 @@ def home(r):
     req=requests.get("https://www.1tamilmv.phd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
-    a=items.findAll('a')
-    for i in a:
+    alinks=items.findAll('a')
+    for i in alinks:
         try:
             if '/e/' in i['href']:
                 i['href']="/watch/?link="+i['href']
@@ -211,4 +211,35 @@ def youtube(r):
 
 def watch(r):
     return HttpResponseRedirect(r.GET['link'])
-
+def mainsearch(r):
+    a=0
+    if "email" in r.COOKIES:
+        a=1
+    flag,page,links,title=0,0,0,0
+    if r.GET.get('q') is not None:
+        query=r.GET.get('q')
+        page=r.GET.get('page')
+        flag=1
+    if r.method=="POST":
+        query=r.POST['query']
+        page="1"
+        flag=1
+    if flag:
+        req=requests.get("https://torrentz2.nz/search?q="+query+"&page="+page)
+        soup=bs(req.content,'html.parser')
+        title=soup.find('h2').get_text()
+        item=soup.find('div',class_='results')
+        dl=item.find_all('dl')
+        links=[]
+        for i in dl:
+            try:
+                url=i.dt.a.get('href')
+                name=i.dt.a.get_text()
+                span=i.find_all('span')
+                magnet=span[0].a.get('href')
+                date=span[1].get_text()
+                size=span[2].get_text()
+                links.append({"name":name,"url":url,"link":magnet,"date":date,"size":size})
+            except:
+                pass
+    return render(r,'search.html',{"page":page,"items":links,"title":title,"a":a})
