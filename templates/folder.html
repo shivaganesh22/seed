@@ -11,7 +11,16 @@
       </form>
 </center>
   <center>
-
+      <table class="table table-striped" style="width: auto;">
+          
+          {%for i in torrents%}
+          <tr>
+              <td><center><a href="{{i.progress_url}}"><strong>{{i.name}}</strong></a> <br> Progress : {{i.progress}}%  </center></td>
+              <td></td>
+              
+            </tr>
+            {%endfor%}
+        </table>
       <table class="table table-striped" style="width: auto;">
           
           {%for i in drive%}

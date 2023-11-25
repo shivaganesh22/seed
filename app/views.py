@@ -64,7 +64,8 @@ def files(r):
     max=round(drive["space_max"]/1024**3,2)
     used=round(drive["space_used"]/1024**3,2)
     drive=seedr.get_drive()['folders']
-    return render(r,'folder.html',{"drive":drive,"a":1,"max":max,"used":used})
+    torrents=seedr.get_drive()['torrents']
+    return render(r,'folder.html',{"drive":drive,"a":1,"max":max,"used":used,"torrents":torrents})
 #player
 def player(r,id):
     if not "email" in r.COOKIES:
