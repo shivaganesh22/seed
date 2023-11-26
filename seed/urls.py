@@ -19,26 +19,33 @@ from django.urls import path
 from app.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',movierulz),
     path('login/',signin),
     path('logout/',signout),
-    path('files/',files),
-    path('player/<int:id>',player),
+
+    path('',movierulz),
+    path('movierulz/movie/',movierulzmovie),
+    path('tamilmv/movie/',tamilmvmovie),
+    path('tamilmv/',tamilmv),
+    path('doodplay/',doodplay),
+
+    path('files/',folders),
     path('playfolder/<int:id>',playfolder),
     path('downloadfolderfile/<int:id>',downloadfolderfile),
-    path('download/<int:id>',download),
     path('deletefolder/<str:id>',deletefolder),
-    path('deletefile/<str:id>/<int:fid>',deletefile),
-    path('open/<int:id>',openfolder),
+    path('renamefolder/<int:id>/',renamefolder),
 
-    path('movie/',movie),
-    path('watch/',watch),
+    path('open/<int:id>',openfolder),
+    path('player/<int:id>',player),
+    path('download/<int:id>',download),
+    path('deletefile/<str:id>/<int:fid>',deletefile),
+    path('renamefile/<int:id>/',renamefile),
+
     path('addtorrent/',addtorrent),
-    path('tamilmv/',home),
-    path('movierulz/movie/',movierulzmovie),
+    path('deletetorrent/<int:id>',deletetorrent),
+
     path('youtube/',youtube),
     path('search/',mainsearch),
-    path('solid/',solidtorrent),
+    #path('solid/',solidtorrent),
 
 
 

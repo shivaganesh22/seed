@@ -1,4 +1,4 @@
-seedr
+seedrcc
 requests
 beautifulsoup4
 pytube

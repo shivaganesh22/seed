@@ -1,17 +1,14 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from seedr import SeedrAPI
+from seedrcc import Login,Seedr
 from bs4 import BeautifulSoup as bs
 import requests
-import re
 from datetime import datetime,timedelta
 from pytube import YouTube
 
-def home(r):
-    a=0
-    if "email" in r.COOKIES:
-        a=1
+#tamilmv
+def tamilmv(r):
     req=requests.get("https://www.1tamilmv.phd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
@@ -19,117 +16,15 @@ def home(r):
     for i in alinks:
         try:
             if '/e/' in i['href']:
-                i['href']="/watch/?link="+i['href']
+                i['href']="/doodplay/?link="+i['href']
             else:
-                i['href']="/movie/?link="+i['href']
+                i['href']="/tamilmv/movie/?link="+i['href']
         except:
             pass
-    return render(r,'index.html',{"a":a,"items":items.prettify()})
+    return render(r,'index.html',{"items":items.prettify()})
 
-def signin(r):
-    if "email" in r.COOKIES:
-        return redirect('/')
-    if r.method=="POST":    
-        res=HttpResponseRedirect('/')
-        try:
-            SeedrAPI(email=r.POST['email'],password=r.POST['password'])
-            res.set_cookie('email',r.POST['email'],expires=datetime.now()+timedelta(days=365))
-            res.set_cookie('password',r.POST['password'],expires=datetime.now()+timedelta(days=365))
-            messages.success(r,"Login Success")
-            return res
-        except:
-            messages.warning(r,"Invalid Details")
-    return render(r,'login.html')
-def signout(r):
-    response = HttpResponseRedirect('/')
-    response.delete_cookie('email')
-    response.delete_cookie('password')
-    messages.success(r,'Logout Success')
-    return response
-def files(r):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    if r.method=="POST":
-        link=r.POST['link']
-        res=seedr.add_torrent(link)
-        result=""
-        if res['result']==True:
-            result=f"Added Successfully {res['title']}"
-            messages.success(r,result)
-        else:
-            messages.warning(r,res['result'])
-        return redirect('/files')
-    drive=seedr.get_drive()
-    max=round(drive["space_max"]/1024**3,2)
-    used=round(drive["space_used"]/1024**3,2)
-    drive=seedr.get_drive()['folders']
-    torrents=seedr.get_drive()['torrents']
-    return render(r,'folder.html',{"drive":drive,"a":1,"max":max,"used":used,"torrents":torrents})
-#player
-def player(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    file=seedr.get_file(id)
-    drive=seedr.get_drive()
-    max=round(drive["space_max"]/1024**3,2)
-    used=round(drive["space_used"]/1024**3,2)
-    return render(r,"player.html",{"url":file['url'],"name":file['name'],"a":1,"max":max,"used":used})
-def playfolder(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    files=seedr.get_folder(id)['files']
-    for i in files:
-        if '.mkv' in i['name'] or '.mp4' in i['name']:
-            return player(r,i['folder_file_id'])
-#download
-def download(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    file=seedr.get_file(id)['url']
-    return redirect(file)
-def downloadfolderfile(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    files=seedr.get_folder(id)['files']
-    for i in files:
-        if '.mkv' in i['name'] or '.mp4' in i['name']:
-            return redirect(seedr.get_file(i['folder_file_id'])['url'])
-def deletefolder(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    try:
-        seedr.delete_folder(id)
-        messages.success(r,'Deleted Folder')
-    except:
-        messages.error(r,'Failed to Delete')
-    return redirect('/files')
-def deletefile(r,id,fid):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    try:
-        seedr.delete_file(id)
-        messages.success(r,'Deleted File')
-    except:
-        messages.error(r,'Failed to Delete')
-    return redirect(f'/open/{fid}')
-def openfolder(r,id):
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    files=seedr.get_folder(id)['files']
-    drive=seedr.get_drive()
-    max=round(drive["space_max"]/1024**3,2)
-    used=round(drive["space_used"]/1024**3,2)
-    return render(r,"files.html",{"files":files,"a":1,"max":max,"used":used})
 
-def movie(r):
+def tamilmvmovie(r):
     a=0
     if "email" in r.COOKIES:
         a=1
@@ -146,23 +41,12 @@ def movie(r):
     for i in items:
         images.append({"link":i.get('src')})
     return render(r,"movie.html",{"links":links,"a":a,"images":images})
-def addtorrent(r):
-    link=r.GET.get('link')
-    if not "email" in r.COOKIES:
-        return redirect('/login')
-    seedr=SeedrAPI(email=r.COOKIES['email'],password=r.COOKIES['password'])
-    res=seedr.add_torrent(link)
-    result=""
-    if res['result']==True:
-        result=f"Added Successfully {res['title']}"
-        messages.success(r,result)
-    else:
-        messages.warning(r,res['result'])
-    return redirect('/files')
+
+def doodplay(r):
+    return HttpResponseRedirect(r.GET['link'])
+
+#movierulz
 def movierulz(r):
-    a=0
-    if "email" in r.COOKIES:
-        a=1
     req=requests.get("https://ww7.5movierulz.gd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('div',class_='boxed film')
@@ -180,8 +64,8 @@ def movierulz(r):
         for i in items:
             if not "trailer"  in i.a.get('title').lower():
                 movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+    return render(r,'movierulz.html',{"movies":movies})
 
-    return render(r,'movierulz.html',{"movies":movies,"a":a})
 def movierulzmovie(r):
     a=0
     if "email" in r.COOKIES:
@@ -202,8 +86,33 @@ def movierulzmovie(r):
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
-
     return render(r,'movierulzmovie.html',{"links":links,"a":a,"details":details})
+
+
+def signin(r):
+    if "email" in r.COOKIES:
+        return redirect('/')
+    if r.method=="POST":    
+        res=HttpResponseRedirect('/')
+        seedr=Login(r.POST['email'],r.POST['password'])
+        response=seedr.authorize()
+        try:
+            Seedr(token=seedr.token)
+            res.set_cookie('email',r.POST['email'],expires=datetime.now()+timedelta(days=365))
+            res.set_cookie('password',r.POST['password'],expires=datetime.now()+timedelta(days=365))
+            messages.success(r,"Login Success")
+            return res
+        except:
+            messages.warning(r,"Invalid Details")
+    return render(r,'login.html')
+def signout(r):
+    response = HttpResponseRedirect('/')
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    messages.success(r,'Logout Success')
+    return response
+
+#youtube downloader
 def youtube(r):
     a=0
     n=0
@@ -218,13 +127,8 @@ def youtube(r):
         image=yt.thumbnail_url
         n=yt.streams.all()
     return render(r,'youtube.html',{"n":n,"name":name,"image":image,"a":a})
-
-def watch(r):
-    return HttpResponseRedirect(r.GET['link'])
+#search
 def mainsearch(r):
-    a=0
-    if "email" in r.COOKIES:
-        a=1
     flag,page,links,title,se=0,0,0,0,[]
     if r.GET.get('q') is not None:
         query=r.GET.get('q')
@@ -261,12 +165,151 @@ def mainsearch(r):
             se.append(pages[-1].get('href'))
         except:
             pass
-    return render(r,'search.html',{"page":page,"items":links,"title":title,"a":a,"se":se})
-from selenium import webdriver
+    return render(r,'search.html',{"page":page,"items":links,"title":title,"se":se})
+
+#seedr
+def getSeedr(r):
+    if "email" in r.COOKIES:
+        seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+        response=seedr.authorize()
+        return Seedr(seedr.token)
+    else:
+        return None
+
+
+def folders(r):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    if r.method=="POST":
+        link=r.POST['link']
+        res=ac.addTorrent(link)
+        if res['result']==True:
+            messages.success(r,f'Added Successfully {res["title"]}')
+        else:
+            messages.warning(r,res['result'])
+        return redirect('/files')
+    content=ac.listContents()
+    return render(r,'folder.html',{"content":content})
+
+def addtorrent(r):
+    link=r.GET.get('link')
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    res=ac.addTorrent(link)
+    if res['result']==True:
+        messages.success(r,f'Added Successfully {res["title"]}')
+    else:
+        messages.warning(r,res['result'])
+    return redirect('/files')
+
+def deletetorrent(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    try:
+        ac.deleteTorrent(id)
+        messages.success(r,'Deleted Torrent')
+    except:
+        messages.error(r,'Failed to Delete')
+    return redirect('/files')
+
+def openfolder(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    if r.method=="POST":
+        link=r.POST['link']
+        res=ac.addTorrent(link)
+        if res['result']==True:
+            messages.success(r,f'Added Successfully {res["title"]}')
+        else:
+            messages.warning(r,res['result'])
+        return redirect('/files')
+    content=ac.listContents(id)
+    return render(r,"files.html",{"content":content})
+
+def deletefolder(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    try:
+        ac.deleteFolder(id)
+        messages.success(r,'Deleted Folder')
+    except:
+        messages.error(r,'Failed to Delete')
+    return redirect('/files')
+
+def renamefolder(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    name=r.GET['name']
+    try:
+        ac.renameFolder(id,name)
+        messages.success(r,"Renamed Success")
+    except:
+        messages.warning(r,"Renamed Failed")
+    return redirect("/files")
+
+#player
+def player(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    file=ac.fetchFile(id)
+    return render(r,"player.html",{"file":file,"content":ac.listContents()})
+def playfolder(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    files=ac.listContents(id)['files']
+    for i in files:
+        if '.mkv' in i['name'] or '.mp4' in i['name']:
+            return player(r,i['folder_file_id'])
+    return redirect('/files')
+#download
+def download(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    file=ac.fetchFile(id)['url']
+    return redirect(file)
+def downloadfolderfile(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    files=ac.listContents(id)['files']
+    for i in files:
+        if '.mkv' in i['name'] or '.mp4' in i['name']:
+            return redirect(ac.fetchFile(i['folder_file_id'])['url'])
+    return redirect('/files')
+def deletefile(r,id,fid):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    try:
+        ac.deleteFile(id)
+        messages.success(r,'Deleted File')
+    except:
+        messages.error(r,'Failed to Delete')
+    return redirect(f'/open/{fid}')
+
+def renamefile(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    name=r.GET['name']
+    ac.renameFolder(id,name)
+    return redirect('/files')
+
+
+"""from selenium import webdriver
 def solidtorrent(r):
     url="https://solidtorrents.to/torrents/skanda-2023-bolly4u-org-pre-dvdrip-hindi-480p-650m-dfa51/6517f35f1b4e7f6abd17bff5/"
     driver=webdriver.Firefox()
     driver.get(url)
     item=driver.page_source
     driver.quit()
-    return render(r,'solid.html',{"item":item})
+    return render(r,'solid.html',{"item":item})"""

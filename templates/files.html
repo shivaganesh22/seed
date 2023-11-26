@@ -13,15 +13,25 @@
   </center>
   
   <center>
-
+    <table class="table table-striped" style="width: auto;">    
+      {%for i in content.folders%}
+      <tr><td></td>
+          <td><center><a href="/open/{{i.id}}"><strong>{{i.name}}</strong></a> <br>
+           <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
+          <td></td>    
+        </tr>
+        {%endfor%}
+    </table>
       <table class="table table-striped" style="width: auto;">
           
-          {%for i in files%}
+          {%for i in content.files%}
           <tr>
             <td><center><strong>{{i.name}}</strong> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
-              
             </tr>
             {%endfor%}
         </table>
     </center>
+    <script>
+      
+    </script>
 {%endblock%}
