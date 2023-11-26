@@ -25,9 +25,6 @@ def tamilmv(r):
 
 
 def tamilmvmovie(r):
-    a=0
-    if "email" in r.COOKIES:
-        a=1
     req=requests.get(r.GET.get('link'))
     soup=bs(req.content,'html.parser')
     magnets=soup.findAll('a')
@@ -40,7 +37,7 @@ def tamilmvmovie(r):
     images=[]
     for i in items:
         images.append({"link":i.get('src')})
-    return render(r,"movie.html",{"links":links,"a":a,"images":images})
+    return render(r,"movie.html",{"links":links,"images":images})
 
 def doodplay(r):
     return HttpResponseRedirect(r.GET['link'])
@@ -67,9 +64,6 @@ def movierulz(r):
     return render(r,'movierulz.html',{"movies":movies})
 
 def movierulzmovie(r):
-    a=0
-    if "email" in r.COOKIES:
-        a=1
     req=requests.get(r.GET.get('link'))
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
@@ -86,7 +80,7 @@ def movierulzmovie(r):
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
-    return render(r,'movierulzmovie.html',{"links":links,"a":a,"details":details})
+    return render(r,'movierulzmovie.html',{"links":links,"details":details})
 
 
 def signin(r):
@@ -114,7 +108,6 @@ def signout(r):
 
 #youtube downloader
 def youtube(r):
-    a=0
     n=0
     name=0
     image=0
@@ -126,7 +119,7 @@ def youtube(r):
         name=yt.title
         image=yt.thumbnail_url
         n=yt.streams.all()
-    return render(r,'youtube.html',{"n":n,"name":name,"image":image,"a":a})
+    return render(r,'youtube.html',{"n":n,"name":name,"image":image})
 #search
 def mainsearch(r):
     flag,page,links,title,se=0,0,0,0,[]
