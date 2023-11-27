@@ -44,6 +44,7 @@ def doodplay(r):
 
 #movierulz
 def movierulz(r):
+    query=0
     req=requests.get("https://ww7.5movierulz.gd")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('div',class_='boxed film')
@@ -61,7 +62,7 @@ def movierulz(r):
         for i in items:
             if not "trailer"  in i.a.get('title').lower():
                 movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return render(r,'movierulz.html',{"movies":movies})
+    return render(r,'movierulz.html',{"movies":movies,"query":query})
 
 def movierulzmovie(r):
     req=requests.get(r.GET.get('link'))
@@ -122,7 +123,7 @@ def youtube(r):
     return render(r,'youtube.html',{"n":n,"name":name,"image":image})
 #search
 def mainsearch(r):
-    flag,page,links,title,se=0,0,0,0,[]
+    flag,page,links,title,query,se=0,0,0,0,0,[]
     if r.GET.get('q') is not None:
         query=r.GET.get('q')
         page=r.GET.get('page')
@@ -158,7 +159,7 @@ def mainsearch(r):
             se.append(pages[-1].get('href'))
         except:
             pass
-    return render(r,'search.html',{"page":page,"items":links,"title":title,"se":se})
+    return render(r,'search.html',{"page":page,"items":links,"title":title,"query":query,"se":se})
 
 #seedr
 def getSeedr(r):

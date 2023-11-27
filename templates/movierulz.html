@@ -19,7 +19,7 @@
     <form action="" method="post">
       {%csrf_token%}
       <div class="input-group mb-3 " style="width: 80%;">
-        <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" {%if query%} value="{{query}}" {%endif%} aria-describedby="basic-addon2">
         <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-search" ></i></button>
       </div>
     </form>

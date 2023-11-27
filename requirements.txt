@@ -3,4 +3,5 @@ requests
 beautifulsoup4
 pytube
 django
+django-mathfilters
 selenium
