@@ -21,7 +21,7 @@
   </style>
     <h5>{{file.name}}</h5> <br>
     <div class="video">
-      <video id="video"><source src="{{file.url}}" type="video/mp4" />
+      <video id="video-id" style="width: 95%;"><source src="{{file.url}}" type="video/mp4"  />
    </div>
     <br>
     <br>
@@ -30,43 +30,41 @@
     <a href="{{file.url}}"  class="btn btn-success"><i class="fa fa-download" aria-hidden="true"></i></a>
     <br>
 </center>
-<!-- <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script> -->
-<script src="https://shivaganesh22.000webhostapp.com/fluidplayer.min.js"></script>
-      <script >
-        var myFP = fluidPlayer("video", {
-  layoutControls: {
-    controlBar: {
-      autoHideTimeout: 3,
-      animated: true,
-      autoHide: true,
-    },
-    htmlOnPauseBlock: {
-      html: null,
-      height: null,
-      width: null,
-    },
-    autoPlay: false,
-    mute: true,
-    allowTheatre: false,
-    playPauseAnimation: true,
-    playbackRateEnabled: true,
-    allowDownload: true,
-    playButtonShowing: true,
-    fillToContainer: false,
-    posterImage: "poster.jpg",
-  },
-  vastOptions: {
-    adList: [],
-    adCTAText: false,
-    adCTATextPosition: "",
-  },
-});
-      </script>
+
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 <script>
-    function CopyText() {
-    var text = document.getElementById("down")
-    text.select()
-    document.execCommand('copy')
-  }
-  </script>
+    var myFP = fluidPlayer(
+        'video-id',	{
+	"layoutControls": {
+		"controlBar": {
+			"autoHideTimeout": 3,
+			"animated": true,
+      "playbackRates": ['x2','x1.75','x1.5','x1.35','x1.25', 'x1','x0.5'],
+			"autoHide": true
+		},
+		"htmlOnPauseBlock": {
+			"html": null,
+			"height": null,
+			"width": null
+		},
+		"autoPlay": false,
+		"mute": false,
+		"allowTheatre": false,
+		"playPauseAnimation": true,
+		"playbackRateEnabled": true,
+		"allowDownload": false,
+		"playButtonShowing": true,
+		"fillToContainer": false,
+		"posterImage": "",
+        "subtitlesEnabled": false,
+        "primaryColor": "#28B8ED",
+        
+	},
+	"vastOptions": {
+		"adList": [],
+		"adCTAText": false,
+		"adCTATextPosition": ""
+	}
+});
+</script>
 {%endblock%}
