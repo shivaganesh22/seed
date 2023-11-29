@@ -307,3 +307,5 @@ def solidtorrent(r):
     item=driver.page_source
     driver.quit()
     return render(r,'solid.html',{"item":item})"""
+def test(r):
+    return render(r,'test.html')
