@@ -308,4 +308,9 @@ def solidtorrent(r):
     driver.quit()
     return render(r,'solid.html',{"item":item})"""
 def test(r):
-    return render(r,'test.html')
+    url="https://youtu.be/cSmabz1ldzE?si=uPYR16Sdk3gHizUf"
+    yt = YouTube(url)
+    name=yt.title
+    image=yt.thumbnail_url
+    n=yt.streams.all()
+    return render(r,'test.html',{"n":n})

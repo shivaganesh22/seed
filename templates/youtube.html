@@ -1,10 +1,134 @@
 {%extends 'index.html'%}
+{%load custom_tags%}
 {%block main%}
-{%if messages%}
-{%for message in messages%}
-<center>{{message}}</center>
-{%endfor%}
-{%endif%}
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+.wrapper{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ font-family: 'Poppins', sans-serif;
+}
+.wrapper{
+ display: grid;
+ height: 100%;
+ width: 100%;
+ place-items: center;
+
+}
+::selection{
+ background: #1a75ff;
+ color: #fff;
+}
+.wrapper{
+ overflow: hidden;
+ max-width: auto;
+ background: #fff;
+ padding: 30px;
+ border-radius: 15px;
+ box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+}
+.wrapper .title-text{
+ display: flex;
+ width: 200%;
+}
+.wrapper .title{
+ width: 50%;
+ font-size: 35px;
+ font-weight: 600;
+ text-align: center;
+ transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+.wrapper .slide-controls{
+ position: relative;
+ display: flex;
+ height: 50px;
+ width: 100%;
+ overflow: hidden;
+ margin: 30px 0 10px 0;
+ justify-content: space-between;
+ border: 1px solid lightgrey;
+ border-radius: 15px;
+}
+.slide-controls .slide{
+ height: 100%;
+ width: 100%;
+ color: #fff;
+ font-size: 18px;
+ font-weight: 500;
+ text-align: center;
+ line-height: 48px;
+ cursor: pointer;
+ z-index: 1;
+ transition: all 0.6s ease;
+}
+.slide-controls label.signup{
+ color: #000;
+}
+.slide-controls .slider-tab{
+ position: absolute;
+ height: 100%;
+ width: 50%;
+ left: 0;
+ z-index: 0;
+ border-radius: 15px;
+ background: -webkit-linear-gradient(left,#003366,#004080,#0059b3
+, #0073e6);
+ transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+input[type="radio"]{
+ display: none;
+}
+#signup:checked ~ .slider-tab{
+ left: 50%;
+}
+#signup:checked ~ label.signup{
+ color: #fff;
+ cursor: default;
+ user-select: none;
+}
+#signup:checked ~ label.login{
+ color: #000;
+}
+#login:checked ~ label.signup{
+ color: #000;
+}
+#login:checked ~ label.login{
+ cursor: default;
+ user-select: none;
+}
+.wrapper .form-container{
+ width: 100%;
+ overflow: hidden;
+}
+.form-container .form-inner{
+ display: flex;
+ width: 200%;
+}
+.form-container .form-inner form{
+ width: 50%;
+ transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+
+
+
+.btn-result {
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.result-item-wrap {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.25rem;
+   justify-content: center;
+}
+.mt-4{
+ margin-top: 1rem!important;
+}
+
+</style>
 <center>
     <form action="" method="post">
         {%csrf_token%}
@@ -17,31 +141,63 @@
   {%if n%}
   <center>
     <img src="{{image}}" alt="" srcset="" width="50%" ><br><br>
-    <h2 style="width: 80%;">{{name}}</h2><br>
-    <table class="table table-striped" style="width: auto;">
-        <thead>
-            
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Type</th>
-            <th scope="col">Resolution</th>
-            <th scope="col">Type</th>
-            <th scope="col">Link</th>
-          </tr>
-        </thead>
-        <tbody>
-            {%for i in n%} 
-          <tr>
-            <th scope="row">{{forloop.counter}}</th>
-            <td>{{i.mime_type}}</td>
-            <td>{{i.resolution}}</td>
-            <td>{{i.filesize_mb}}</td>
-            <td><a href="{{i.url}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-play" aria-hidden="true"></i></a></td>
-          </tr>
-          {%endfor%}
-          
-        </tbody>
-      </table>
+    <h2 style="width: 80%;">{{name}}</h2>
+    <div class="wrapper">
+      <div class="form-container">
+        <div class="slide-controls">
+          <input type="radio" name="slide" id="login" checked>
+          <input type="radio" name="slide" id="signup">
+          <label for="login" class="slide login">Video</label>
+          <label for="signup" class="slide signup">Audio</label>
+          <div class="slider-tab"></div>
+        </div>
+        <div class="form-inner">
+          <form action="#" class="login">
+            <div class="mt-4 result-item-wrap" >
+            {%for i in n%}
+            {% if "video" in i.type%}
+              {%if i.is_progressive%}
+              <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" href="{{i.url}}" style="height: 87px;width: 100px;"><strong>{{i.resolution}}</strong><span class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" height="1rem" fill="white" viewBox="0 0 467.968 467.968"><path d="M264.704 96.512H51.2c-28.16 0-51.2 23.04-51.2 51.2v172.544c0 28.16 23.04 51.2 51.2 51.2h213.504c28.16 0 51.2-23.04 51.2-51.2V147.712c0-28.672-23.04-51.2-51.2-51.2zM430.08 124.672c-3.072.512-6.144 2.048-8.704 3.584l-79.872 46.08V293.12l80.384 46.08c14.848 8.704 33.28 3.584 41.984-11.264 2.56-4.608 4.096-9.728 4.096-15.36V154.368c0-18.944-17.92-34.304-37.888-29.696z"></path></svg> {{i.video_codec | get_vcodec}}</span><span>{{i.filesize_mb |  floatformat:2}} MB</span></a>
+              {%else%}
+              <a class="btn btn-info btn-sq btn-dl text-uppercase btn-result" href="{{i.url}}" style="height: 87px;width: 100px;"><strong>{{i.resolution}}</strong><span class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" height="1rem" fill="white" viewBox="0 0 467.968 467.968"><path d="M352.021 16.075c0-6.08-3.52-11.84-8.96-14.4-5.76-2.88-12.16-1.92-16.96 1.92l-141.76 112.96 167.68 167.68V16.075zM443.349 420.747l-416-416c-6.24-6.24-16.384-6.24-22.624 0s-6.24 16.384 0 22.624l100.672 100.704h-9.376c-9.92 0-18.56 4.48-24.32 11.52-4.8 5.44-7.68 12.8-7.68 20.48v128c0 17.6 14.4 32 32 32h74.24l155.84 124.48c2.88 2.24 6.4 3.52 9.92 3.52 2.24 0 4.8-.64 7.04-1.6 5.44-2.56 8.96-8.32 8.96-14.4v-57.376l68.672 68.672c3.136 3.136 7.232 4.704 11.328 4.704s8.192-1.568 11.328-4.672c6.24-6.272 6.24-16.384 0-22.656z"></path></svg> {{i.video_codec | get_vcodec}}</span><span>{{i.filesize_mb |floatformat:2 }} MB</span></a>
+              {%endif%}
+              {%endif%}
+              {%endfor%}       
+            </div>
+          </form>
+          <form action="#" class="signup">
+            <div class="mt-4 result-item-wrap" >
+              {%for i in n%}
+              {% if "audio" in i.type%}
+              <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" href="{{i.url}}" style="height: 87px;width: 100px;"><strong>{{i.abr}}</strong><span class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" height="1rem" fill="white" viewBox="0 0 467.968 467.968"><path d="M328.712 264.539c12.928-21.632 21.504-48.992 23.168-76.064 1.056-17.376-2.816-35.616-11.2-52.768-13.152-26.944-35.744-42.08-57.568-56.704-16.288-10.912-31.68-21.216-42.56-35.936l-1.952-2.624c-6.432-8.64-13.696-18.432-14.848-26.656-1.152-8.32-8.704-14.24-16.96-13.76a15.957 15.957 0 00-14.88 15.936v285.12c-13.408-8.128-29.92-13.12-48-13.12-44.096 0-80 28.704-80 64s35.904 64 80 64 80-28.704 80-64V165.467c24.032 9.184 63.36 32.576 74.176 87.2-2.016 2.976-3.936 6.176-6.176 8.736-5.856 6.624-5.216 16.736 1.44 22.56 6.592 5.888 16.704 5.184 22.56-1.44 4.288-4.864 8.096-10.56 11.744-16.512.384-.448.737-.928 1.056-1.472z"></path></svg> {{i.audio_codec | get_acodec}}</span><span>{{i.filesize_mb | floatformat:2}} MB</span></a>
+              {%endif%}
+              {%endfor%}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+       const loginText = document.querySelector(".title-text .login");
+          const loginForm = document.querySelector("form.login");
+          const loginBtn = document.querySelector("label.login");
+          const signupBtn = document.querySelector("label.signup");
+          const signupLink = document.querySelector("form .signup-link a");
+          signupBtn.onclick = (()=>{
+            loginForm.style.marginLeft = "-50%";
+            loginText.style.marginLeft = "-50%";
+          });
+          loginBtn.onclick = (()=>{
+            loginForm.style.marginLeft = "0%";
+            loginText.style.marginLeft = "0%";
+          });
+          signupLink.onclick = (()=>{
+            signupBtn.click();
+            return false;
+          });
+    
+    </script>
       
   </center>
   {%endif%}
