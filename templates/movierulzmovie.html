@@ -10,15 +10,32 @@
     {{details.inf |safe }}
 {{details.desc |safe }}
 </div>
-<center>
-    <table class="table table-striped" style="width: auto;">
-        {%for i in links%}
-        <tr>
-            <td><strong>{{i.name}}</strong></td>
-            <td><center><a href="/addtorrent/?link={{i.link}}" class="btn btn-success">Upload</a></center></td>
-        </tr>
-        {%endfor%}
-    </table>
-</center>
+<style>
+    
+.btn-result {
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.result-item-wrap {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.25rem;
+   justify-content: center;
+}
+.mt-4{
+ margin-top: 1rem!important;
+}
+
+</style>
+
+<div class="mt-4 result-item-wrap" >
+    {%for i in links%}
+    <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" href="/addtorrent/?link={{i.link}}" style="height: auto;width: 100px;"> <i class="fa fa-upload"></i>  <strong>{{i.name}}</strong></a>
+      {%endfor%}       
+    </div>
+<br>
+
 
 {%endblock%}
