@@ -30,9 +30,12 @@ def tamilmvmovie(r):
     magnets=soup.findAll('a')
     links=[]
     for i in magnets:
-        if i.get_text()=="MAGNET":
-            j=i.find_previous_sibling('strong')
-            links.append({"name":j.get_text(),"link":i.get('href')})
+        try:
+            if i.get_text()=="MAGNET" or i.find('img').get('alt')=="magnet.png":
+                j=i.find_previous_sibling('strong')
+                links.append({"name":j.get_text(),"link":i.get('href')})
+        except:
+            pass
     items=soup.findAll('img',class_='ipsImage')
     images=[]
     for i in items:

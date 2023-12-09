@@ -8,6 +8,14 @@
         margin:10px;
         float: left;
         box-sizing: border-box;
+        
+    }
+    .cont_display {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
     }
     @media (min-width:768px){
         .card{ width: 15%;}}
@@ -24,14 +32,31 @@
       </div>
     </form>
   </center>
+  <style>
+    .btn-result {
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.result-item-wrap {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.25rem;
+   justify-content: center;
+}
+.mt-4{
+ margin-top: 1rem!important;
+}
+  </style>
+
+<div class="mt-4 result-item-wrap" >
 {%for i in movies%}
-    
-    <div class="boxed film card">
-        <div class="cont_display">
-            <a href="/movierulz/movie/?link={{i.link}}" title="{{i.name}}"><img width="165" height="220" src="{{i.image}}" class="attachment-full size-full wp-post-image" alt="{{i.name}}"></a>
-        </div>
-        <p><b>{{i.name}}</b></p>
-    </div>
+    <div class="cont_display card">
+        <a href="/movierulz/movie/?link={{i.link}}"  title="{{i.name}}"><img width="165" height="220" src="{{i.image}}" class="attachment-full size-full wp-post-image" alt="{{i.name}}"></a>
+        <center><p><b>{{i.name}}</b></p></center>
+    </div>  
+
 {%endfor%}
 
 {%endblock%}

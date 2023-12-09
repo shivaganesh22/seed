@@ -2,12 +2,14 @@
 {%block main%}
 
 <center>
-<h2>{{details.name}}</h2>
-<img src="{{details.image}}" alt="" srcset="">
+<div class="container"><h2>{{details.name}}</h2></div>
+<img src="{{details.image}}" style="border-radius: 3px;" alt="" srcset="">
 </center>
 <hr>
-{{details.inf |safe }}
+<div class="container">
+    {{details.inf |safe }}
 {{details.desc |safe }}
+</div>
 <center>
     <table class="table table-striped" style="width: auto;">
         {%for i in links%}
