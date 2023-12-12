@@ -46,7 +46,7 @@ urlpatterns = [
     path('youtube/',youtube),
     path('search/',mainsearch),
     path('test/',test),
-    #path('solid/',solidtorrent),
+    path('api/data/',apidata),
 
 
 

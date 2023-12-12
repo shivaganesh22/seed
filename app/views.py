@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib import messages
 from seedrcc import Login,Seedr
 from bs4 import BeautifulSoup as bs
@@ -172,7 +172,9 @@ def getSeedr(r):
         return Seedr(seedr.token)
     else:
         return None
-
+def apidata(r):
+    ac=getSeedr(r)
+    return JsonResponse(ac.listContents())
 
 def folders(r):
     ac=getSeedr(r)
@@ -311,9 +313,5 @@ def solidtorrent(r):
     driver.quit()
     return render(r,'solid.html',{"item":item})"""
 def test(r):
-    url="https://youtu.be/cSmabz1ldzE?si=uPYR16Sdk3gHizUf"
-    yt = YouTube(url)
-    name=yt.title
-    image=yt.thumbnail_url
-    n=yt.streams.all()
-    return render(r,'test.html',{"n":n})
+    
+    return render(r,'test.html')

@@ -1,6 +1,64 @@
 {%extends 'index.html'%}
 {%load mathfilters%}
 {%block main%}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+  update();
+      // AJAX request
+      function update(){
+        $.ajax({
+          url: '/api/data',
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+              // Update the torrents table
+              var torrentsTable = $('#torrents tbody');
+              torrentsTable.empty();  // Clear existing content
+
+              for (var i = 0; i < data.torrents.length; i++) {
+                  var torrent = data.torrents[i];
+                  var row = $('<tr>');
+                  row.append('<td><center><a href="' + torrent.progress_url + '"><strong>' + torrent.name + '</strong></a> <br>' + torrent.progress + '% ' + (torrent.size / 1073741824).toFixed(2) + 'GB <a href="/deletetorrent/' + torrent.id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></center></td>');
+                  row.append('<td></td>');
+                  torrentsTable.append(row);
+              }
+
+              // Update the folders table
+              var foldersTable = $('#folders tbody');
+              foldersTable.empty();  // Clear existing content
+
+              for (var j = 0; j < data.folders.length; j++) {
+                  var folder = data.folders[j];
+                  var rowFolder = $('<tr>');
+                  rowFolder.append('<td><center><a href="/open/' + folder.id + '"><strong id="foldername">' + folder.name + '</strong></a> <a href="" onclick="edit(); " style="visibility: hidden;" class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a> <br>' +
+                      '<a href="/playfolder/' + folder.id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/' + folder.id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/' + folder.id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>');
+                  rowFolder.append('<td></td>');
+                  foldersTable.append(rowFolder);
+              }
+
+              // Update the files table
+              var filesTable = $('#files tbody');
+              filesTable.empty();  // Clear existing content
+
+              for (var k = 0; k < data.files.length; k++) {
+                  var file = data.files[k];
+                  var rowFile = $('<tr>');
+                  rowFile.append('<td><center><strong>' + file.name + '</strong> <br>' +
+                      '<a href="/player/' + file.folder_file_id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/' + file.folder_file_id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/' + file.folder_file_id + '/' + file.folder_id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>');
+                  filesTable.append(rowFile);
+              }
+              
+          },
+          error: function(error) {
+              console.error('Error loading data:', error);
+          }
+      });
+      }
+      setInterval(update,1000)
+      
+
+</script>
   <center>
 
     <form action="" method="post">
@@ -12,54 +70,40 @@
       </form>
 </center>
   <center>
-      <table class="table table-striped" style="width: auto;">
-          
-          {%for i in content.torrents%}
-          <tr>
-              <td><center><a href="{{i.progress_url}}"><strong>{{i.name}}</strong></a> <br> {{i.progress}}%  {{i.size | div:1073741824 | floatformat:2}}GB <a href="/deletetorrent/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
-              <td></td>
-              
-            </tr>
-            {%endfor%}
-        </table>
-      <table class="table table-striped" style="width: auto;">    
-          {%for i in content.folders%}
+    <table class="table table-striped" id="torrents" style="width: auto;">
+      <tbody>
+        {%for i in content.torrents%}
+        <tr>
+            <td><center><a href="{{i.progress_url}}"><strong>{{i.name}}</strong></a> <br> {{i.progress}}%  {{i.size | div:1073741824 | floatformat:2}}GB <a href="/deletetorrent/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
+            <td></td>
+            
+          </tr>
+          {%endfor%}
+      </tbody>
+  </table>
+  
+  <!-- Folders Table -->
+  <table class="table table-striped" id="folders" style="width: auto;">
+     <tbody>
+        {%for i in content.folders%}
           <tr>
               <td><center><a href="/open/{{i.id}}" ><strong id="foldername"  >{{i.name}}</strong></a> <a href="" onclick="edit(); " style="visibility: hidden;" class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a> <br>
                <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
               <td></td>    
             </tr>
             {%endfor%}
-        </table>
-      <table class="table table-striped" style="width: auto;">    
+     </tbody>
+  </table>
+  
+  <!-- Files Table -->
+  <table class="table table-striped" style="width: auto;">
+      <tbody>
         {%for i in content.files%}
         <tr>
           <td><center><strong>{{i.name}}</strong> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
           </tr>
           {%endfor%}
-        </table>
-<script>
-
-    // document.getElementById('editfolder').addEventListener('click', function(event){
-    //   event.preventDefault()
-    //   fn=document.getElementById("foldername")
-    //   id=fn.classList.value
-    //   flink=document.getElementById("flink")
-    //   ip=document.createElement('input')
-    //   ip.type='text';ip.value=fn.innerHTML;
-    //   flink.replaceWith(ip)
-    //   ip.focus()
-    //   this.innerHTML='<i class="fa fa-paper-plane" aria-hidden="true"></i>'
-    //   this.addEventListener('click',()=>{
-    //     window.location.href='/renamefolder/'+id+'/?name='+ip.value
-    //   })
-    //   ip.addEventListener('keypress',(e)=>{
-    //     if(e.key=="Enter"){
-    //       window.location.href='/renamefolder/'+id+'/?name='+ip.value
-    //     }
-    //   })
-    // })
-
-</script>
-
-{%endblock%}
+      </tbody>
+  </table>
+  </center>
+  {%endblock%}
