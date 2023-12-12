@@ -235,7 +235,6 @@ def deletefolder(r,id):
         return redirect('/login')
     try:
         ac.deleteFolder(id)
-        messages.success(r,'Deleted Folder')
     except:
         messages.error(r,'Failed to Delete')
     return redirect('/files')
