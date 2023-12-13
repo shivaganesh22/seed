@@ -1,7 +1,128 @@
 {%extends 'index.html'%}
 {%load custom_tags %}
+{%load mathfilters %}
 {%block main%}
 
 
+<center>
 
+    <form action="" method="post">
+        {%csrf_token%}
+        <div class="input-group mb-3 " style="width: 80%;">
+          <input type="text" class="form-control" placeholder="Paste Magnet Url Here" name="link" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-plus" ></i></button>
+        </div>
+      </form>
+</center>
+  <center>
+      <table class="table table-striped" style="width: auto;">
+          
+          {%for i in content.torrents%}
+          <tr>
+              <td><center><a href="{{i.progress_url}}"><strong>{{i.name}}</strong></a> <br> {{i.progress}}%  {{i.size | div:1073741824 | floatformat:2}}GB <a href="/deletetorrent/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
+              <td></td>
+              
+            </tr>
+            {%endfor%}
+        </table>
+      <table class="table table-striped" style="width: auto;">    
+          {%for i in content.folders%}
+          <tr id="{{i.id}}">
+              <td ><center><a href="/open/{{i.id}}" ><strong  >{{i.name}}</strong></a> <a href="" id="edit{{i.id}}"  onclick="edit('{{i.id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancel{{i.id}}"  onclick="cancelbtn('{{i.id}}','{{i.name}}',event);" style="display: none;" class="btn"><i class="fa fa-times" aria-hidden="true"></i></a> <br>
+               <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center>
+              </td>  
+               
+            </tr>
+            {%endfor%}
+        </table>
+      <table class="table table-striped" style="width: auto;">    
+        {%for i in content.files%}
+        <tr id="{{i.folder_file_id}}">
+          <td><center><strong>{{i.name}}</strong> <a href="" id="editfile{{i.folder_file_id}}"  onclick="editfile('{{i.folder_file_id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancelfile{{i.folder_file_id}}"  onclick="cancelbtnfile('{{i.folder_file_id}}','{{i.name}}',event);" style="display: none;" class="btn"><i class="fa fa-times" aria-hidden="true"></i></a> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
+          </tr>
+          {%endfor%}
+        </table>
+ 
+<script>
+    function edit(id,name,event){
+        event.preventDefault();
+        row=document.getElementById(id)
+        curr=document.getElementById('edit'+id)
+        cancel=document.getElementById('cancel'+id)
+        curr.style.display='none'
+        cancel.style.display=''
+        
+        col=document.createElement('td')
+        col.id='new'+id
+        col.innerHTML=`<center><input style="width:70%" type="text" id='value${id}' value="${name}" ><a onclick="rename(${id},event)" id="rename${id}" class="btn" ><i class="fa fa-paper-plane" aria-hidden="true"></i></a></center>`
+        row.insertAdjacentElement('afterend', col);
+        ip=document.getElementById("value"+id)
+        ip.select()
+        ip.focus()
+        renamebtn=document.getElementById("rename"+id)
+        renamebtn.addEventListener('click',function(e){
+          
+          window.location.href='/renamefolder/'+id+'/?name='+ip.value
+
+        })
+        ip.addEventListener('keypress',function(e){
+          if(e.key=="Enter"){
+          window.location.href='/renamefolder/'+id+'/?name='+ip.value
+        }
+        })
+        
+    }
+    function cancelbtn(id,name,event){
+        event.preventDefault();
+        curr=document.getElementById('edit'+id)
+        col=document.getElementById('new'+id)
+        col.remove()
+        cancel=document.getElementById('cancel'+id)
+        curr.style.display=''
+        cancel.style.display='none'
+        
+        
+    }
+    function editfile(id,name,event){
+        event.preventDefault();
+        row=document.getElementById(id)
+        curr=document.getElementById('editfile'+id)
+        cancel=document.getElementById('cancelfile'+id)
+        curr.style.display='none'
+        cancel.style.display=''
+        
+        col=document.createElement('td')
+        col.id='newfile'+id
+        col.innerHTML=`<center><input style="width:70%" type="text" id='valuefile${id}' value="${name}" ><a onclick="renamefile(${id},event)" id="renamefile${id}" class="btn" ><i class="fa fa-paper-plane" aria-hidden="true"></i></a></center>`
+        row.insertAdjacentElement('afterend', col);
+        ip=document.getElementById("valuefile"+id)
+        ip.select()
+        ip.focus()
+        renamebtn=document.getElementById("renamefile"+id)
+        renamebtn.addEventListener('click',function(e){
+          
+          window.location.href='/renamefile/'+id+'/?name='+ip.value
+
+        })
+        ip.addEventListener('keypress',function(e){
+          if(e.key=="Enter"){
+          window.location.href='/renamefile/'+id+'/?name='+ip.value
+        }
+        })
+        
+    }
+    function cancelbtnfile(id,name,event){
+        event.preventDefault();
+        curr=document.getElementById('editfile'+id)
+        col=document.getElementById('newfile'+id)
+        col.remove()
+        cancel=document.getElementById('cancelfile'+id)
+        curr.style.display=''
+        cancel.style.display='none'
+        
+        
+    }
+    
+
+</script>
 {%endblock%}

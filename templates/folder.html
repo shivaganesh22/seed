@@ -29,25 +29,37 @@
               foldersTable.empty();  // Clear existing content
 
               for (var j = 0; j < data.folders.length; j++) {
-                  var folder = data.folders[j];
-                  var rowFolder = $('<tr>');
-                  rowFolder.append('<td><center><a href="/open/' + folder.id + '"><strong id="foldername">' + folder.name + '</strong></a> <a href="" onclick="edit(); " style="visibility: hidden;" class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a> <br>' +
-                      '<a href="/playfolder/' + folder.id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/' + folder.id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/' + folder.id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>');
-                  rowFolder.append('<td></td>');
-                  foldersTable.append(rowFolder);
-              }
-
+                      var folder = data.folders[j];
+                      var rowFolder = $('<tr id="' + folder.id + '">');
+                      
+                      // Edit and Cancel buttons have unique IDs based on folder.id
+                      rowFolder.append('<td><center><a href="/open/' + folder.id + '"><strong id="foldername">' + folder.name + '</strong></a>' +
+                          ' <a href="#" id="edit' + folder.id + '" class="btn" onclick="edit(\'' + folder.id + '\', \'' + folder.name + '\', event);"><i class="fa fa-edit" aria-hidden="true"></i></a>' +
+                          ' <a href="#" id="cancel' + folder.id + '" class="btn" onclick="cancelbtn(\'' + folder.id + '\', \'' + folder.name + '\', event);" style="display: none;"><i class="fa fa-times" aria-hidden="true"></i></a><br>' +
+                          ' <a href="/playfolder/' + folder.id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a>' +
+                          ' <a href="/downloadfolderfile/' + folder.id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a>' +
+                          ' <a href="/deletefolder/' + folder.id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></center></td>');
+                      foldersTable.append(rowFolder);
+                }
+    
               // Update the files table
               var filesTable = $('#files tbody');
               filesTable.empty();  // Clear existing content
 
               for (var k = 0; k < data.files.length; k++) {
-                  var file = data.files[k];
-                  var rowFile = $('<tr>');
-                  rowFile.append('<td><center><strong>' + file.name + '</strong> <br>' +
-                      '<a href="/player/' + file.folder_file_id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/' + file.folder_file_id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/' + file.folder_file_id + '/' + file.folder_id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>');
-                  filesTable.append(rowFile);
-              }
+                    var file = data.files[k];
+                    var rowFile = $('<tr id="' + file.folder_file_id + '">');
+                    
+                    // Edit and Cancel buttons have unique IDs based on file.folder_file_id
+                    rowFile.append('<td><center><strong>' + file.name + '</strong>' +
+                        ' <a href="#" id="editfile' + file.folder_file_id + '" class="btn" onclick="editfile(\'' + file.folder_file_id + '\', \'' + file.name + '\', event);"><i class="fa fa-edit" aria-hidden="true"></i></a>' +
+                        ' <a href="#" id="cancelfile' + file.folder_file_id + '" class="btn" onclick="cancelbtnfile(\'' + file.folder_file_id + '\', \'' + file.name + '\', event);" style="display: none;"><i class="fa fa-times" aria-hidden="true"></i></a> <br>' +
+                        ' <a href="/player/' + file.folder_file_id + '" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> ' +
+                        ' <a href="/download/' + file.folder_file_id + '" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> ' +
+                        ' <a href="/deletefile/' + file.folder_file_id + '/' + file.folder_id + '" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>');
+
+                    filesTable.append(rowFile);
+                }
               
           },
           error: function(error) {
@@ -55,9 +67,12 @@
           }
       });
       }
-      setInterval(update,1000)
+      repeat=setInterval(update,5000)
       
 
+</script>
+<script>
+  
 </script>
   <center>
 
@@ -75,7 +90,7 @@
         {%for i in content.torrents%}
         <tr>
             <td><center><a href="{{i.progress_url}}"><strong>{{i.name}}</strong></a> <br> {{i.progress}}%  {{i.size | div:1073741824 | floatformat:2}}GB <a href="/deletetorrent/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a></center></td>
-            <td></td>
+           
             
           </tr>
           {%endfor%}
@@ -85,25 +100,113 @@
   <!-- Folders Table -->
   <table class="table table-striped" id="folders" style="width: auto;">
      <tbody>
-        {%for i in content.folders%}
-          <tr>
-              <td><center><a href="/open/{{i.id}}" ><strong id="foldername"  >{{i.name}}</strong></a> <a href="" onclick="edit(); " style="visibility: hidden;" class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a> <br>
-               <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
-              <td></td>    
-            </tr>
-            {%endfor%}
+      {%for i in content.folders%}
+      <tr id="{{i.id}}">
+          <td ><center><a href="/open/{{i.id}}" ><strong  >{{i.name}}</strong></a> <a href="" id="edit{{i.id}}"  onclick="edit('{{i.id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancel{{i.id}}"  onclick="cancelbtn('{{i.id}}','{{i.name}}',event);" style="display: none;" class="btn"><i class="fa fa-times" aria-hidden="true"></i></a> <br>
+           <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center>
+          </td>  
+           
+        </tr>
+        {%endfor%}
      </tbody>
   </table>
   
   <!-- Files Table -->
-  <table class="table table-striped" style="width: auto;">
+  <table class="table table-striped" id="files" style="width: auto;">
       <tbody>
         {%for i in content.files%}
-        <tr>
-          <td><center><strong>{{i.name}}</strong> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
+        <tr id="{{i.folder_file_id}}">
+          <td><center><strong>{{i.name}}</strong> <a href="" id="editfile{{i.folder_file_id}}"  onclick="editfile('{{i.folder_file_id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancelfile{{i.folder_file_id}}"  onclick="cancelbtnfile('{{i.folder_file_id}}','{{i.name}}',event);" style="display: none;" class="btn"><i class="fa fa-times" aria-hidden="true"></i></a> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a> </center></td>
           </tr>
           {%endfor%}
       </tbody>
   </table>
   </center>
+
+   
+<script>
+  function edit(id,name,event){
+      clearInterval(repeat)
+      event.preventDefault();
+      row=document.getElementById(id)
+      curr=document.getElementById('edit'+id)
+      cancel=document.getElementById('cancel'+id)
+      curr.style.display='none'
+      cancel.style.display=''
+      
+      col=document.createElement('td')
+      col.id='new'+id
+      col.innerHTML=`<center><input style="width:70%" type="text" id='value${id}' value="${name}" ><a onclick="rename(${id},event)" id="rename${id}" class="btn" ><i class="fa fa-paper-plane" aria-hidden="true"></i></a></center>`
+      row.insertAdjacentElement('afterend', col);
+      ip=document.getElementById("value"+id)
+      ip.select()
+      ip.focus()
+      renamebtn=document.getElementById("rename"+id)
+      renamebtn.addEventListener('click',function(e){
+        
+        window.location.href='/renamefolder/'+id+'/?name='+ip.value
+
+      })
+      ip.addEventListener('keypress',function(e){
+        if(e.key=="Enter"){
+        window.location.href='/renamefolder/'+id+'/?name='+ip.value
+      }
+      })
+      
+  }
+  function cancelbtn(id,name,event){
+      event.preventDefault();
+      curr=document.getElementById('edit'+id)
+      col=document.getElementById('new'+id)
+      col.remove()
+      cancel=document.getElementById('cancel'+id)
+      curr.style.display=''
+      cancel.style.display='none'
+      
+      
+  }
+  function editfile(id,name,event){
+      clearInterval(repeat)
+      event.preventDefault();
+      row=document.getElementById(id)
+      curr=document.getElementById('editfile'+id)
+      cancel=document.getElementById('cancelfile'+id)
+      curr.style.display='none'
+      cancel.style.display=''
+      
+      col=document.createElement('td')
+      col.id='newfile'+id
+      col.innerHTML=`<center><input style="width:70%" type="text" id='valuefile${id}' value="${name}" ><a onclick="renamefile(${id},event)" id="renamefile${id}" class="btn" ><i class="fa fa-paper-plane" aria-hidden="true"></i></a></center>`
+      row.insertAdjacentElement('afterend', col);
+      ip=document.getElementById("valuefile"+id)
+      ip.select()
+      ip.focus()
+      renamebtn=document.getElementById("renamefile"+id)
+      renamebtn.addEventListener('click',function(e){
+        
+        window.location.href='/renamefile/'+id+'/?name='+ip.value
+
+      })
+      ip.addEventListener('keypress',function(e){
+        if(e.key=="Enter"){
+        window.location.href='/renamefile/'+id+'/?name='+ip.value
+      }
+      })
+      
+  }
+  function cancelbtnfile(id,name,event){
+      event.preventDefault();
+      curr=document.getElementById('editfile'+id)
+      col=document.getElementById('newfile'+id)
+      col.remove()
+      cancel=document.getElementById('cancelfile'+id)
+      curr.style.display=''
+      cancel.style.display='none'
+      
+      
+  }
+  
+
+</script>
+
   {%endblock%}

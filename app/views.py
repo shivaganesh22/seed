@@ -244,11 +244,11 @@ def renamefolder(r,id):
     if not ac:
         return redirect('/login')
     name=r.GET['name']
-    try:
-        ac.renameFolder(id,name)
+    res=ac.renameFolder(id,name)
+    if res['result']:
         messages.success(r,"Renamed Success")
-    except:
-        messages.warning(r,"Renamed Failed")
+    else:
+        messages.warning(r,res['error'].title())
     return redirect("/files")
 
 #player
@@ -294,13 +294,28 @@ def deletefile(r,id,fid):
         messages.error(r,'Failed to Delete')
     return redirect(f'/open/{fid}')
 
-def renamefile(r,id):
+def renamefile(r,fid,id):
     ac=getSeedr(r)
     if not ac:
         return redirect('/login')
     name=r.GET['name']
-    ac.renameFolder(id,name)
-    return redirect('/files')
+    res=ac.renameFile(id,name)
+    if res['result']:
+        messages.success(r,"Renamed Success")
+    else:
+        messages.warning(r,res['error'].title())
+    return redirect(f'/open/{fid}')
+def renamefilehome(r,id):
+    ac=getSeedr(r)
+    if not ac:
+        return redirect('/login')
+    name=r.GET['name']
+    res=ac.renameFile(id,name)
+    if res['result']:
+        messages.success(r,"Renamed Success")
+    else:
+        messages.warning(r,res['error'].title())
+    return redirect(f'/files')
 
 
 """from selenium import webdriver
@@ -312,5 +327,5 @@ def solidtorrent(r):
     driver.quit()
     return render(r,'solid.html',{"item":item})"""
 def test(r):
-    
-    return render(r,'test.html')
+    # print(r.build_absolute_uri())
+    return render(r,'test.html',{"content":getSeedr(r).listContents()})

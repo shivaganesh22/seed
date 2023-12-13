@@ -38,7 +38,8 @@ urlpatterns = [
     path('player/<int:id>',player),
     path('download/<int:id>',download),
     path('deletefile/<str:id>/<int:fid>',deletefile),
-    path('renamefile/<int:id>/',renamefile),
+    path('renamefile/<int:fid>/<int:id>/',renamefile),
+    path('renamefile/<int:id>/',renamefilehome),
 
     path('addtorrent/',addtorrent),
     path('deletetorrent/<int:id>',deletetorrent),
