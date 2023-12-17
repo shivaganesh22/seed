@@ -174,7 +174,9 @@ def getSeedr(r):
         return None
 def apidata(r):
     ac=getSeedr(r)
-    return JsonResponse(ac.listContents())
+    data=ac.listContents()
+    data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+    return JsonResponse(data)
 
 def folders(r):
     ac=getSeedr(r)

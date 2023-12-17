@@ -1,5 +1,6 @@
 {%extends 'index.html'%}
 {%load mathfilters%}
+{%load custom_tags%}
 {%block main%}
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -100,7 +101,7 @@
   <!-- Folders Table -->
   <table class="table table-striped" id="folders" style="width: auto;">
      <tbody>
-      {%for i in content.folders%}
+      {% for i in content.folders|get_last_update %}
       <tr id="{{i.id}}">
           <td ><center><a href="/open/{{i.id}}" ><strong  >{{i.name}}</strong></a> <a href="" id="edit{{i.id}}"  onclick="edit('{{i.id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancel{{i.id}}"  onclick="cancelbtn('{{i.id}}','{{i.name}}',event);" style="display:none " class="btn text-danger"><i class="fa fa-times fa-lg"   aria-hidden="true"></i></a> <br>
            <a href="/playfolder/{{i.id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/downloadfolderfile/{{i.id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefolder/{{i.id}}" class="btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></a> </center>
