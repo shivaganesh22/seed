@@ -22,7 +22,7 @@
 </style>
 <center>
     
-    <form action="" method="post">
+    <form action="" method="post" id="myForm">
       {%csrf_token%}
       <div class="input-group mb-3 " style="width: 80%;">
         <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" {%if query%} value="{{query}}" {%endif%} aria-describedby="basic-addon2">
@@ -30,6 +30,10 @@
       </div>
     </form>
   </center>
+  <div class="text-center text-primary hidden" id="spinner-box">
+    <div class="spinner-border" role="status">
+    </div>
+  </div>
   <style>
     .btn-result {
    align-items: center;

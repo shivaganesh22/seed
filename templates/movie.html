@@ -1,12 +1,15 @@
 {%extends 'index.html'%}
 {%block main%}
-<center>
-
+<center>  
+    <div class="text-center text-primary hidden" id="spinner-box">
+        <div class="spinner-border" role="status">
+        </div>
+      </div>
     <table class="table table-striped" style="width: auto;">
         {%for i in links%}
         <tr>
             <td><strong>{{i.name}}</strong></td>
-            <td><a href="/addtorrent/?link={{i.link}}" class="btn btn-success">Upload</a></td>
+            <td><a href="/addtorrent/?link={{i.link}}" onclick="showSpinner()" class="btn btn-success">Upload</a></td>
         </tr>
         {%endfor%}
     </table>

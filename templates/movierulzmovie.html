@@ -29,10 +29,13 @@
 }
 
 </style>
-
+<div class="text-center text-primary hidden" id="spinner-box">
+  <div class="spinner-border" role="status">
+  </div>
+</div>
 <div class="mt-4 result-item-wrap" >
     {%for i in links%}
-    <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" href="/addtorrent/?link={{i.link}}" style="height: auto;width: 100px;"> <i class="fa fa-upload"></i>  <strong>{{i.name}}</strong></a>
+    <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" onclick="showSpinner()" onabort="cancelSpinner()" href="/addtorrent/?link={{i.link}}" style="height: auto;width: 100px;"> <i class="fa fa-upload"></i>  <strong>{{i.name}}</strong></a>
       {%endfor%}       
     </div>
 <br>
