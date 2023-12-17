@@ -17,9 +17,16 @@
 
               for (var i = 0; i < data.torrents.length; i++) {
                   var torrent = data.torrents[i];
+                  war=""
+                  if(torrent.warnings!="[]"){
+                    war=` <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+        ${torrent.warnings}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div><br>`
+                  }
                   var row = $('<tr>');
-                  row.append('<td><center><a href="' + torrent.progress_url + '"><strong>' + torrent.name + '</strong></a> <br>' + torrent.progress + '% ' + (torrent.size / 1073741824).toFixed(2) + 'GB <a href="/deletetorrent/' + torrent.id + '" onclick="showSpinner()" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></center></td>');
-                  row.append('<td></td>');
+                  row.append('<td><center>'+war+'<a href="' + torrent.progress_url + '"><strong>' + torrent.name + '</strong></a> <br>' + torrent.progress + '% ' + (torrent.size / 1073741824).toFixed(2) + 'GB <a href="/deletetorrent/' + torrent.id + '" onclick="showSpinner()" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></center></td>');
                   torrentsTable.append(row);
               }
 

@@ -12,3 +12,7 @@ def get_acodec(value):
 def get_last_update(value):
     sorted_data = sorted(value, key=lambda x: x['last_update'],reverse=True)
     return sorted_data
+@register.filter(name='get_name')
+def get_name(value):
+    sorted_data = sorted(value, key=lambda x: x['name'])
+    return sorted_data
