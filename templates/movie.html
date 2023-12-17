@@ -9,7 +9,12 @@
         {%for i in links%}
         <tr>
             <td><strong>{{i.name}}</strong></td>
-            <td><a href="/addtorrent/?link={{i.link}}" onclick="showSpinner()" class="btn btn-success">Upload</a></td>
+            <td><a href="/addtorrent/?link={{i.link}}" onclick="tamilSpinner('{{forloop.counter}}')" class="btn btn-success">
+                <div class="text-center  hidden" id="spinner-box{{forloop.counter}}">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                    </div>
+                  </div>
+                Upload</a></td>
         </tr>
         {%endfor%}
     </table>
@@ -17,4 +22,9 @@
     <img src="{{i.link}}" width="70%" alt="" srcset="">
     {%endfor%}
 </center>
+<script>
+    function tamilSpinner(id){
+        $('#spinner-box'+id).removeClass('hidden'); 
+    }
+</script>
 {%endblock%}

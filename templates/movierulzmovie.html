@@ -29,16 +29,25 @@
 }
 
 </style>
-<div class="text-center text-primary hidden" id="spinner-box">
-  <div class="spinner-border" role="status">
-  </div>
-</div>
+
 <div class="mt-4 result-item-wrap" >
     {%for i in links%}
-    <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" onclick="showSpinner()" onabort="cancelSpinner()" href="/addtorrent/?link={{i.link}}" style="height: auto;width: 100px;"> <i class="fa fa-upload"></i>  <strong>{{i.name}}</strong></a>
+    <a class="btn btn-success btn-sq btn-dl text-uppercase btn-result" href="/addtorrent/?link={{i.link}}" onclick="customSpinner('{{forloop.counter}}')" style="height: auto;width: 100px;"> 
+      <div class="text-center  hidden" id="spinner-box{{forloop.counter}}">
+        <div class="spinner-border spinner-border-sm" role="status">
+        </div>
+      </div>
+      <i class="fa fa-upload" id="icon-box{{forloop.counter}}"></i>  <strong>{{i.name}}</strong>
+    
+    </a>
       {%endfor%}       
     </div>
 <br>
-
+<script>
+  function customSpinner(id){
+    $('#spinner-box'+id).removeClass('hidden'); 
+    $('#icon-box'+id).addClass('hidden'); 
+  }
+</script>
 
 {%endblock%}
