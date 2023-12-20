@@ -90,7 +90,11 @@ def signin(request):
 def getSeedr(email,password):
     seedr=Login(email,password)
     response=seedr.authorize()
-    return Seedr(seedr.token)
+    try:
+        ac=Seedr(seedr.token)
+        return ac
+    except:
+        return None
     
 @api_view(['POST'])
 def files(r):
@@ -98,8 +102,10 @@ def files(r):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
+        
         ac=getSeedr(email,password)
-    
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         data=ac.listContents()
         data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
         return Response(data,status=status.HTTP_200_OK)
