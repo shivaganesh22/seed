@@ -6,6 +6,5 @@ urlpatterns = [
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/',tamilmvmovie),
     path('login/',signin),
-    path('login1/',signin1),
 
 ]

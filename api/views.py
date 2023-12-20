@@ -69,41 +69,32 @@ from rest_framework import status
 from .serializers import UserCredentialsSerializer
 
 @api_view(['POST'])
-def signin1(request):
+def signin(request):
     serializer = UserCredentialsSerializer(data=request.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-
-        
-        return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-
-@csrf_exempt
-def signin(request):
-    if request.method == 'POST':
+        seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+        response=seedr.authorize()
         try:
-            # Assuming the request body contains JSON data
-            data = json.loads(request.body.decode('utf-8'))
-            # Process the data as needed
-            # For example, you can save it to a model
-            # YourModel.objects.create(**data)
-            return JsonResponse({'message': 'Data received successfully'}, status=200)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format in the request'}, status=400)
+            Seedr(token=seedr.token)
+            return Response({'status': 'true'}, status=status.HTTP_200_OK)
+        except:
+            return Response({'status': 'false'}, status=status.HTTP_200_OK)
+            
+    return Response({'status': 'false'}, status=status.HTTP_200_OK)
+    
 
-    return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
- 
 
+@api_view(['POST'])
 def getSeedr(r):
-    email=r.headers.get("email")
-    password=r.headers.get("password")
-    seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
-    response=seedr.authorize()
-    return Seedr(seedr.token)
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+        response=seedr.authorize()
+        return Seedr(seedr.token)
 
 def files(r):
     ac=getSeedr(r)
