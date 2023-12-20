@@ -3,4 +3,6 @@ from api.views import *
 urlpatterns = [
     path('movierulz/',movierulz),
     path('movierulz/movie/',movierulzmovie),
+    path('tamilmv/',tamilmv),
+    path('tamilmv/movie/',tamilmvmovie),
 ]

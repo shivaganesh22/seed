@@ -30,3 +30,34 @@ def movierulzmovie(r):
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
     return JsonResponse({"links":links,"details":details})
+def tamilmv(r):
+    req=requests.get("https://www.1tamilmv.phd")
+    soup=bs(req.content,'html.parser')
+    items=soup.findAll('p',style="font-size: 13.1px;")[0]
+    alinks=items.findAll('a')
+    for i in alinks:
+        try:
+            if '/e/' in i['href']:
+                i['href']="/doodplay/?link="+i['href']
+            else:
+                i['href']="/tamilmv/movie/?link="+i['href']
+        except:
+            pass
+    return JsonResponse({"items":items.prettify()})
+def tamilmvmovie(r):
+    req=requests.get(r.GET.get('link'))
+    soup=bs(req.content,'html.parser')
+    magnets=soup.findAll('a')
+    links=[]
+    for i in magnets:
+        try:
+            if i.get_text()=="MAGNET" or i.find('img').get('alt')=="magnet.png":
+                j=i.find_previous_sibling('strong')
+                links.append({"name":j.get_text(),"link":i.get('href')})
+        except:
+            pass
+    items=soup.findAll('img',class_='ipsImage')
+    images=[]
+    for i in items:
+        images.append({"link":i.get('src')})
+    return JsonResponse({"links":links,"images":images})
