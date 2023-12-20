@@ -74,9 +74,9 @@ def signin(r):
             seedr=Login(email,password)
             response=seedr.authorize()
             Seedr(token=seedr.token)
-            return JsonResponse({"status":"true"})
+            return JsonResponse({"status":"true"},status=200)
         except:
-            return JsonResponse({"status":"false"})
+            return JsonResponse({"status":"false"},status=200)
             
     
 
