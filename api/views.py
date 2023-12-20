@@ -82,22 +82,25 @@ def signin(request):
         except:
             return Response({'status': 'false'}, status=status.HTTP_200_OK)
             
-    return Response({'status': 'false'}, status=status.HTTP_200_OK)
+    return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 
+
+def getSeedr(email,password):
+    seedr=Login(email,password)
+    response=seedr.authorize()
+    return Seedr(seedr.token)
+    
 @api_view(['POST'])
-def getSeedr(r):
+def files(r):
     serializer = UserCredentialsSerializer(data=r.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        seedr=Login(email,password)
-        response=seedr.authorize()
-        return Seedr(seedr.token)
-
-def files(r):
-    ac=getSeedr(r)
-    data=ac.listContents()
-    data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
-    return JsonResponse(data)
+        ac=getSeedr(email,password)
+    
+        data=ac.listContents()
+        data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+        return Response(data,status=status.HTTP_200_OK)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
