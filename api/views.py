@@ -74,7 +74,7 @@ def signin(request):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+        seedr=Login(email,password)
         response=seedr.authorize()
         try:
             Seedr(token=seedr.token)
@@ -92,7 +92,7 @@ def getSeedr(r):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+        seedr=Login(email,password)
         response=seedr.authorize()
         return Seedr(seedr.token)
 
