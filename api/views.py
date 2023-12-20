@@ -3,8 +3,7 @@ from django.http import JsonResponse
 import requests
 from bs4 import BeautifulSoup as bs
 from seedrcc import Login,Seedr
-from django.views.decorators.csrf import csrf_exempt
-import json
+
 # Create your views here.
 def movierulz(r):
     req=requests.get("https://ww7.5movierulz.gd")
@@ -64,21 +63,22 @@ def tamilmvmovie(r):
     for i in items:
         images.append({"link":i.get('src')})
     return JsonResponse({"links":links,"images":images})
-@csrf_exempt
-def signin(r):
-    if r.method == 'POST':
-        try:
-            data = json.loads(r.body.decode())
-            email = data.get('email')
-            password = data.get('password')
-            seedr=Login(email,password)
-            response=seedr.authorize()
-            Seedr(token=seedr.token)
-            return JsonResponse({"status":"true"},status=200)
-        except:
-            return JsonResponse({"status":"false"},status=200)
-            
-    
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import UserCredentialsSerializer
+
+@api_view(['POST'])
+def signin(request):
+    serializer = UserCredentialsSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+
+        
+        return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 def getSeedr(r):
     email=r.headers.get("email")
