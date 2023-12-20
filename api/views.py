@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import requests
 from bs4 import BeautifulSoup as bs
+from seedrcc import Login,Seedr
 # Create your views here.
 def movierulz(r):
     req=requests.get("https://ww7.5movierulz.gd")
@@ -61,3 +62,25 @@ def tamilmvmovie(r):
     for i in items:
         images.append({"link":i.get('src')})
     return JsonResponse({"links":links,"images":images})
+def signin(r):
+    email=r.headers.get("email")
+    password=r.headers.get("password")
+    seedr=Login(email,password)
+    response=seedr.authorize()
+    try:
+        Seedr(token=seedr.token)
+        return JsonResponse({"status":"true"})
+    except:
+        return JsonResponse({"status":"false"})
+def getSeedr(r):
+    email=r.headers.get("email")
+    password=r.headers.get("password")
+    seedr=Login(r.COOKIES['email'],r.COOKIES['password'])
+    response=seedr.authorize()
+    return Seedr(seedr.token)
+    
+def files(r):
+    ac=getSeedr(r)
+    data=ac.listContents()
+    data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+    return JsonResponse(data)

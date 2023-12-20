@@ -5,4 +5,6 @@ urlpatterns = [
     path('movierulz/movie/',movierulzmovie),
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/',tamilmvmovie),
+    path('login/',signin),
+
 ]
