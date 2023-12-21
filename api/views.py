@@ -159,4 +159,36 @@ def getFile(r,id):
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 
+@api_view(['POST'])
+def addtorrent(r):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        link=r.GET.get('link')
+        res=ac.addTorrent(link)
+        return Response(res,status=status.HTTP_200_OK)
+        
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def deletetorrent(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        res=ac.deleteTorrent(id)
+        return Response(res,status=status.HTTP_200_OK)
+        
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+
 

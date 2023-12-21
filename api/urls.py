@@ -10,6 +10,8 @@ urlpatterns = [
     path('open/<id>',openfolder),
     path('folder/file/<id>',folderfile),
     path('file/<id>',getFile),
+    path('addtorrent/',addtorrent),
+    path('deletetorrent/',deletetorrent),
     
 
 ]
