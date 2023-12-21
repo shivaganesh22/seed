@@ -12,6 +12,8 @@ urlpatterns = [
     path('file/<id>',getFile),
     path('addtorrent/',addtorrent),
     path('deletetorrent/<id>',deletetorrent),
+    path('deletefolder/<id>',deletefolder),
+    path('deletefile/<id>',deletefile),
     
 
 ]
