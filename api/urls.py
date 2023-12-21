@@ -9,6 +9,7 @@ urlpatterns = [
     path('files/',files),
     path('open/<id>',openfolder),
     path('folder/file/<id>',folderfile),
+    path('file/<id>',getFile),
     
 
 ]

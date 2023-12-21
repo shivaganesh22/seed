@@ -138,9 +138,24 @@ def folderfile(r,id):
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         files=ac.listContents(id)['files']
         if files[0]:
-            return Response({"data":ac.fetchFile(files[0]['folder_file_id'])},status=status.HTTP_200_OK)
+            return Response(ac.fetchFile(files[0]['folder_file_id']),status=status.HTTP_200_OK)
         else:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def getFile(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        
+        return Response(ac.fetchFile(id),status=status.HTTP_200_OK)
+        
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 
