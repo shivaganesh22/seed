@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import requests
 from bs4 import BeautifulSoup as bs
 from seedrcc import Login,Seedr
-
+from pytube import YouTube
 # Create your views here.
 def movierulz(r):
     req=requests.get("https://ww7.5movierulz.gd")
@@ -110,3 +110,38 @@ def files(r):
         data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
         return Response(data,status=status.HTTP_200_OK)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def openfolder(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        data=ac.listContents(id)
+        data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+        return Response(data,status=status.HTTP_200_OK)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def getfolderlink(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        files=ac.listContents(id)['files']
+        if files[0]:
+            return Response({"link":files[0]},status=status.HTTP_200_OK)
+        else:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+
+
+

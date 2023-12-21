@@ -7,5 +7,8 @@ urlpatterns = [
     path('tamilmv/movie/',tamilmvmovie),
     path('login/',signin),
     path('files/',files),
+    path('open/<id>',openfolder),
+    path('folder/getlink/<id>',getfolderlink),
+    
 
 ]
