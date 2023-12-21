@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/',signin),
     path('files/',files),
     path('open/<id>',openfolder),
-    path('folder/getlink/<id>',getfolderlink),
+    path('folder/file/<id>',folderfile),
     
 
 ]

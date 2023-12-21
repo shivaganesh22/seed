@@ -127,7 +127,7 @@ def openfolder(r,id):
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
-def getfolderlink(r,id):
+def folderfile(r,id):
     serializer = UserCredentialsSerializer(data=r.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
@@ -138,7 +138,7 @@ def getfolderlink(r,id):
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         files=ac.listContents(id)['files']
         if files[0]:
-            return Response({"link":files[0]},status=status.HTTP_200_OK)
+            return Response({ac.fetchFile(files[0]['folder_file_id'])},status=status.HTTP_200_OK)
         else:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
