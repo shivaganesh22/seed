@@ -137,9 +137,9 @@ def folderfile(r,id):
         if not ac:
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         files=ac.listContents(id)['files']
-        if files[0]:
+        try:
             return Response(ac.fetchFile(files[0]['folder_file_id']),status=status.HTTP_200_OK)
-        else:
+        except:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
