@@ -107,8 +107,11 @@ def files(r):
         if not ac:
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         data=ac.listContents()
-        data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
-        return Response(data,status=status.HTTP_200_OK)
+        try:
+            data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+            return Response(data,status=status.HTTP_200_OK)
+        except:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
@@ -117,13 +120,15 @@ def openfolder(r,id):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        
         ac=getSeedr(email,password)
         if not ac:
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
-        data=ac.listContents(id)
-        data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
-        return Response(data,status=status.HTTP_200_OK)
+        try:
+            data=ac.listContents(id)
+            data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+            return Response(data,status=status.HTTP_200_OK)
+        except:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
@@ -136,8 +141,9 @@ def folderfile(r,id):
         ac=getSeedr(email,password)
         if not ac:
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
-        files=ac.listContents(id)['files']
+        
         try:
+            files=ac.listContents(id)['files']
             return Response(ac.fetchFile(files[0]['folder_file_id']),status=status.HTTP_200_OK)
         except:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
@@ -153,8 +159,10 @@ def getFile(r,id):
         ac=getSeedr(email,password)
         if not ac:
             return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
-        
-        return Response(ac.fetchFile(id),status=status.HTTP_200_OK)
+        try:
+            return Response(ac.fetchFile(id),status=status.HTTP_200_OK)
+        except:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
         
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
