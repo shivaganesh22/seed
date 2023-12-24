@@ -240,7 +240,7 @@ def renamefolder(r,id):
         name=r.GET['name']
         res=ac.renameFolder(id,name)
         if res['result']:
-            Response(res,status=status.HTTP_200_OK)
+            return Response(res,status=status.HTTP_200_OK)
         else:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
@@ -257,7 +257,7 @@ def renamefile(r,id):
         name=r.GET['name']
         res=ac.renameFile(id,name)
         if res['result']:
-            Response(res,status=status.HTTP_200_OK)
+            return Response(res,status=status.HTTP_200_OK)
         else:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
