@@ -16,6 +16,8 @@ urlpatterns = [
     path('deletefile/<id>',deletefile),
     path('search/',mainsearch),
     path('movierulz/search/<query>',movierulzsearch),
+    path('rename/folder/<id>/',renamefolder),
+    path('rename/file/<id>/',renamefile),
     
 
 ]

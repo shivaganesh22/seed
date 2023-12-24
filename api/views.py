@@ -227,7 +227,40 @@ def deletefile(r,id):
         return Response(res,status=status.HTTP_200_OK)
         
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
-
+@api_view(['POST'])
+def renamefolder(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        name=r.GET['name']
+        res=ac.renameFolder(id,name)
+        if res['result']:
+            Response(res,status=status.HTTP_200_OK)
+        else:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+@api_view(['POST'])
+def renamefile(r,id):
+    serializer = UserCredentialsSerializer(data=r.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        ac=getSeedr(email,password)
+        if not ac:
+            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+        name=r.GET['name']
+        res=ac.renameFile(id,name)
+        if res['result']:
+            Response(res,status=status.HTTP_200_OK)
+        else:
+            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+    return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 def mainsearch(r):
     req=requests.get("https://torrentz2.nz/search?q="+r.GET['q']+"&page="+r.GET['page'])
@@ -268,3 +301,4 @@ def movierulzsearch(r,query):
         if not "trailer"  in i.a.get('title').lower():
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
+
