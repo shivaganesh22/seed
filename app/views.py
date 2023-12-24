@@ -266,9 +266,11 @@ def playfolder(r,id):
     if not ac:
         return redirect('/login')
     files=ac.listContents(id)['files']
-    for i in files:
-        if '.mkv' in i['name'] or '.mp4' in i['name']:
-            return player(r,i['folder_file_id'])
+    try:
+        i=files[0]
+        return player(r,i['folder_file_id'])
+    except:
+        return redirect('/files')
     return redirect('/files')
 #download
 def download(r,id):
@@ -282,9 +284,11 @@ def downloadfolderfile(r,id):
     if not ac:
         return redirect('/login')
     files=ac.listContents(id)['files']
-    for i in files:
-        if '.mkv' in i['name'] or '.mp4' in i['name']:
-            return redirect(ac.fetchFile(i['folder_file_id'])['url'])
+    try:
+        i=files[0]
+        return redirect(ac.fetchFile(i['folder_file_id'])['url'])
+    except:
+        return redirect('/files')
     return redirect('/files')
 def deletefile(r,id,fid):
     ac=getSeedr(r)
