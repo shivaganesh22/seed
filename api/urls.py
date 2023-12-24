@@ -14,6 +14,7 @@ urlpatterns = [
     path('deletetorrent/<id>',deletetorrent),
     path('deletefolder/<id>',deletefolder),
     path('deletefile/<id>',deletefile),
+    path('search/<query>/<page>',mainsearch),
     
 
 ]

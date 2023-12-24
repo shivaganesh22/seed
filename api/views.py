@@ -229,4 +229,32 @@ def deletefile(r,id):
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 
-
+def mainsearch(r,query,page):
+    req=requests.get("https://torrentz2.nz/search?q="+"jaan"+"&page="+"1")
+    soup=bs(req.content,'html.parser')
+    title=soup.find('h2').get_text()
+    item=soup.find('div',class_='results')
+    dl=item.find_all('dl')
+    links=[]
+    ends=[]
+    page=[]
+    for i in dl:
+        try:
+            url=i.dt.a.get('href')
+            name=i.dt.a.get_text()
+            span=i.find_all('span')
+            magnet=span[0].a.get('href')
+            date=span[1].get_text()
+            size=span[2].get_text()
+            links.append({"name":name,"url":url,"link":magnet,"date":date,"size":size})
+        except:
+            pass
+    try:
+        pages=soup.find('div',class_="pagination").find_all('a')
+        for i in pages[1:-1]:
+            page.append({"link":i.get('href'),"name":i.get_text()})
+        ends.append(pages[0].get('href'))
+        ends.append(pages[-1].get('href'))
+    except:
+        pass
+    return Response({"name":title,"links":links,"ends":ends,"pages":page},status=status.HTTP_200_OK)
