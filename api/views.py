@@ -229,8 +229,8 @@ def deletefile(r,id):
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 
-def mainsearch(r,query,no):
-    req=requests.get("https://torrentz2.nz/search?q="+query+"&page="+str(no))
+def mainsearch(r):
+    req=requests.get("https://torrentz2.nz/search?q="+r.GET['q']+"&page="+r.GET['page'])
     soup=bs(req.content,'html.parser')
     title=soup.find('h2').get_text()
     item=soup.find('div',class_='results')
