@@ -242,7 +242,7 @@ def renamefolder(r,id):
         if res['result']:
             return Response(res,status=status.HTTP_200_OK)
         else:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":res['error'].title()},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 @api_view(['POST'])
 def renamefile(r,id):
@@ -259,7 +259,7 @@ def renamefile(r,id):
         if res['result']:
             return Response(res,status=status.HTTP_200_OK)
         else:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":res['error'].title()},status=status.HTTP_401_UNAUTHORIZED)
     return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
 
 def mainsearch(r):
