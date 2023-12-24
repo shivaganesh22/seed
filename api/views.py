@@ -258,3 +258,13 @@ def mainsearch(r,query,no):
     except:
         pass
     return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
+
+def movierulzsearch(r,query):
+    req=requests.get(f"https://ww7.5movierulz.gd/?s="+query)
+    soup=bs(req.content,'html.parser')
+    items=soup.findAll('div',class_='boxed film')
+    movies=[]
+    for i in items:
+        if not "trailer"  in i.a.get('title').lower():
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+    return JsonResponse({"movies":movies})

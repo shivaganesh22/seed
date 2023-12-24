@@ -15,6 +15,7 @@ urlpatterns = [
     path('deletefolder/<id>',deletefolder),
     path('deletefile/<id>',deletefile),
     path('search/<query>/<no>',mainsearch),
+    path('movierulz/search/<query>',movierulzsearch),
     
 
 ]
