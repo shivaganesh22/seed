@@ -257,4 +257,4 @@ def mainsearch(r,query,no):
         ends.append(pages[-1].get('href'))
     except:
         pass
-    return Response({"name":title,"links":links,"ends":ends,"pages":page},status=status.HTTP_200_OK)
+    return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
