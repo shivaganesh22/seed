@@ -18,6 +18,7 @@ urlpatterns = [
     path('movierulz/search/<query>',movierulzsearch),
     path('rename/folder/<id>/',renamefolder),
     path('rename/file/<id>/',renamefile),
+    path('updates/',updates),
     
 
 ]
