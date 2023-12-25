@@ -301,4 +301,5 @@ def movierulzsearch(r,query):
         if not "trailer"  in i.a.get('title').lower():
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
-
+def updates(r):
+    return JsonResponse({"id":"1.1.0","link":""})
