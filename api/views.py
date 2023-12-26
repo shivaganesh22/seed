@@ -6,7 +6,7 @@ from seedrcc import Login,Seedr
 from pytube import YouTube
 # Create your views here.
 def movierulz(r):
-    req=requests.get("https://ww7.5movierulz.gd")
+    req=requests.get("https://ww22.5movierulz.top")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('div',class_='boxed film')
     movies=[]
