@@ -301,5 +301,19 @@ def movierulzsearch(r,query):
         if not "trailer"  in i.a.get('title').lower():
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
-def updates(r):
-    return JsonResponse({"id":"1.1.0","link":""})
+def youtube(r):
+    url=r.GET['link']
+    yt = YouTube(url)
+    data={}
+    data['title']=yt.title
+    data['thumb']=yt.thumbnail_url
+    videos=[]
+    audio=[]
+    for i in yt.streams.all():
+        if "video" in i.type:
+            videos.append({"audio":i.is_progressive,"codec":i.video_codec.split('.')[0][:-1],"resolution":i.resolution,"size":i.filesize_mb,"url":i.url})
+        if "audio" in i.type:
+            audio.append({"codec":i.audio_codec.split('.')[0],"resolution":i.abr,"size":i.filesize_mb,"url":i.url})
+    data['videos']=videos
+    data['audio']=audio
+    return JsonResponse(data)
