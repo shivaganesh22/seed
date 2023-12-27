@@ -1,0 +1,47 @@
+{%extends 'index.html'%}
+{%block main%}
+
+<center>
+<div class="container"><h2>{{details.name}}</h2></div>
+<img src="{{details.image}}" style="border-radius: 3px;" alt="" srcset="">
+</center>
+<hr>
+<div class="container">
+   <h5>Genre: {{details.genre  }}</h5> 
+<h5>{{details.cast}}</h5>
+
+</div>
+<style>
+    
+.btn-result {
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.result-item-wrap {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.25rem;
+   justify-content: center;
+}
+.mt-4{
+ margin-top: 1rem!important;
+}
+
+</style>
+
+<center>
+
+    <iframe width="300" height="200" src="{{details.link}}"  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <br>
+    <a class="btn btn-warning" target="_blank" href="{{details.trailer}}">Trailer</a> 
+    <a class="btn btn-primary" target="_blank" href="{{details.dlink}}">Download</a>
+</center>
+<br>
+<center>
+    <h5>{{details.desc | safe}}</h5>
+</center>
+
+
+{%endblock%}

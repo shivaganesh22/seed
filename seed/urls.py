@@ -27,6 +27,8 @@ urlpatterns = [
     path('movierulz/movie/',movierulzmovie),
     path('tamilmv/movie/',tamilmvmovie),
     path('tamilmv/',tamilmv),
+    path('ibomma/movie/',ibommamovie),
+    path('ibomma/',ibomma),
     path('doodplay/',doodplay),
 
     path('files/',folders),

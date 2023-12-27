@@ -325,18 +325,32 @@ def renamefilehome(r,id):
         messages.warning(r,res['error'].title())
     return redirect(f'/files')
 
+def ibomma(r):
+    req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
+    soup=bs(req.content,'html.parser')
+    items=soup.find_all('article')
+    movies=[]
+    for i in items:
+        try:
+            movies.append({"name":i.h2.a.get_text(),"image":i.img.get('data-src'),"link":i.a.get('href')})
+        except:
+            pass
+    return render(r,"ibomma.html",{"movies":movies})
 
-
-def test(r):
-    req=requests.get("https://aahs.ibomma.pw/ai-n2cdl/spark-2023-nch2i-telugu-movie-watch-online.html")
+def ibommamovie(r):
+    req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')
     name=soup.find("div",class_="entry-title-movie")
-    genres=soup.find("article",id="https://aahs.ibomma.pw/ai-n2cdl/spark-2023-nch2i-telugu-movie-watch-online.html")
+    genres=soup.find("article",id=r.GET['link'])
     cast=soup.find("div",class_="cast-and-director")
+    director=soup.find("div",class_="movies-director")
+    description=soup.find("div",class_="additional-info")
     trailer=soup.find("a",class_="button-trailer-css")
     scripts=soup.find_all('script', string=re.compile('lazyIframe.src'))
     image=soup.find('img',class_="entry-thumb")
     genre=""
+    link=""
+    details={}
     for i in scripts:
         match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
         if match:
@@ -344,13 +358,18 @@ def test(r):
     for i in genres.get('class'):
         if "tag-" in i:
             genre+=i.replace("tag-","")+" "
+    details["name"] = name.get_text()
+    details["genre"] = genre.title()
+    details["cast"] = cast.get_text()
+    details["director"] = director.get_text()
+    details["desc"] = description.get_text()
+    details["trailer"] = trailer.get('href')
+    details["image"] = image.get('data-src')
+    details["link"] = link
+    details["dlink"] = r.GET['link']
+    return render(r,"ibommamovie.html",{"details":details})
 
-    print(name.get_text())
-    print(genre.title())
+def test(r):
+    
 
-    print(cast.get_text())
-    print(trailer.get('href'))
-    print(link)
-    print(image.get('data-src'))
-
-    return render(r,'test.html',{"image":image.get('data-src')})
+    return render(r,'test.html')
