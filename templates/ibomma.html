@@ -20,16 +20,7 @@
     @media (max-width:767px){
         .card{ width: 40%;}}
 </style>
-<center>
-    
-    <form action="" method="post" id="myForm">
-      {%csrf_token%}
-      <div class="input-group mb-3 " style="width: 80%;">
-        <input type="text" class="form-control" placeholder="Enter movie name" name="query" aria-label="Recipient's username" {%if query%} value="{{query}}" {%endif%} aria-describedby="basic-addon2">
-        <button  type="submit" class="input-group-text" id="basic-addon2"><i class="fa fa-search" ></i></button>
-      </div>
-    </form>
-  </center>
+
   <div class="text-center text-primary hidden" id="spinner-box">
     <div class="spinner-border" role="status">
     </div>
