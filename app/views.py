@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib import messages
 from seedrcc import Login,Seedr
+import re
 from bs4 import BeautifulSoup as bs
 import requests
 from datetime import datetime,timedelta
@@ -325,14 +326,31 @@ def renamefilehome(r,id):
     return redirect(f'/files')
 
 
-"""from selenium import webdriver
-def solidtorrent(r):
-    url="https://solidtorrents.to/torrents/skanda-2023-bolly4u-org-pre-dvdrip-hindi-480p-650m-dfa51/6517f35f1b4e7f6abd17bff5/"
-    driver=webdriver.Firefox()
-    driver.get(url)
-    item=driver.page_source
-    driver.quit()
-    return render(r,'solid.html',{"item":item})"""
+
 def test(r):
-    # print(r.build_absolute_uri())
-    return render(r,'test.html',{"content":getSeedr(r).listContents()})
+    req=requests.get("https://aahs.ibomma.pw/ai-n2cdl/spark-2023-nch2i-telugu-movie-watch-online.html")
+    soup=bs(req.content,'html.parser')
+    name=soup.find("div",class_="entry-title-movie")
+    genres=soup.find("article",id="https://aahs.ibomma.pw/ai-n2cdl/spark-2023-nch2i-telugu-movie-watch-online.html")
+    cast=soup.find("div",class_="cast-and-director")
+    trailer=soup.find("a",class_="button-trailer-css")
+    scripts=soup.find_all('script', string=re.compile('lazyIframe.src'))
+    image=soup.find('img',class_="entry-thumb")
+    genre=""
+    for i in scripts:
+        match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
+        if match:
+            link = match.group(1)
+    for i in genres.get('class'):
+        if "tag-" in i:
+            genre+=i.replace("tag-","")+" "
+
+    print(name.get_text())
+    print(genre.title())
+
+    print(cast.get_text())
+    print(trailer.get('href'))
+    print(link)
+    print(image.get('data-src'))
+
+    return render(r,'test.html',{"image":image.get('data-src')})
