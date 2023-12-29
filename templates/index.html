@@ -2,17 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-  * {
-    padding: 0;
-    margin: 0;
-  }
 
   .head {
-
-    box-sizing: border-box;
     text-decoration: none;
-    list-style: none;
     font-family:'ubuntu';
+  }
+  .head1 {
+    list-style: none;
+    box-sizing: border-box;
   }
 
  
@@ -127,7 +124,7 @@
   }
   
   .logo-text {
-    font-size: 30px;
+    
     color: whitesmoke;
     margin-left: 5px;
     font-weight: bold; /* Adjust the font weight as needed */
@@ -164,21 +161,26 @@
       <a href="/" style="text-decoration: none;">
         <div class="logo" style="display: flex;">
           <img class="ll" src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*zzvdRmHGGXONZpuQ2FeqsQ.png" alt="logo">
-          <h1 class="logo-text" >Seedr</h1>
+          <span class="logo-text" style="font-size: 30px;" >Seedr</span>
         </div>
       </a>
+      <div style="margin-left: 25px;">
+
+        <span style="color:white;">{%if content%}{{content.space_used | div:1073741824 | floatformat:2 }} / {{content.space_max | div:1073741824 | floatformat:2  }}GB{%endif%}</span>
+
+      </div>
       
       <nav>
         <ul>
-          <li class="head">
+          <li class="head1">
             <a href="/" class="head active">Home</a>
           </li>
-          <li class="head"><a href="/tamilmv" class="head">Tamilmv</a></li>
-          <li class="head"><a href="/search" class="head">Search</a></li>
-          <li class="head"><a href="/files" class="head">Files</a></li>
-          <li class="head"><a href="/ibomma" class="head">IBomma</a></li>
-          <li class="head"><a href="/sports" class="head">Sports</a></li>
-          <li class="head"><a href="/youtube" class="head">YT Downloader</a></li>
+          <li class="head1"><a href="/tamilmv" class="head">Tamilmv</a></li>
+          <li class="head1"><a href="/search" class="head">Search</a></li>
+          <li class="head1"><a href="/files" class="head">Files</a></li>
+          <li class="head1"><a href="/ibomma" class="head">IBomma</a></li>
+          <li class="head1"><a href="/sports" class="head">Sports</a></li>
+          <li class="head1"><a href="/youtube" class="head">YT Downloader</a></li>
 
 
         </ul>
