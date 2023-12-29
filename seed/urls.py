@@ -30,6 +30,9 @@ urlpatterns = [
     path('ibomma/movie/',ibommamovie),
     path('ibomma/',ibomma),
     path('doodplay/',doodplay),
+    
+    path('sports/',sports),
+    path('sports/player/',sportsplayer),
 
     path('files/',folders),
     path('playfolder/<int:id>',playfolder),
