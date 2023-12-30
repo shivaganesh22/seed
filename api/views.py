@@ -378,7 +378,7 @@ def sports(r):
         
     }
 """
-    items.insert(0,sc)
+    items.append(sc)
     return JsonResponse({"items":items.prettify()})
 def sportsplayer(r):
     req=requests.get(r.GET['link'])
