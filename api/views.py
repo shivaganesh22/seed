@@ -374,7 +374,7 @@ def sports(r):
         item=items[i]
         if (item.href.includes("telegram")) item.remove()
         else if (item.href.includes("cricstreaming"))
-        item.href=item.href
+        item.href="/api/sports/player/?link="+item.href
         
     }
 """
