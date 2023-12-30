@@ -379,9 +379,9 @@ def sports(r):
     }
 """
     items.append(sc)
-    return JsonResponse({"items":items.prettify()})
+    return render(r,'api/sports.html',{"items":items.prettify()})
 def sportsplayer(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')
     items=soup.find('script').prettify()
-    return JsonResponse({"items":items})
+    return render(r,'api/sportsplayer.html',{"items":items})
