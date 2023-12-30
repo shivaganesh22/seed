@@ -19,5 +19,9 @@ urlpatterns = [
     path('rename/folder/<id>/',renamefolder),
     path('rename/file/<id>/',renamefile),
     path('youtube/',youtube),
+    path('ibomma/movie/',ibommamovie),
+    path('ibomma/',ibomma),
+    path('sports/',sports),
+    path('sports/player/',sportsplayer),
 
 ]

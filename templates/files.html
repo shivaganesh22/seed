@@ -46,7 +46,10 @@
     <table class="table table-striped" style="width: auto;">    
       {%for i in content.files|get_name%}
       <tr id="{{i.folder_file_id}}">
-        <td><center><strong>{{i.name}}</strong> <a href="" id="editfile{{i.folder_file_id}}"  onclick="editfile('{{i.folder_file_id}}','{{i.folder_id}}','{{i.name}}',event); "  class="btn"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancelfile{{i.folder_file_id}}"  onclick="cancelbtnfile('{{i.folder_file_id}}','{{i.name}}',event);" style="display: none;" class="btn text-danger" ><i class="fa fa-times fa-lg" aria-hidden="true"></i></a> <br> <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" onclick="folderSpinner('{{i.folder_file_id}}')" class="btn btn-danger">
+        <td><center><strong>{{i.name}}</strong> <br> 
+          <a href="/player/{{i.folder_file_id}}" class="btn btn-success"><i class="fa fa-play" aria-hidden="true"></i></a> <a href="/download/{{i.folder_file_id}}" class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i></a> 
+          <a href="" id="editfile{{i.folder_file_id}}"  onclick="editfile('{{i.folder_file_id}}','{{i.folder_id}}','{{i.name}}',event); " style="background-color:#6f42c1"  class="btn btn-primary"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="" id="cancelfile{{i.folder_file_id}}"  onclick="cancelbtnfile('{{i.folder_file_id}}','{{i.name}}',event);" style="display: none;" class="btn text-danger" ><i class="fa fa-times fa-lg" aria-hidden="true"></i></a> 
+          <a href="/deletefile/{{i.folder_file_id}}/{{i.folder_id}}" onclick="folderSpinner('{{i.folder_file_id}}')" class="btn btn-danger">
           <div class="text-center hidden " id="spinner-box{{i.folder_file_id}}">
             <div class="spinner-border spinner-border-sm" role="status">
             </div>

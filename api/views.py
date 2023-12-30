@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from seedrcc import Login,Seedr
 from pytube import YouTube
+import re
 # Create your views here.
 def movierulz(r):
     req=requests.get("https://ww22.5movierulz.top")
@@ -317,3 +318,56 @@ def youtube(r):
     data['videos']=videos
     data['audio']=audio
     return JsonResponse(data)
+def ibomma(r):
+    req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
+    soup=bs(req.content,'html.parser')
+    items=soup.find_all('article')
+    movies=[]
+    for i in items:
+        try:
+            movies.append({"name":i.h2.a.get_text(),"image":i.img.get('data-src'),"link":i.a.get('href')})
+        except:
+            pass
+    return JsonResponse({"movies":movies})
+
+def ibommamovie(r):
+    req=requests.get(r.GET['link'])
+    soup=bs(req.content,'html.parser')
+    name=soup.find("div",class_="entry-title-movie")
+    genres=soup.find("article",id=r.GET['link'])
+    cast=soup.find("div",class_="cast-and-director")
+    director=soup.find("div",class_="movies-director")
+    description=soup.find("div",class_="additional-info")
+    trailer=soup.find("a",class_="button-trailer-css")
+    scripts=soup.find_all('script', string=re.compile('lazyIframe.src'))
+    image=soup.find('img',class_="entry-thumb")
+    genre=""
+    link=""
+    details={}
+    for i in scripts:
+        match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
+        if match:
+            link = match.group(1)
+    for i in genres.get('class'):
+        if "tag-" in i:
+            genre+=i.replace("tag-","")+" "
+    details["name"] = name.get_text()
+    details["genre"] = genre.title()
+    details["cast"] = cast.get_text()
+    details["director"] = director.get_text()
+    details["desc"] = description.get_text()
+    details["trailer"] = trailer.get('href')
+    details["image"] = image.get('data-src')
+    details["link"] = link
+    details["dlink"] = r.GET['link']
+    return JsonResponse(details)
+def sports(r):
+    req=requests.get("https://sports-cricstreaming.vercel.app")
+    soup=bs(req.content,'html.parser')
+    items=soup.find('head').prettify()
+    return JsonResponse({"items":items})
+def sportsplayer(r):
+    req=requests.get(r.GET['link'])
+    soup=bs(req.content,'html.parser')
+    items=soup.find('script').prettify()
+    return JsonResponse({"items":items})
