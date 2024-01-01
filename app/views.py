@@ -4,6 +4,7 @@ from django.contrib import messages
 from seedrcc import Login,Seedr
 import re
 from bs4 import BeautifulSoup as bs
+from .forms import *
 import requests
 from datetime import datetime,timedelta
 from pytube import YouTube
@@ -380,6 +381,15 @@ def sportsplayer(r):
     soup=bs(req.content,'html.parser')
     items=soup.find('script').prettify()
     return render(r,'sportsplayer.html',{"items":items})
+def contact(r):
+    form=ContactForm()
+    if r.method=="POST":
+        form=ContactForm(r.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(r,'Form Submitted')
+            return redirect('/')
+    return render(r,'contact.html',{"form":form})
 def test(r):
     
 

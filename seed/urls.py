@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',signin),
     path('logout/',signout),
+    path('contact/',contact),
 
     path('',movierulz),
     path('movierulz/movie/',movierulzmovie),

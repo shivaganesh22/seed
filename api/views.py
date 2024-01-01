@@ -67,7 +67,7 @@ def tamilmvmovie(r):
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserCredentialsSerializer
+from .serializers import *
 
 @api_view(['POST'])
 def signin(request):
@@ -84,8 +84,15 @@ def signin(request):
             return Response({'status': 'false'}, status=status.HTTP_200_OK)
             
     return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+@api_view(['POST'])
+def contact(request):
+    serializer = ContactSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'status': 'true'}, status=status.HTTP_200_OK)
+    return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
 
+    
 
 
 def getSeedr(email,password):
