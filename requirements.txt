@@ -7,3 +7,4 @@ django-mathfilters
 selenium
 djangorestframework
 psycopg
+psycopg2
