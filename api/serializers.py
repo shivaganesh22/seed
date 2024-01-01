@@ -7,3 +7,4 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact  # Make sure this line is present
         fields = '__all__'
+        
