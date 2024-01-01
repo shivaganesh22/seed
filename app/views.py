@@ -271,6 +271,7 @@ def playfolder(r,id):
         i=files[0]
         return player(r,i['folder_file_id'])
     except:
+        messages.warning(r,'No File')
         return redirect('/files')
     return redirect('/files')
 #download
@@ -289,6 +290,7 @@ def downloadfolderfile(r,id):
         i=files[0]
         return redirect(ac.fetchFile(i['folder_file_id'])['url'])
     except:
+        messages.warning(r,'No File')
         return redirect('/files')
     return redirect('/files')
 def deletefile(r,id,fid):

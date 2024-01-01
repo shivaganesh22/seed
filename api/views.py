@@ -127,6 +127,7 @@ def openfolder(r,id):
         try:
             data=ac.listContents(id)
             data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
+            data["files"] = sorted(data['files'], key=lambda x: x['name'])
             return Response(data,status=status.HTTP_200_OK)
         except:
             return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)

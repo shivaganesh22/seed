@@ -129,7 +129,7 @@
             <a href="/open/{{i.id}}" class="btn btn-warning"><i class="fa fa-folder-open" aria-hidden="true"></i></a> 
             <a href="" id="edit{{i.id}}"  onclick="edit('{{i.id}}','{{i.name}}',event); " style="background-color:#6f42c1"  class="btn btn-primary"><i class="fa fa-edit" aria-hidden="true"></i></a>
             <a href="" id="cancel{{i.id}}"  onclick="cancelbtn('{{i.id}}','{{i.name}}',event);" style="display:none " class="btn text-danger"><i class="fa fa-times fa-lg"   aria-hidden="true"></i></a> 
-           <a href="/ deletefolder/{{i.id}}" onclick="folderSpinner('{{i.id}}')" class="btn btn-danger"> 
+           <a href="/deletefolder/{{i.id}}" onclick="folderSpinner('{{i.id}}')" class="btn btn-danger"> 
             <div class="text-center hidden " id="spinner-box{{i.id}}">
             <div class="spinner-border spinner-border-sm" role="status">
             </div>
