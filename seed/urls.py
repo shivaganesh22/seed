@@ -37,6 +37,8 @@ urlpatterns = [
     
     path('sports/',sports),
     path('sports/player/',sportsplayer),
+    path('tv/',tv),
+    path('tv/player/',tvplayer),
 
     path('files/',folders),
     path('playfolder/<int:id>',playfolder),

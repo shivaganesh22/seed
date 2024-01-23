@@ -1,0 +1,44 @@
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 Player</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        video {
+            width: 80%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <video id="m3u8Player" controls></video>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var video = document.getElementById('m3u8Player');
+            var m3u8Url = 'https://sports247.eu.org/api/m3u8.php?ch=657&e=.m3u8';
+        
+            if (Hls.isSupported()) {
+                var hls = new Hls();
+                hls.loadSource(m3u8Url);
+                hls.attachMedia(video);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = m3u8Url;
+            } else {
+                console.error('Your browser does not support the M3U8 format.');
+            }
+        });
+        
+    </script>
+</body>
+</html>
