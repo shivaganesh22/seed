@@ -392,31 +392,26 @@ def contact(r):
     return render(r,'contact.html',{"form":form})
 def tv(r):
     query=0
-    req=requests.get("https://sports247.eu.org/api/")
+    req=requests.get("https://bigcric.me")
     soup=bs(req.content,'html.parser')
-    item=soup.find('div',class_='grid-cols-2')
-    img=item.find_all('img')
-    link=item.find_all('a')
-    for i in img:
-        i['src']='https://sports247.eu.org/api/'+i['src']
-    for i in link:
+    header=soup.find('header')
+    header.extract()
+    soup.find('style').extract()
+    soup.find(id='loading-msg').extract()
+    dropdown = soup.find(id='channel-dropdown')
+
+    # Create a new option tag with the desired attributes
+    new_option = soup.new_tag('option', value='regional telugu', selected=True)
+    new_option.string = 'Regional Telugu'  # Set the text inside the option tag
+
+    # Append the new option tag to the select element
+    dropdown.insert(0,new_option)
+    links=soup.find_all('a',class_='site-card')
+    for i in links:
         i['href']='/tv/player/?link='+i['href']
-    if r.method=="POST":
-        query=r.POST['query']
-        req=requests.get("https://sports247.eu.org/api/?search="+query)
-        soup=bs(req.content,'html.parser')
-        item=soup.find('div',class_='grid-cols-2')
-        img=item.find_all('img')
-        link=item.find_all('a')
-        for i in img:
-            i['src']='https://sports247.eu.org/api/'+i['src']
-        for i in link:
-            i['href']='/tv/player/?link='+i['href']
-    return render(r,'tv.html',{"item":item.prettify(),"query":query})
+    return render(r,'tv.html',{"item":soup.prettify(),"query":query})
 def tvplayer(r):
-    print('https://sports247.eu.org/api/'+r.GET['link'],"ssssssss")
-    req=requests.get('https://sports247.eu.org/api/'+r.GET['link'])
-    soup=bs(req.content,'html.parser')
-    return render(r,'sportsplayer.html',{'items':soup.prettify()})
+    link='https://bigcric.me/'+r.GET['link']
+    return redirect(link)
 def test(r):
     return render(r,'test.html')
