@@ -388,6 +388,21 @@ def sports(r):
 """
     items.append(sc)
     return render(r,'api/sports.html',{"items":items.prettify()})
+def tv(r):
+    req=requests.get("https://tata-web-by-krotos.vercel.app")
+    soup=bs(req.content,'html.parser')
+    header=soup.find('header')
+    header.extract()
+    soup.find('style').extract()
+    soup.find(id='loading-msg').extract()
+    dropdown = soup.find(id='channel-dropdown')
+    new_option = soup.new_tag('option', value='regional telugu', selected=True)
+    new_option.string = 'Regional Telugu' 
+    dropdown.insert(0,new_option)
+    links=soup.find_all('a',class_='site-card')
+    for i in links:
+        i['href']='/tv/player/?link='+i['href']
+    return render(r,'api/sports.html',{"items":soup.prettify()})
 def sportsplayer(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')

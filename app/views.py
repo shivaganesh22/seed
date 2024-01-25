@@ -392,7 +392,7 @@ def contact(r):
     return render(r,'contact.html',{"form":form})
 def tv(r):
     query=0
-    req=requests.get("https://bigcric.me")
+    req=requests.get("https://tata-web-by-krotos.vercel.app")
     soup=bs(req.content,'html.parser')
     header=soup.find('header')
     header.extract()
@@ -411,7 +411,7 @@ def tv(r):
         i['href']='/tv/player/?link='+i['href']
     return render(r,'tv.html',{"item":soup.prettify(),"query":query})
 def tvplayer(r):
-    link='https://bigcric.me/'+r.GET['link']
+    link='https://tata-web-by-krotos.vercel.app/'+r.GET['link']
     return redirect(link)
 def test(r):
     return render(r,'test.html')

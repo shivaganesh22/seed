@@ -35,7 +35,7 @@ urlpatterns = [
     path('ibomma/',ibomma),
     path('doodplay/',doodplay),
     
-    path('sports/',sports),
+    path('sports/',tv),
     path('sports/player/',sportsplayer),
     path('tv/',tv),
     path('tv/player/',tvplayer),
