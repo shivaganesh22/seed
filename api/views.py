@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import requests
 from bs4 import BeautifulSoup as bs
@@ -401,8 +401,10 @@ def tv(r):
     dropdown.insert(0,new_option)
     links=soup.find_all('a',class_='site-card')
     for i in links:
-        i['href']='/tv/player/?link='+i['href']
-    return render(r,'api/sports.html',{"items":soup.prettify()})
+        i['href']='/tv/tata/player/?link='+i['href']
+    return render(r,'api/sports.html',{"tata":soup.prettify()})
+def jioplayer(r):
+    return redirect(f"https://sports247.eu.org/api/app/play.php?cid={r.GET['cid']}&id={r.GET['id']}")
 def sportsplayer(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')

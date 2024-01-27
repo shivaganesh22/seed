@@ -23,6 +23,7 @@ urlpatterns = [
     path('ibomma/movie/',ibommamovie),
     path('ibomma/',ibomma),
     path('sports/',tv),
+    path('sports/app/play.php',jioplayer),
     path('sports/player/',sportsplayer),
 
 ]

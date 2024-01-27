@@ -38,7 +38,8 @@ urlpatterns = [
     path('sports/',tv),
     path('sports/player/',sportsplayer),
     path('tv/',tv),
-    path('tv/player/',tvplayer),
+    path('tv/tata/player/',tataplayer),
+    path('tv/app/play.php',jioplayer),
 
     path('files/',folders),
     path('playfolder/<int:id>',playfolder),

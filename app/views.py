@@ -390,8 +390,9 @@ def contact(r):
             messages.success(r,'Form Submitted')
             return redirect('/')
     return render(r,'contact.html',{"form":form})
+
+
 def tv(r):
-    query=0
     req=requests.get("https://tata-web-by-krotos.vercel.app")
     soup=bs(req.content,'html.parser')
     header=soup.find('header')
@@ -399,19 +400,16 @@ def tv(r):
     soup.find('style').extract()
     soup.find(id='loading-msg').extract()
     dropdown = soup.find(id='channel-dropdown')
-
-    # Create a new option tag with the desired attributes
     new_option = soup.new_tag('option', value='regional telugu', selected=True)
-    new_option.string = 'Regional Telugu'  # Set the text inside the option tag
-
-    # Append the new option tag to the select element
+    new_option.string = 'Regional Telugu'
     dropdown.insert(0,new_option)
     links=soup.find_all('a',class_='site-card')
     for i in links:
-        i['href']='/tv/player/?link='+i['href']
-    return render(r,'tv.html',{"item":soup.prettify(),"query":query})
-def tvplayer(r):
-    link='https://tata-web-by-krotos.vercel.app/'+r.GET['link']
-    return redirect(link)
+        i['href']='/tv/tata/player/?link='+i['href']
+    return render(r,'tv.html',{"tata":soup.prettify()})
+def tataplayer(r):
+    return redirect('https://tata-web-by-krotos.vercel.app/'+r.GET['link'])
+def jioplayer(r):
+    return redirect(f"https://sports247.eu.org/api/app/play.php?cid={r.GET['cid']}&id={r.GET['id']}")
 def test(r):
     return render(r,'test.html')

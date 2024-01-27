@@ -1,6 +1,15 @@
 {%extends 'index.html'%}
 {%block main%}
 
+<center>
+    <select id="serverchoice">
+        <option value="tata" selected>TATA</option>
+        <option value="jio">JIO TV+</option>
+    </select>
+</center>
+
+<div id="tata" >
+
 <style>
 
 
@@ -214,6 +223,153 @@
   
 
 </style>
-    {{item |safe}}
+{{tata|safe}}
 
+</div>
+    
+<div id="jio" style="display: none;">
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="ENJOY FREE LIVE JIOTV" name="description"/>
+<meta content="JIOTV, LIVETV, SPORTS, MOVIES, MUSIC" name="keywords"/>
+<meta content="Techie Sneh" name="author"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="https://i.ibb.co/37fVLxB/f4027915ec9335046755d489a14472f2.png" rel="shortcut icon" type="image/x-icon"/>
+<link href="https://sports247.eu.org/api/app/assets/css/techiesneh.min.css" rel="stylesheet"/>
+<link href="https://sports247.eu.org/api/app/assets/css/search.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script>
+<script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</meta></head>
+<body>
+
+<div id="searchWrapper">
+<input id="searchBar" name="searchBar" placeholder="Search ..." type="text"/>
+</div>
+<div id="content">
+<div class="container">
+<div class="filters">
+<label for="genreFilter">Genre:</label>
+<select id="genreFilter">
+<option value="">All</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Movies">Movies</option>
+<option value="Kids">Kids</option>
+<option value="Sports">Sports</option>
+<option value="Lifestyle">Lifestyle</option>
+<option value="Infotainment">Infotainment</option>
+<option value="News">News</option>
+<option value="Music">Music</option>
+<option value="Devotional">Devotional</option>
+<option value="Business">Business</option>
+<option value="Educational">Educational</option>
+<option value="Shopping">Shopping</option>
+<option value="JioDarshan">JioDarshan</option>
+</select>
+<label for="langFilter">Language:</label>
+<select id="langFilter">
+<option value="">All</option>
+<option value="Hindi">Hindi</option>
+<option value="English">English</option>
+<option value="Marathi">Marathi</option>
+<option value="Punjabi">Punjabi</option>
+<option value="Urdu">Urdu</option>
+<option value="Bengali">Bengali</option>
+<option value="Malayalam">Malayalam</option>
+<option value="Tamil">Tamil</option>
+<option value="Gujarati">Gujarati</option>
+<option value="Odia">Odia</option>
+<option value="Telugu">Telugu</option>
+<option value="Bhojpuri">Bhojpuri</option>
+<option value="Kannada">Kannada</option>
+<option value="Assamese">Assamese</option>
+<option value="Nepali">Nepali</option>
+<option value="French">French</option>
+</select>
+</div>
+<div class="row" id="charactersList">
+</div>
+</div>
+</div>
+<script src="https://sports247.eu.org/api/app/assets/js/search.js"></script>
+</body>
+<script>
+    document.getElementById("loginButton").addEventListener("click", function() {
+        window.location.href = "app/login.php";
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "app/logout.php", true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+            }
+        };
+        xhr.send();
+    });
+
+    const PlayListButton = document.getElementById('PlayListButton');
+    PlayListButton.addEventListener('click', () => {
+
+        var protocol = window.location.protocol;
+        var localIP = window.location.hostname;
+        var port = window.location.port;
+
+        if (window.location.hostname !== "127.0.0.1" && window.location.hostname !== "localhost") {
+            var hostJio = "https://sports247.eu.org/api/";
+        } else {
+            var hostJio = "https://sports247.eu.org/api/";
+        }
+
+        var jioPath = protocol + '//' + hostJio + window.location.pathname.replace(/\/[^/]*$/, '');
+        var jioPath = jioPath + '/app/playlist.php';
+
+        navigator.clipboard.writeText(jioPath)
+            .then(() => {
+                alert('PlayList URL copied to Clipboard!');
+            })
+            .catch((error) => {
+                console.error('Error copying URL:', error);
+            });
+    });
+</script>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+     $(".card-text").find(".badge.bg-dark:eq(2)").html('JIO TV')
+    setInterval(() => {
+        $(".card-text").find(".badge.bg-dark:eq(2)").html('JIO TV') 
+    }, 1000);
+</script>
+</div>
+<script>
+    serverchoice=document.getElementById("serverchoice");
+    tata=document.getElementById('tata')
+    jio=document.getElementById('jio')
+   // choice=serverchoice.options[serverchoice.selectedIndex];
+    //choiceid=choice.value;
+    serverchoice.addEventListener("change",function(){
+        choiceid=serverchoice.value
+        switch (choiceid){
+            case 'tata': 
+                tata.style.display=''
+                jio.style.display='none'
+                break
+            case 'jio':
+                tata.style.display='none'
+                jio.style.display=''
+            break
+            
+                
+        }
+    })
+
+</script>
     {%endblock%}
