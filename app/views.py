@@ -403,6 +403,8 @@ def tv(r):
     new_option = soup.new_tag('option', value='regional telugu', selected=True)
     new_option.string = 'Regional Telugu'
     dropdown.insert(0,new_option)
+    dropdown.insert_after(soup.new_tag('br'))
+    dropdown.insert_after(soup.new_tag('br'))
     links=soup.find_all('a',class_='site-card')
     for i in links:
         i['href']='/tv/tata/player/?link='+i['href']
