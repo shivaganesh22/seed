@@ -61,7 +61,7 @@ def movierulz(r):
         movies.clear()
         req=requests.get(f"https://ww7.5movierulz.gd/?s="+query)
         soup=bs(req.content,'html.parser')
-        items=soup.find('div',class_='films').findAll('div',class_='boxed film')
+        items=soup.find(id='main').findAll('div',class_='boxed film')
         movies=[]
         for i in items:
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
