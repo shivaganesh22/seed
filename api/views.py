@@ -9,11 +9,10 @@ import re
 def movierulz(r):
     req=requests.get("https://ww22.5movierulz.top")
     soup=bs(req.content,'html.parser')
-    items=soup.findAll('div',class_='boxed film')
+    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        if not "trailer"  in i.a.get('title').lower():
-            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
 def movierulzmovie(r):
     req=requests.get(r.GET.get('link'))
@@ -304,11 +303,10 @@ def mainsearch(r):
 def movierulzsearch(r,query):
     req=requests.get(f"https://ww7.5movierulz.gd/?s="+query)
     soup=bs(req.content,'html.parser')
-    items=soup.findAll('div',class_='boxed film')
+    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        if not "trailer"  in i.a.get('title').lower():
-            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
 def youtube(r):
     url=r.GET['link']

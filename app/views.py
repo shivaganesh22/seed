@@ -52,21 +52,19 @@ def movierulz(r):
     query=0
     req=requests.get("https://ww7.5movierulz.gd")
     soup=bs(req.content,'html.parser')
-    items=soup.findAll('div',class_='boxed film')
+    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        if not "trailer"  in i.a.get('title').lower():
-            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
         req=requests.get(f"https://ww7.5movierulz.gd/?s="+query)
         soup=bs(req.content,'html.parser')
-        items=soup.findAll('div',class_='boxed film')
+        items=soup.find('div',class_='films').findAll('div',class_='boxed film')
         movies=[]
         for i in items:
-            if not "trailer"  in i.a.get('title').lower():
-                movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
     return render(r,'movierulz.html',{"movies":movies,"query":query})
 
 def movierulzmovie(r):
