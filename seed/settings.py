@@ -79,17 +79,16 @@ WSGI_APPLICATION = 'seed.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME':'railway',
-        # 'USER':'postgres',
-        # 'PASSWORD':'Eb3edCEaDfBfA4ff*De5*-Ad4b1D-Gdg',
-        # 'HOST':'monorail.proxy.rlwy.net',
-        # 'PORT':'42000',
-        
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'verceldb',
+        'USER': 'default',
+        'PASSWORD': 'Rzj6pDnru0ke',
+        'HOST': 'ep-yellow-dust-85172855-pooler.us-east-1.postgres.vercel-storage.com',  # Set to your PostgreSQL host
+        'PORT': '5432',       # Set to your PostgreSQL port
     }
 }
+
+
 
 
 # Password validation
