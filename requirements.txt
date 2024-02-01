@@ -5,4 +5,4 @@ pytube
 django
 django-mathfilters
 djangorestframework
-
+psycopg2
