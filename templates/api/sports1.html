@@ -1,0 +1,373 @@
+
+<center>
+    
+    <label for="langFilter" >Choose Server:</label>
+<select id="serverchoice" style="width: 80px;">
+    <option value="tata" selected>TATA</option>
+    <option value="jio">JIO TV+</option>
+</select>
+</center>
+<div id="tata" >
+
+<style>
+
+
+  body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #333;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.6;
+  }
+
+  
+  select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #3498db;
+      border-radius: 20px; /* Add border-radius to the dropdown */
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s ease;
+      text-align-last: center; /* Center-align text within the select element */
+  }
+
+  select:hover,
+  select:focus {
+      border-color: #2c3e50;
+  }
+
+  
+
+  .site-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjusted grid size */
+      gap: 15px;
+      margin-top: 15px;
+  }
+
+  .site-card {
+      background-color: #444;
+      border: 1px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease-in-out;
+      text-decoration: none;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      max-width: 150px; /* Set a maximum width for the site card */
+      margin: auto; /* Center the site card within its container */
+  }
+
+  .site-card:hover {
+      transform: scale(1.05);
+  }
+
+  .site-card img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-bottom: 1px solid #333;
+  }
+
+  .site-info {
+      padding: 10px; /* Reduce padding for the site info */
+      text-align: center;
+      flex-grow: 1;
+  }
+
+  .site-info h2 {
+      font-size: 0.9em; /* Adjust the font size for the channel name (h2) */
+      margin: 0;
+  }
+
+  .site-link {
+      margin-top: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #3498db;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .site-link:hover {
+      background-color: #2c3e50;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .github-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+      background-color: #4CAF50;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+  }
+
+  .github-button:hover {
+      background-color: #45a049;
+  }
+
+  .github-icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+  }
+  .telegram-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+      background-color: #0088cc; /* Use the color you prefer for Telegram */
+      border-radius: 5px;
+      margin-left: 10px; /* Adjust the margin as needed */
+      transition: background-color 0.3s ease;
+  }
+
+  .telegram-button:hover {
+      background-color: #006699; /* Adjust the hover color as needed */
+  }
+
+  .telegram-icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+  }
+
+  /* Modern Search Bar Styles */
+  .search-bar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 70%; /* Adjusted width for better visibility on small screens */
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px; /* Add border-radius for a curved end */
+  }
+
+  #channel-search {
+      padding: 10px;
+      border: none; /* Remove border to create a seamless appearance */
+      border-radius: 20px; /* Match the border-radius of the container */
+      width: 70%; /* Adjusted width for better visibility on small screens */
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  #channel-search:focus {
+      outline: none;
+      background-color: #eee; /* Change background color when focused */
+  }
+
+    #search-btn {
+        background-color: #3498db;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px; /* Add border-radius to the search button */
+        padding: 10px 20px; /* Add padding to the search button */
+        transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #search-btn:hover {
+        background-color: #2c3e50;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #search-icon {
+      font-size: 20px;
+      color: #3498db;
+      transition: color 0.3s ease;
+  }
+
+  /* Media Query for Small Screens */
+  @media only screen and (max-width: 600px) {
+      .site-grid {
+          grid-template-columns: repeat(3, 1fr);
+      }
+
+      #channel-search {
+          width: 60%; /* Adjusted width for small screens */
+      }
+
+      #search-btn {
+          width: 30%; /* Adjusted width for small screens */
+      }
+
+      #search-bar {
+          align-items: stretch; /* Align items vertically to stretch the search bar */
+      }
+
+      #channel-search {
+          width: 60%; /* Make the input full width */
+          margin-bottom: 0; /* Remove margin at the bottom */
+      }
+  }
+  
+
+</style>
+{{tata|safe}}
+
+</div>
+    
+<div id="jio" style="display: none;">
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="ENJOY FREE LIVE JIOTV" name="description"/>
+<meta content="JIOTV, LIVETV, SPORTS, MOVIES, MUSIC" name="keywords"/>
+<meta content="Techie Sneh" name="author"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="https://i.ibb.co/37fVLxB/f4027915ec9335046755d489a14472f2.png" rel="shortcut icon" type="image/x-icon"/>
+<link href="https://sports247.eu.org/api/app/assets/css/techiesneh.min.css" rel="stylesheet"/>
+<link href="https://sports247.eu.org/api/app/assets/css/search.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script>
+<script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</meta></head>
+<body>
+    <br>
+<div id="searchWrapper">
+<input id="searchBar" name="searchBar" placeholder="Search ..." type="text"/>
+</div>
+<div id="content">
+<div class="container">
+<div class="filters">
+<label for="genreFilter">Genre:</label>
+<select id="genreFilter">
+<option value="">All</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Movies">Movies</option>
+<option value="Kids">Kids</option>
+<option value="Sports">Sports</option>
+<option value="Lifestyle">Lifestyle</option>
+<option value="Infotainment">Infotainment</option>
+<option value="News">News</option>
+<option value="Music">Music</option>
+<option value="Devotional">Devotional</option>
+<option value="Business">Business</option>
+<option value="Educational">Educational</option>
+<option value="Shopping">Shopping</option>
+<option value="JioDarshan">JioDarshan</option>
+</select>
+<label for="langFilter">Language:</label>
+<select id="langFilter">
+<option value="">All</option>
+<option value="Hindi">Hindi</option>
+<option value="English">English</option>
+<option value="Marathi">Marathi</option>
+<option value="Punjabi">Punjabi</option>
+<option value="Urdu">Urdu</option>
+<option value="Bengali">Bengali</option>
+<option value="Malayalam">Malayalam</option>
+<option value="Tamil">Tamil</option>
+<option value="Gujarati">Gujarati</option>
+<option value="Odia">Odia</option>
+<option value="Telugu">Telugu</option>
+<option value="Bhojpuri">Bhojpuri</option>
+<option value="Kannada">Kannada</option>
+<option value="Assamese">Assamese</option>
+<option value="Nepali">Nepali</option>
+<option value="French">French</option>
+</select>
+</div>
+<div class="row" id="charactersList">
+</div>
+</div>
+</div>
+<script src="https://sports247.eu.org/api/app/assets/js/search.js"></script>
+</body>
+<script>
+    document.getElementById("loginButton").addEventListener("click", function() {
+        window.location.href = "app/login.php";
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "app/logout.php", true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+            }
+        };
+        xhr.send();
+    });
+
+    const PlayListButton = document.getElementById('PlayListButton');
+    PlayListButton.addEventListener('click', () => {
+
+        var protocol = window.location.protocol;
+        var localIP = window.location.hostname;
+        var port = window.location.port;
+
+        if (window.location.hostname !== "127.0.0.1" && window.location.hostname !== "localhost") {
+            var hostJio = "https://sports247.eu.org/api/";
+        } else {
+            var hostJio = "https://sports247.eu.org/api/";
+        }
+
+        var jioPath = protocol + '//' + hostJio + window.location.pathname.replace(/\/[^/]*$/, '');
+        var jioPath = jioPath + '/app/playlist.php';
+
+        navigator.clipboard.writeText(jioPath)
+            .then(() => {
+                alert('PlayList URL copied to Clipboard!');
+            })
+            .catch((error) => {
+                console.error('Error copying URL:', error);
+            });
+    });
+</script>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+     $(".card-text").find(".badge.bg-dark:eq(2)").html('JIO TV')
+    setInterval(() => {
+        $(".card-text").find(".badge.bg-dark:eq(2)").html('JIO TV') 
+    }, 1000);
+</script>
+</div>
+<script>
+    serverchoice=document.getElementById("serverchoice");
+    tata=document.getElementById('tata')
+    jio=document.getElementById('jio')
+   // choice=serverchoice.options[serverchoice.selectedIndex];
+    //choiceid=choice.value;
+    serverchoice.addEventListener("change",function(){
+        choiceid=serverchoice.value
+        switch (choiceid){
+            case 'tata': 
+                tata.style.display=''
+                jio.style.display='none'
+                break
+            case 'jio':
+                tata.style.display='none'
+                jio.style.display=''
+            break
+            
+                
+        }
+    })
+
+</script>

@@ -370,7 +370,7 @@ def ibommamovie(r):
     details["dlink"] = r.GET['link']
     return render(r,"ibommamovie.html",{"details":details})
 def sports(r):
-    req=requests.get("https://sports-cricstreaming.vercel.app")
+    req=requests.get("https://sports-cricstreaming.pages.dev")
     soup=bs(req.content,'html.parser')
     items=soup.find('head').prettify()
     return render(r,'sports.html',{"items":items})

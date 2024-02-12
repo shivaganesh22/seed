@@ -35,9 +35,9 @@ urlpatterns = [
     path('ibomma/',ibomma),
     path('doodplay/',doodplay),
     
-    path('sports/',tv),
+    path('sports/',sports),
     path('sports/player/',sportsplayer),
-    path('tv/',tv),
+    path('tv/',sports),
     path('tv/tata/player/',tataplayer),
     path('tv/app/play.php',jioplayer),
 
