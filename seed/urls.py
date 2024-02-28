@@ -60,6 +60,7 @@ urlpatterns = [
     path('youtube/',youtube),
     path('search/',mainsearch),
     path('test/',test),
+    path('privacy/',privacy),
     path('api/data/',apidata),
 
     path('api/',include(urls.urlpatterns)),
