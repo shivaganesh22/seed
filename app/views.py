@@ -413,3 +413,5 @@ def jioplayer(r):
     return redirect(f"https://sports247.eu.org/api/app/play.php?cid={r.GET['cid']}&id={r.GET['id']}")
 def test(r):
     return render(r,'test.html')
+def privacy(r):
+    return render(r,'privacy.html')
