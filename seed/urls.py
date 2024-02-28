@@ -20,7 +20,8 @@ from django.conf import settings
 from django.views.static import serve
 
 from app.views import *
-from api import urls
+import api.urls
+import react.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',signin),
@@ -63,7 +64,8 @@ urlpatterns = [
     path('privacy/',privacy),
     path('api/data/',apidata),
 
-    path('api/',include(urls.urlpatterns)),
+    path('api/',include(api.urls.urlpatterns)),
+    path('react/',include(react.urls.urlpatterns)),
 
 
 re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
