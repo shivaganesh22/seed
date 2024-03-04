@@ -21,7 +21,29 @@
         .card{ width: 40%;}}
 </style>
 <center>
-    
+  <script>
+    window.onload = function() {
+        // Trigger the modal when the page is loaded
+        $('#myModal').modal('show');
+    };
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">New Version Notification</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>A new version of our website has been developed. Explore the updated features and improvements!</p>
+    </div>
+    <div class="modal-footer">
+      <a type="button" class="btn btn-success" href="https://rsgmovies.vercel.app"  >Open</a>
+    </div>
+  </div>
+</div>
+</div>
+
     <form action="" method="post" id="myForm">
       {%csrf_token%}
       <div class="input-group mb-3 " style="width: 80%;">
