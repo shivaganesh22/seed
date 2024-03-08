@@ -308,7 +308,7 @@ def ibomma(r):
     movies=[]
     for i in items:
         try:
-            movies.append({"name":i.h2.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content),"link":i.a.get('href')})
+            movies.append({"name":i.h2.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content).decode('utf-8'),"link":i.a.get('href')})
         except:
             pass
     return JsonResponse({"movies":movies})
@@ -340,7 +340,7 @@ def ibommamovie(r):
     details["director"] = director.get_text()
     details["desc"] = description.get_text()
     details["trailer"] = trailer.get('href')
-    details["image"] = base64.b64encode(requests.get(image.get('data-src')).content)
+    details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
     details["link"] = link
     details["dlink"] = r.GET['link']
     return JsonResponse(details)
