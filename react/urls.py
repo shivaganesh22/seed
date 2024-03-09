@@ -2,6 +2,7 @@ from django.urls import path
 from react.views import *
 urlpatterns = [
     path('movierulz/',movierulz),
+    path('movierulz/special/',special),
     path('movierulz/movie/',movierulzmovie),
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/',tamilmvmovie),

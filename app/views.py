@@ -59,7 +59,27 @@ def movierulz(r):
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
-        req=requests.get(f"https://www.5movierulz.blog/?s="+query)
+        req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
+        soup=bs(req.content,'html.parser')
+        items=soup.find(id='main').findAll('div',class_='boxed film')
+        movies=[]
+        for i in items:
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+    return render(r,'movierulz.html',{"movies":movies,"query":query})
+#movierulz
+def special(r):
+    query=0
+    link=r.GET['link']
+    req=requests.get(link)
+    soup=bs(req.content,'html.parser')
+    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
+    movies=[]
+    for i in items:
+        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+    if r.method=="POST":
+        query=r.POST['query'].lower()
+        movies.clear()
+        req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
         soup=bs(req.content,'html.parser')
         items=soup.find(id='main').findAll('div',class_='boxed film')
         movies=[]
@@ -73,13 +93,16 @@ def movierulzmovie(r):
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
     for i in items:
-        b=i.findAll('small')
-        links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
+        b=i.find('small')
+        links.append({"name":b.get_text(),"link":i.get('href')})
     items=soup.findAll('p')
     details={}
     details["name"]=soup.find('h2',class_='entry-title').get_text()
     for i in items:
         if "directed" in i.get_text().lower():
+            inflinks=i.findAll('a')
+            for m in inflinks:
+                m['href']="/movierulz/special/?link="+m['href']
             details["inf"]=i.prettify()
             j=i.find_next_sibling()
             details["desc"]=j.prettify()

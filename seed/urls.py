@@ -29,6 +29,7 @@ urlpatterns = [
     path('contact/',contact),
 
     path('',movierulz),
+    path('movierulz/special/',special),
     path('movierulz/movie/',movierulzmovie),
     path('tamilmv/movie/',tamilmvmovie),
     path('tamilmv/',tamilmv),
