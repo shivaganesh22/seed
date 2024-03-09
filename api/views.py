@@ -7,7 +7,7 @@ from pytube import YouTube
 import re
 # Create your views here.
 def movierulz(r):
-    req=requests.get("https://ww22.5movierulz.top")
+    req=requests.get("https://www.5movierulz.blog")
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
@@ -301,7 +301,7 @@ def mainsearch(r):
     return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
 
 def movierulzsearch(r,query):
-    req=requests.get(f"https://ww7.5movierulz.gd/?s="+query)
+    req=requests.get(f"https://www.5movierulz.blog/?s="+query)
     soup=bs(req.content,'html.parser')
     items=soup.find(id='main').findAll('div',class_='boxed film')
     movies=[]
