@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 def movierulz(r):
-    req=requests.get("https://www.5movierulz.blog")
+    req=requests.get("https://ww2.5movierulz.cab")
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
