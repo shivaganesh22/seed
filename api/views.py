@@ -20,8 +20,10 @@ def movierulzmovie(r):
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
     for i in items:
-        b=i.find('small')
-        links.append({"name":b.get_text(),"link":i.get('href')})
+        #b=i.find('small')
+        #links.append({"name":b.get_text(),"link":i.get('href')})
+        b=i.findAll('small')
+        links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
     items=soup.findAll('p')
     details={}
     details["name"]=soup.find('h2',class_='entry-title').get_text()
