@@ -50,7 +50,7 @@ def doodplay(r):
 #movierulz
 def movierulz(r):
     query=0
-    req=requests.get("https://www.5movierulz.blog")
+    req=requests.get("https://ww2.5movierulz.cab")
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
@@ -59,7 +59,8 @@ def movierulz(r):
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
-        req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
+        #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
+        req=requests.get(f"https://ww2.5movierulz.cab/?s="+query)
         soup=bs(req.content,'html.parser')
         items=soup.find(id='main').findAll('div',class_='boxed film')
         movies=[]
