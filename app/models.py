@@ -8,3 +8,11 @@ class Contact(models.Model):
     message=models.TextField()
     def __str__(self):
         return self.full_name+" "+self.subject
+class Movierulz(models.Model):
+    name=models.CharField(max_length=150)
+    image=models.URLField()
+    link=models.URLField()
+class IBomma(models.Model):
+    name=models.CharField(max_length=150)
+    image=models.URLField()
+    link=models.URLField()
