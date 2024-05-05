@@ -9,7 +9,6 @@ def send_fcm_notification( title, body,image,link):
     }
     payload = {
         'to': '/topics/movies',
-        'priority':'high',
         'data': {  # Use 'data' instead of 'notification'    
             'link': link,
         },
@@ -25,9 +24,8 @@ def send_fcm_notification( title, body,image,link):
     else:
         print("Failed to send notification:", response.text)
 
-
 def movierulz_fcm():
-    response=requests.get("https://rsg-movies.vercel.app/react/movierulz")
+    response=requests.get("https://rsg-movies.vercel.app/react/movierulz/")
     try:
         data=response.json()
         new_movies=[]
@@ -36,13 +34,13 @@ def movierulz_fcm():
             if not Movierulz.objects.filter(name=i['name']).exists():
                 send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movierulz/movie?link='+i['link'])
         Movierulz.objects.all().delete()
-
+        print("movierulz deleted")
         Movierulz.objects.bulk_create(new_movies)
-
+        print("movierulz added")
     except :
         pass
 def ibomma_fcm():
-    response=requests.get("https://rsg-movies.vercel.app/api/ibomma")
+    response=requests.get("https://rsg-movies.vercel.app/api/ibomma/")
     try:
         data=response.json()
         new_movies=[]
@@ -51,8 +49,9 @@ def ibomma_fcm():
             if not IBomma.objects.filter(name=i['name']).exists():
                 send_fcm_notification("IBomma Movie Update",i['name'],i['image'],'/ibomma/movie?link='+i['link'])
         IBomma.objects.all().delete()
-
+        print("ibomma deleted")
         IBomma.objects.bulk_create(new_movies)
+        print("ibomma added")
   
     except :
         pass
