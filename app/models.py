@@ -16,3 +16,6 @@ class IBomma(models.Model):
     name=models.CharField(max_length=150)
     image=models.URLField()
     link=models.URLField()
+class FCM_token(models.Model):
+    token=models.CharField(max_length=500,unique=True)
+    added_at = models.DateTimeField(auto_now_add=True)

@@ -97,9 +97,24 @@ def contact(request):
         serializer.save()
         return Response({'status': 'true'}, status=status.HTTP_200_OK)
     return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
-
+@api_view(['GET','POST'])
+def addFCM(request):
+    serializer=FCM_tokenSerializer(FCM_token.objects.all(),many=True)
+    if request.method=="POST":
+        serializer = FCM_tokenSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': 'true'}, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+from rest_framework.generics import GenericAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
+class FCMList(ListCreateAPIView):
+    queryset=FCM_token.objects.all()
+    serializer_class=FCM_tokenSerializer
     
-
+class FCMManage(RetrieveUpdateDestroyAPIView):
+    queryset=FCM_token.objects.all()
+    serializer_class=FCM_tokenSerializer
+  
 
 def getSeedr(r):
     seedr=Login(r.auth.user.email,r.auth.user.password)

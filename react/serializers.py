@@ -8,3 +8,8 @@ class ContactSerializer(serializers.ModelSerializer):
         model = Contact  # Make sure this line is present
         fields = '__all__'
         
+class FCM_tokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FCM_token  # Make sure this line is present
+        fields = '__all__'
+        
