@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+import json
 import requests
 from bs4 import BeautifulSoup as bs
 from pytube import YouTube
@@ -97,6 +97,55 @@ def contact(request):
         serializer.save()
         return Response({'status': 'true'}, status=status.HTTP_200_OK)
     return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
+def send_fcm_notification( title, body,image,link):
+    url = 'https://fcm.googleapis.com/fcm/send'
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAhHqY1L0:APA91bF76GAl0BG_JOc9UNOTmQCBAA8irf_7z9zRRIr7NmvM3Gr4VYYTnHAMLb-ZP-td473Bfjek76dYR81a0xnRRFkPihOeTdA8quIotP8uw685M6ZjZJrL-jokGGreuRywtYd7JdJj',  # Replace YOUR_SERVER_KEY with your Firebase Server key
+    }
+    payload = {
+        'to': '/topics/movies',
+        'data': {  # Use 'data' instead of 'notification'    
+            'link': link,
+        },
+        'notification': {
+            'title': title,
+            'body': body,
+            'image':image,
+        },
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    if response.status_code == 200:
+        return "Sent "+body
+    else:
+        return "Failed to sent notification "+response.body
+from app.models import *
+@api_view(['GET'])
+def movierulz_fcm(request):
+    response=movierulz(request)
+    total=0
+    items=[]
+    try:
+        data=json.loads(response.content)
+        
+        new_movies=[]
+        for i in data['movies']:
+            new_movies.append(Movierulz(name=i['name'],image=i['image'],link=i['link']))
+            if not  Movierulz.objects.filter(name=i['name']).exists():
+                items.append(send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movierulz/movie?link='+i['link']))
+                total+=1
+        Movierulz.objects.all().delete()
+        Movierulz.objects.bulk_create(new_movies)
+    except Exception as e :
+        print(e)
+
+    return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def test_fcm(request):
+    res=send_fcm_notification("test","test1","iam","lin")
+    return Response({"items":res}, status=status.HTTP_200_OK)
+
 @api_view(['GET','POST'])
 def addFCM(request):
     serializer=FCM_tokenSerializer(FCM_token.objects.all(),many=True)

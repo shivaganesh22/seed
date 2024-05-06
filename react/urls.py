@@ -1,5 +1,6 @@
 from django.urls import path
 from react.views import *
+from api.views import ibomma_fcm
 urlpatterns = [
     path('movierulz/',movierulz),
     path('movierulz/special/',special),
@@ -10,6 +11,9 @@ urlpatterns = [
     path('contact/',contact),
     path('fcm/',FCMList.as_view()),
     path('fcm/<pk>',FCMManage.as_view()),
+    path('movierulz_fcm/',movierulz_fcm),
+    path('ibomma_fcm/',ibomma_fcm),
+    path('test_fcm/',test_fcm),
 
     path('files/',FilesApi.as_view()),
     path('open/<id>',OpenFolder.as_view()),

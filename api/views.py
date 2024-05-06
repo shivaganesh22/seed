@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import requests
+import json
+from app.models import *
 from bs4 import BeautifulSoup as bs
 from seedrcc import Login,Seedr
 from pytube import YouTube
@@ -381,6 +383,26 @@ def ibommamovie(r):
     details["link"] = link
     details["dlink"] = r.GET['link']
     return JsonResponse(details)
+from react.views import send_fcm_notification
+@api_view(['GET'])
+def ibomma_fcm(request):
+    response=ibomma(request)
+    total=0
+    items=[]
+    try:
+        data=json.loads(response.content)
+        
+        new_movies=[]
+        for i in data['movies']:
+            new_movies.append(IBomma(name=i['name'],image=i['image'],link=i['link']))
+            if not  IBomma.objects.filter(name=i['name']).exists():
+                items.append(send_fcm_notification("IBomma Movie Update",i['name'],i['image'],'/ibomma/movie?link='+i['link']))
+                total+=1
+        IBomma.objects.all().delete()
+        IBomma.objects.bulk_create(new_movies)
+    except Exception as e :
+        print(e)
+    return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
 def sports(r):
     req=requests.get("https://sports-cricstreaming.pages.dev")
     soup=bs(req.content,'html.parser')
