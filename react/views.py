@@ -105,13 +105,12 @@ def send_fcm_notification( title, body,image,link):
     }
     payload = {
         'to': '/topics/movies',
-        'data': {  # Use 'data' instead of 'notification'    
-            'link': link,
-        },
-        'notification': {
+        'data': {
             'title': title,
             'body': body,
             'image':image,
+            # "icon":"https://rsgmovies.vercel.app/fav_c.png",
+            'link':link
         },
     }
     response = requests.post(url, headers=headers, data=json.dumps(payload))
