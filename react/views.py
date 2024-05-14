@@ -18,75 +18,90 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 def movierulz(r):
-    req=requests.get("https://ww2.5movierulz.cab")
-    soup=bs(req.content,'html.parser')
-    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
-    movies=[]
-    for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return JsonResponse({"movies":movies})
+    try:
+        req=requests.get("https://ww2.5movierulz.cab")
+        soup=bs(req.content,'html.parser')
+        items=soup.find('div',class_='films').findAll('div',class_='boxed film')
+        movies=[]
+        for i in items:
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        return Response({"movies":movies},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
 def movierulzmovie(r):
-    req=requests.get(r.GET.get('link'))
-    soup=bs(req.content,'html.parser')
-    items=soup.findAll('a',class_='mv_button_css')
-    links=[]
-    for i in items:
-        #b=i.find('small')
-        #links.append({"name":b.get_text(),"link":i.get('href')})
-        b=i.findAll('small')
-        links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
-    items=soup.findAll('p')
-    details={}
-    details["name"]=soup.find('h2',class_='entry-title').get_text()
-    for i in items:
-        if "directed" in i.get_text().lower():
-            inflinks=i.findAll('a')
-            for m in inflinks:
-                m['href']="/movierulz/special/?link="+m['href']
-            details["inf"]=i.prettify()
-            j=i.find_next_sibling()
-            details["desc"]=j.prettify()
-    details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
-    return JsonResponse({"links":links,"details":details})
+    try:
+        req=requests.get(r.GET.get('link'))
+        soup=bs(req.content,'html.parser')
+        items=soup.findAll('a',class_='mv_button_css')
+        links=[]
+        for i in items:
+            #b=i.find('small')
+            #links.append({"name":b.get_text(),"link":i.get('href')})
+            b=i.findAll('small')
+            links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
+        items=soup.findAll('p')
+        details={}
+        details["name"]=soup.find('h2',class_='entry-title').get_text()
+        for i in items:
+            if "directed" in i.get_text().lower():
+                inflinks=i.findAll('a')
+                for m in inflinks:
+                    m['href']="/movierulz/special/?link="+m['href']
+                details["inf"]=i.prettify()
+                j=i.find_next_sibling()
+                details["desc"]=j.prettify()
+        details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
+        return Response({"links":links,"details":details},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get movie data"},status=status.HTTP_400_BAD_REQUEST)
 def special(r):
-    req=requests.get(r.GET['link'])
-    soup=bs(req.content,'html.parser')
-    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
-    movies=[]
-    for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return JsonResponse({"movies":movies})
+    try:
+        req=requests.get(r.GET['link'])
+        soup=bs(req.content,'html.parser')
+        items=soup.find('div',class_='films').findAll('div',class_='boxed film')
+        movies=[]
+        for i in items:
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        return Response({"movies":movies},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
 def tamilmv(r):
-    req=requests.get("https://www.1tamilmv.phd")
-    soup=bs(req.content,'html.parser')
-    items=soup.findAll('p',style="font-size: 13.1px;")[0]
-    alinks=items.findAll('a')
-    for i in alinks:
-        try:
-            if '/e/' in i['href']:
-                i['href']="/doodplay/?link="+i['href']
-            else:
-                i['href']="/tamilmv/movie/?link="+i['href']
-        except:
-            pass
-    return JsonResponse({"items":items.prettify()})
+    try:
+        req=requests.get("https://www.1tamilmv.phd")
+        soup=bs(req.content,'html.parser')
+        items=soup.findAll('p',style="font-size: 13.1px;")[0]
+        alinks=items.findAll('a')
+        for i in alinks:
+            try:
+                if '/e/' in i['href']:
+                    i['href']="/doodplay/?link="+i['href']
+                else:
+                    i['href']="/tamilmv/movie/?link="+i['href']
+            except:
+                pass
+        return Response({"items":items.prettify()},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
 def tamilmvmovie(r):
-    req=requests.get(r.GET.get('link'))
-    soup=bs(req.content,'html.parser')
-    magnets=soup.findAll('a')
-    links=[]
-    for i in magnets:
-        try:
-            if i.get_text()=="MAGNET" or i.find('img').get('alt')=="magnet.png":
-                j=i.find_previous_sibling('strong')
-                links.append({"name":j.get_text(),"link":i.get('href')})
-        except:
-            pass
-    items=soup.findAll('img',class_='ipsImage')
-    images=[]
-    for i in items:
-        images.append({"link":i.get('src')})
-    return JsonResponse({"links":links,"images":images})
+    try:
+        req=requests.get(r.GET.get('link'))
+        soup=bs(req.content,'html.parser')
+        magnets=soup.findAll('a')
+        links=[]
+        for i in magnets:
+            try:
+                if i.get_text()=="MAGNET" or i.find('img').get('alt')=="magnet.png":
+                    j=i.find_previous_sibling('strong')
+                    links.append({"name":j.get_text(),"link":i.get('href')})
+            except:
+                pass
+        items=soup.findAll('img',class_='ipsImage')
+        images=[]
+        for i in items:
+            images.append({"link":i.get('src')})
+        return Response({"links":links,"images":images},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get movie data"},status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -96,7 +111,7 @@ def contact(request):
     if serializer.is_valid():
         serializer.save()
         return Response({'status': 'true'}, status=status.HTTP_200_OK)
-    return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 def send_fcm_notification( title, body,image,link):
     url = 'https://fcm.googleapis.com/fcm/send'
     headers = {
@@ -117,7 +132,7 @@ def send_fcm_notification( title, body,image,link):
     if response.status_code == 200:
         return "Sent "+body
     else:
-        return "Failed to sent notification "+response.body
+        return "Failed to sent notification "+body
 from app.models import *
 @api_view(['GET'])
 def movierulz_fcm(request):
