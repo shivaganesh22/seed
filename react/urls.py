@@ -8,6 +8,7 @@ urlpatterns = [
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/',tamilmvmovie),
     path('login/',LoginApi.as_view()),
+    path('login/default/',DefaultLogin.as_view()),
     path('contact/',contact),
     path('fcm/',FCMList.as_view()),
     path('fcm/<pk>',FCMManage.as_view()),
