@@ -27,7 +27,7 @@ def movierulz(r):
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
         return Response({"movies":movies},status=status.HTTP_200_OK)
     except:
-        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def movierulzmovie(r):
     try:
         req=requests.get(r.GET.get('link'))
@@ -53,7 +53,7 @@ def movierulzmovie(r):
         details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
         return Response({"links":links,"details":details},status=status.HTTP_200_OK)
     except:
-        return Response({"error":"Failed to get movie data"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def special(r):
     try:
         req=requests.get(r.GET['link'])
@@ -64,7 +64,7 @@ def special(r):
             movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
         return Response({"movies":movies},status=status.HTTP_200_OK)
     except:
-        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def tamilmv(r):
     try:
         req=requests.get("https://www.1tamilmv.phd")
@@ -81,7 +81,7 @@ def tamilmv(r):
                 pass
         return Response({"items":items.prettify()},status=status.HTTP_200_OK)
     except:
-        return Response({"error":"Failed to get movies"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def tamilmvmovie(r):
     try:
         req=requests.get(r.GET.get('link'))
@@ -101,7 +101,7 @@ def tamilmvmovie(r):
             images.append({"link":i.get('src')})
         return Response({"links":links,"images":images},status=status.HTTP_200_OK)
     except:
-        return Response({"error":"Failed to get movie data"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -203,7 +203,7 @@ class LoginApi(APIView):
                 token,created=Token.objects.get_or_create(user=user)
                 return Response({"token":token.key,"created":created,"status":True})
             except:
-                return Response({'status': False},status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': "Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors)
 class FilesApi(APIView):
     authentication_classes=[TokenAuthentication]
@@ -211,14 +211,14 @@ class FilesApi(APIView):
     def get(self,r):
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":False},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         try:
             data=ac.listContents(id)
             data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
             data["files"] = sorted(data['files'], key=lambda x: x['name'])
             return Response(data,status=status.HTTP_200_OK)
         except:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
     
 
 
@@ -228,14 +228,14 @@ class OpenFolder(APIView):
     def get(self,r,id):
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":False},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         try:
             data=ac.listContents(id)
             data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"],reverse=True)
             data["files"] = sorted(data['files'], key=lambda x: x['name'])
             return Response(data,status=status.HTTP_200_OK)
         except:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
     
 
 class FolderFile(APIView):
@@ -244,13 +244,13 @@ class FolderFile(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
             
         try:
             files=ac.listContents(id)['files']
             return Response(ac.fetchFile(files[0]['folder_file_id']),status=status.HTTP_200_OK)
         except:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
 
 class GetFile(APIView):
     authentication_classes=[TokenAuthentication]
@@ -258,13 +258,13 @@ class GetFile(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
             
         try:
             
             return Response(ac.fetchFile(id),status=status.HTTP_200_OK)
         except:
-            return Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
     
 
 class AddTorrent(APIView):
@@ -273,7 +273,7 @@ class AddTorrent(APIView):
     def get(self,r):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         link=r.GET.get('link')
         res=ac.addTorrent(link)
         return Response(res,status=status.HTTP_200_OK)
@@ -283,7 +283,7 @@ class DeleteTorrent(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         res=ac.deleteTorrent(id)
         return Response(res,status=status.HTTP_200_OK)
     
@@ -293,7 +293,7 @@ class DeleteFolder(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         res=ac.deleteFolder(id)
         return Response(res,status=status.HTTP_200_OK)
     
@@ -303,7 +303,7 @@ class DeleteFile(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         res=ac.deleteFile(id)
         return Response(res,status=status.HTTP_200_OK)
     
@@ -313,7 +313,7 @@ class RenameFolder(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         name=r.GET['name']
         res=ac.renameFolder(id,name)
         if res['result']:
@@ -327,7 +327,7 @@ class RenameFile(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"status":"false"},status=status.HTTP_401_UNAUTHORIZED)
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
         name=r.GET['name']
         res=ac.renameFile(id,name)
         if res['result']:
@@ -339,16 +339,16 @@ class RenameFile(APIView):
 
 
 def mainsearch(r):
-    req=requests.get("https://torrentz2.nz/search?q="+r.GET['q']+"&page="+r.GET['page'])
-    soup=bs(req.content,'html.parser')
-    title=soup.find('h2').get_text()
-    item=soup.find('div',class_='results')
-    dl=item.find_all('dl')
-    links=[]
-    ends=[]
-    page=[]
-    for i in dl:
-        try:
+    try:
+        req=requests.get("https://torrentz2.nz/search?q="+r.GET['q']+"&page="+r.GET['page'])
+        soup=bs(req.content,'html.parser')
+        title=soup.find('h2').get_text()
+        item=soup.find('div',class_='results')
+        dl=item.find_all('dl')
+        links=[]
+        ends=[]
+        page=[]
+        for i in dl:
             url=i.dt.a.get('href')
             name=i.dt.a.get_text()
             span=i.find_all('span')
@@ -356,86 +356,97 @@ def mainsearch(r):
             date=span[1].get_text()
             size=span[2].get_text()
             links.append({"name":name,"url":url,"link":magnet,"date":date,"size":size})
-        except:
-            pass
-    try:
+            
+    
         pages=soup.find('div',class_="pagination").find_all('a')
         for i in pages[1:-1]:
             page.append({"link":i.get('href'),"name":i.get_text()})
         ends.append(pages[0].get('href'))
         ends.append(pages[-1].get('href'))
-    except:
-        pass
-    return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
+        return Response({"name":title,"links":links,"ends":ends,"pages":page},status=status.HTTP_200_OK)
+    except :
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 
 def movierulzsearch(r,query):
     #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
-    req=requests.get(f"https://ww2.5movierulz.cab/?s="+query)
-    soup=bs(req.content,'html.parser')
-    items=soup.find(id='main').findAll('div',class_='boxed film')
-    movies=[]
-    for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return JsonResponse({"movies":movies})
+    try:
+        req=requests.get(f"https://ww2.5movierulz.cab/?s="+query)
+        soup=bs(req.content,'html.parser')
+        items=soup.find(id='main').findAll('div',class_='boxed film')
+        movies=[]
+        for i in items:
+            movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        return Response({"movies":movies},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def youtube(r):
-    url=r.GET['link']
-    yt = YouTube(url)
-    data={}
-    data['title']=yt.title
-    data['thumb']=yt.thumbnail_url
-    videos=[]
-    audio=[]
-    for i in yt.streams.all():
-        if "video" in i.type:
-            videos.append({"audio":i.is_progressive,"codec":i.video_codec.split('.')[0][:-1],"resolution":i.resolution,"size":i.filesize_mb,"url":i.url})
-        if "audio" in i.type:
-            audio.append({"codec":i.audio_codec.split('.')[0],"resolution":i.abr,"size":i.filesize_mb,"url":i.url})
-    data['videos']=videos
-    data['audio']=audio
-    return JsonResponse(data)
+    try:
+        url=r.GET['link']
+        yt = YouTube(url)
+        data={}
+        data['title']=yt.title
+        data['thumb']=yt.thumbnail_url
+        videos=[]
+        audio=[]
+        for i in yt.streams.all():
+            if "video" in i.type:
+                videos.append({"audio":i.is_progressive,"codec":i.video_codec.split('.')[0][:-1],"resolution":i.resolution,"size":i.filesize_mb,"url":i.url})
+            if "audio" in i.type:
+                audio.append({"codec":i.audio_codec.split('.')[0],"resolution":i.abr,"size":i.filesize_mb,"url":i.url})
+        data['videos']=videos
+        data['audio']=audio
+        return Response(data,status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def ibomma(r):
-    req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
-    soup=bs(req.content,'html.parser')
-    items=soup.find_all('article')
-    movies=[]
-    for i in items:
-        try:
-            movies.append({"name":i.h2.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content).decode('utf-8'),"link":i.a.get('href')})
-        except:
-            pass
-    return JsonResponse({"movies":movies})
+    try:
+        req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
+        soup=bs(req.content,'html.parser')
+        items=soup.find_all('article')
+        movies=[]
+        for i in items:
+            try:
+                movies.append({"name":i.h2.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content).decode('utf-8'),"link":i.a.get('href')})
+            except:
+                pass
+        return Response({"movies":movies},status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 
 def ibommamovie(r):
-    req=requests.get(r.GET['link'])
-    soup=bs(req.content,'html.parser')
-    name=soup.find("div",class_="entry-title-movie")
-    genres=soup.find("article",id=r.GET['link'])
-    cast=soup.find("div",class_="cast-and-director")
-    director=soup.find("div",class_="movies-director")
-    description=soup.find("div",class_="additional-info")
-    trailer=soup.find("a",class_="button-trailer-css")
-    scripts=soup.find_all('script', string=re.compile('lazyIframe.src'))
-    image=soup.find('img',class_="entry-thumb")
-    genre=""
-    link=""
-    details={}
-    for i in scripts:
-        match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
-        if match:
-            link = match.group(1)
-    for i in genres.get('class'):
-        if "tag-" in i:
-            genre+=i.replace("tag-","")+" "
-    details["name"] = name.get_text()
-    details["genre"] = genre.title()
-    details["cast"] = cast.get_text()
-    details["director"] = director.get_text()
-    details["desc"] = description.get_text()
-    details["trailer"] = trailer.get('href')
-    details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
-    details["link"] = link
-    details["dlink"] = r.GET['link']
-    return JsonResponse(details)
+    try:
+        req=requests.get(r.GET['link'])
+        soup=bs(req.content,'html.parser')
+        name=soup.find("div",class_="entry-title-movie")
+        genres=soup.find("article",id=r.GET['link'])
+        cast=soup.find("div",class_="cast-and-director")
+        director=soup.find("div",class_="movies-director")
+        description=soup.find("div",class_="additional-info")
+        trailer=soup.find("a",class_="button-trailer-css")
+        scripts=soup.find_all('script', string=re.compile('lazyIframe.src'))
+        image=soup.find('img',class_="entry-thumb")
+        genre=""
+        link=""
+        details={}
+        for i in scripts:
+            match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
+            if match:
+                link = match.group(1)
+        for i in genres.get('class'):
+            if "tag-" in i:
+                genre+=i.replace("tag-","")+" "
+        details["name"] = name.get_text()
+        details["genre"] = genre.title()
+        details["cast"] = cast.get_text()
+        details["director"] = director.get_text()
+        details["desc"] = description.get_text()
+        details["trailer"] = trailer.get('href')
+        details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
+        details["link"] = link
+        details["dlink"] = r.GET['link']
+        return Response(details,status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
 def sports(r):
     req=requests.get("https://sports-cricstreaming.pages.dev")
     soup=bs(req.content,'html.parser')
