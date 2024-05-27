@@ -17,14 +17,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
-def movierulz(r):
-    req=requests.get("https://ww2.5movierulz.cab")
-    soup=bs(req.content,'html.parser')
-    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
-    movies=[]
-    for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return JsonResponse({"movies":movies})
+
 def movierulzmovie(r):
     req=requests.get(r.GET.get('link'))
     soup=bs(req.content,'html.parser')

@@ -1,15 +1,22 @@
 from django.urls import path
 from react.views import *
 from api.views import ibomma_fcm
+from .all_movies import *
+from .movierulz import *
 urlpatterns = [
+
     path('movierulz/',movierulz),
     path('movierulz/special/',special),
     path('movierulz/movie/',movierulzmovie),
+
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/',tamilmvmovie),
+
     path('login/',LoginApi.as_view()),
     path('login/default/',DefaultLogin.as_view()),
+
     path('contact/',contact),
+
     path('fcm/',FCMList.as_view()),
     path('fcm/<pk>',FCMManage.as_view()),
     path('movierulz_fcm/',movierulz_fcm),
@@ -24,15 +31,28 @@ urlpatterns = [
     path('deletetorrent/<id>',DeleteTorrent.as_view()),
     path('deletefolder/<id>',DeleteFolder.as_view()),
     path('deletefile/<id>',DeleteFile.as_view()),
-    path('search/',mainsearch),
-    path('movierulz/search/<query>',movierulzsearch),
     path('rename/folder/<id>/',RenameFolder.as_view()),
     path('rename/file/<id>/',RenameFile.as_view()),
+
+    path('search/',mainsearch),
+    path('movierulz/search/<query>',movierulzsearch),
+
+
     path('youtube/',youtube),
+
     path('ibomma/movie/',ibommamovie),
     path('ibomma/',ibomma),
+
     path('sports/',sports),
     path('sports/app/play.php',jioplayer),
     path('sports/player/',sportsplayer),
+
+    #allmovies
+    path('allmovies/',allMovies),
+    path('imdb/',imdbMovies),
+    path('allmovies/search/',allMoviesSearch),
+    path('allmovies/all/',allMoviesLink),
+    path('allmovies/movies/<str:id>/',allMoviesMovie),
+
 
 ]
