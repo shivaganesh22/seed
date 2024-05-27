@@ -18,8 +18,18 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-def movierulzmovie(r):
-    req=requests.get(r.GET.get('link'))
+domain="https://ww2.5movierulz.cab/"
+def movierulz(r):
+    req=requests.get(domain)
+    soup=bs(req.content,'html.parser')
+    items=soup.find('div',class_='films').findAll('div',class_='boxed film')
+    movies=[]
+    for i in items:
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
+    return JsonResponse({"movies":movies})
+def movierulzmovie(r,id):
+    req=requests.get(domain+id)
+    print(domain+id)
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
@@ -41,6 +51,15 @@ def movierulzmovie(r):
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
     return JsonResponse({"links":links,"details":details})
+def movierulzsearch(r,query):
+    #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
+    req=requests.get(f"{domain}?s="+query)
+    soup=bs(req.content,'html.parser')
+    items=soup.find(id='main').findAll('div',class_='boxed film')
+    movies=[]
+    for i in items:
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
+    return JsonResponse({"movies":movies})
 def special(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')
@@ -124,7 +143,7 @@ def movierulz_fcm(request):
         for i in data['movies']:
             new_movies.append(Movierulz(name=i['name'],image=i['image'],link=i['link']))
             if not  Movierulz.objects.filter(name=i['name']).exists():
-                items.append(send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movierulz/movie?link='+i['link']))
+                items.append(send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movierulz/movie'+i['link']))
                 total+=1
         Movierulz.objects.all().delete()
         Movierulz.objects.bulk_create(new_movies)
@@ -352,15 +371,6 @@ def mainsearch(r):
         pass
     return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
 
-def movierulzsearch(r,query):
-    #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
-    req=requests.get(f"https://ww2.5movierulz.cab/?s="+query)
-    soup=bs(req.content,'html.parser')
-    items=soup.find(id='main').findAll('div',class_='boxed film')
-    movies=[]
-    for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
-    return JsonResponse({"movies":movies})
 def youtube(r):
     url=r.GET['link']
     yt = YouTube(url)

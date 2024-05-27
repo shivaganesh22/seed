@@ -2,15 +2,15 @@ from django.urls import path
 from react.views import *
 from api.views import ibomma_fcm
 from .all_movies import *
-from .movierulz import *
 urlpatterns = [
-
+    #movierulz
     path('movierulz/',movierulz),
     path('movierulz/special/',special),
-    path('movierulz/movie/',movierulzmovie),
+    path('movierulz/movie/<str:id>/',movierulzmovie),
+    path('movierulz/search/<str:query>/',movierulzsearch),
 
     path('tamilmv/',tamilmv),
-    path('tamilmv/movie/',tamilmvmovie),
+    path('tamilmv/movie/<str:id>/',tamilmvmovie),
 
     path('login/',LoginApi.as_view()),
     path('login/default/',DefaultLogin.as_view()),
@@ -35,7 +35,7 @@ urlpatterns = [
     path('rename/file/<id>/',RenameFile.as_view()),
 
     path('search/',mainsearch),
-    path('movierulz/search/<query>',movierulzsearch),
+    
 
 
     path('youtube/',youtube),
