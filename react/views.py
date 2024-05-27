@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from pytube import YouTube
 from seedrcc import Login,Seedr
+from urllib.parse import urlparse
 import re
 import base64
 from rest_framework.views import APIView
