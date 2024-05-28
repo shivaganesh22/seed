@@ -12,4 +12,8 @@ class FCM_tokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = FCM_token  # Make sure this line is present
         fields = '__all__'
-        
+class PlayerSerializer(serializers.Serializer):
+    id=serializers.CharField()
+    num=serializers.CharField()
+    type=serializers.CharField()
+    

@@ -53,6 +53,7 @@ urlpatterns = [
     path('allmovies/search/',allMoviesSearch),
     path('allmovies/all/',allMoviesLink),
     path('allmovies/movies/<str:id>/',allMoviesMovie),
+    path('allmovies/player/',fetchPlayer),
 
 
 ]

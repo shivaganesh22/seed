@@ -180,7 +180,7 @@ def allMoviesMovie(r,id):
     req=requests.get(domain+"movies/"+id+"/")
     soup=bs(req.content,'html.parser')
     #details
-    poster = title = extra = description = download = player = trailer = director_details = ""
+    poster = title = extra = description = download = player  = director_details = ""
 
     try:
       poster=soup.find('div',class_='poster').img.get('src')
@@ -198,11 +198,12 @@ def allMoviesMovie(r,id):
         genre.append({"link":link,"name":name})
     except:
       pass
-    #synposis
+    download=[]
     try:
-      notes=soup.find('div',class_='extra_note')
+      notes=soup.find('div',itemprop="description")
       description=notes.p.get_text().replace("MovierulzHD","rsgmovies")
-      download=notes.find("a",class_='maxbutton-4')['href']
+      for i in notes.find_all("a",class_='maxbutton-4'):
+        download.append({"name":i.get_text(),"link":i['href']})
     except:
       pass
     #images
@@ -260,17 +261,36 @@ def allMoviesMovie(r,id):
     except:
       pass
     #links
+    players=[]
     try:
-      id=soup.find('link',rel='shortlink')['href'].split('=')[-1]
+      items=soup.find_all('li',class_="dooplay_player_option")
+      for i in items:
+        players.append({"name":i.find('span',class_="title").get_text(),"id":i["data-post"],"num":i["data-nume"],"type":i["data-type"]})
     except:
       pass
     try:
-      response = requests.post('https://movierulzhd.green/wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': id,'nume': '1','type': 'movie'})
+      response = requests.post('https://movierulzhd.green/wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': players[0]["id"],'nume': '1','type': 'movie'})
       player=response.json()["embed_url"]
-      response = requests.post('https://movierulzhd.green/wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': id,'nume': 'trailer','type': 'movie'})
-      trailer=response.json()["embed_url"]
     except:
       pass
     
-    data={"name":title,"image":poster,"extra":extra,"genre":genre,"description":description,"download":download,"player":player,"trailer":trailer,"images":images,"custom":custom,"director":director_details,"actors":actors,"movies":movies}
+    data={"name":title,"image":poster,"extra":extra,"genre":genre,"description":description,"download":download,"player":player,"players":players,"images":images,"custom":custom,"director":director_details,"actors":actors,"movies":movies}
     return JsonResponse(data)
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import *
+from rest_framework import status
+@api_view(["POST"])
+def fetchPlayer(r):
+  serializer=PlayerSerializer(data=r.data)
+  if serializer.is_valid():
+    try:
+      req=requests.post(f'{domain}wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': serializer.data["id"],'nume': serializer.data["num"],'type':serializer.data["type"]})
+      player=req.json()
+      if player["embed_url"]:
+        return Response({"link":player["embed_url"]})
+      raise Exception
+    except :
+      return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
+  return Response({"error":"Failed to get results"},status=status.HTTP_400_BAD_REQUEST)
+    
