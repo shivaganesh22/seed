@@ -269,7 +269,7 @@ def allMoviesMovie(r,id):
     except:
       pass
     try:
-      response = requests.post('https://movierulzhd.green/wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': players[0]["id"],'nume': '1','type': 'movie'})
+      response = requests.post(f'{domain}wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': players[0]["id"],'nume': '1','type': 'movie'})
       player=response.json()["embed_url"]
     except:
       pass
