@@ -38,7 +38,7 @@ urlpatterns = [
     
 
 
-    path('youtube/',youtube),
+    
 
     path('ibomma/movie/',ibommamovie),
     path('ibomma/',ibomma),
@@ -55,5 +55,8 @@ urlpatterns = [
     path('allmovies/movies/<str:id>/',allMoviesMovie),
     path('allmovies/player/',fetchPlayer),
 
-
+    #youtube
+    path('youtube/',youtube),
+    path('y2mate/',y2mate),
+    path('y2matedownload/',y2matedownload),
 ]

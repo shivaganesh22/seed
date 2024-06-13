@@ -474,3 +474,10 @@ def sportsplayer(r):
     soup=bs(req.content,'html.parser')
     items=soup.find('script').prettify()
     return render(r,'api/sportsplayer.html',{"items":items})
+
+def y2mate(r):
+    res=requests.post("https://in76.y2mates.com/mates/analyzeV2/ajax",data={"k_query":r.GET["link"]})
+    return JsonResponse(res.json())
+def y2matedownload(r):
+    res=requests.post("https://in76.y2mates.com/mates/convertV2/index",data={"vid":r.GET["vid"],"k":r.GET["link"]})
+    return JsonResponse(res.json())
