@@ -482,24 +482,80 @@ def y2matedownload(r):
     res=requests.post("https://in76.y2mates.com/mates/convertV2/index",data={"vid":r.GET["vid"],"k":r.GET["link"]})
     return JsonResponse(res.json())
 from .models import *
+def filter_entries_less_than_2gb(entries):
+    def convert_to_gb(size_str):
+        try:
+            size, unit = size_str.split()
+            size = float(size)
+            if unit.lower() == 'mb':
+                size /= 1024  # Convert MB to GB
+            return size
+        except:
+            pass
+    filtered_entries = []
+
+    for entry in entries:
+        try:
+            ss=entry["name"].split()
+            size_str = ss[0] + ' ' + ss[1]
+            if convert_to_gb(size_str) < 2:
+                filtered_entries.append(entry)
+        except:
+            pass
+    return filtered_entries
 @api_view(['GET'])
 def add_stream(request):
     response=movierulz(request)
     total=0
     items=[]
     try:
-        data=json.loads(response.content)
-        
+        movies=json.loads(response.content)
         new_movies=[]
-        for i in data['movies']:
+        seedr=Login("shivaganeshrsg1@gmail.com","Shiva123@")
+        response=seedr.authorize()
+        ac=Seedr(seedr.token)
+        for i in movies['movies'][:1]:
             link=i["link"]
             name=i["name"]
-            if not  StreamLink.objects.filter(slug=i['name']).exists():
+            if not StreamLink.objects.filter(slug=i['name']).exists():
                 items.append(link)
                 total+=1
+                res=movierulzmovie(request,link)
+                links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
+                if links:
+                    # ac.addTorrent(links[0]["link"])
+                    
+                    data=ac.listContents()
+                    if data["torrents"]:
+                        # status=data[]
+                        while True:
+                            pass
+
+                    print(data)
+
+                
         
     except Exception as e :
         print(e)
 
     return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
 
+import time
+from urllib.parse import quote
+def tttt(request):
+    key="56925fxislvf4q1zn2qfp"
+
+    seedr=Login("shivaganeshrsg1@gmail.com","Shiva123@")
+    response=seedr.authorize()
+    ac=Seedr(seedr.token)
+    data=ac.listContents()
+    # print(data)
+    for i in range(1):
+        # time.sleep(20)
+        if data["folders"]:
+            folder=ac.listContents(folderId=data["folders"][-1]["id"])
+            if folder["files"]:
+                file=ac.fetchFile(fileId=folder["files"][-1]["folder_file_id"])
+                url=quote(file["url"])
+                req=requests.get(f"https://filemoonapi.com/api/remote/add?key={key}&url={url}")
+                return Response({"status":req.status_code})
