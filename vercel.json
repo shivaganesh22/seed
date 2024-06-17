@@ -2,18 +2,12 @@
     "builds": [{
         "src": "seed/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9","timeout": 300 }
     }],
     "routes": [
         {
             "src": "/(.*)",
             "dest": "seed/wsgi.py"
         }
-    ],
-    "functions": {
-        
-        "react/(.*)": {
-          "maxDuration": 60 
-        }
-      }
+    ]
 }
