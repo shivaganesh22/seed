@@ -526,7 +526,7 @@ def add_stream(request):
         seedr=Login("shivaganeshrsg1@gmail.com","Shiva123@")
         response=seedr.authorize()
         ac=Seedr(seedr.token)
-        for i in movies['movies'][:15]:
+        for i in movies['movies']:
             link=i["link"]
             name=i["name"]
             flag=False
