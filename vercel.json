@@ -13,7 +13,7 @@
     "functions": {
         
         "react/(.*)": {
-          "maxDuration": 59 
+          "maxDuration": 60 
         }
       }
 }
