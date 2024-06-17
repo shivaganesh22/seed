@@ -481,3 +481,25 @@ def y2mate(r):
 def y2matedownload(r):
     res=requests.post("https://in76.y2mates.com/mates/convertV2/index",data={"vid":r.GET["vid"],"k":r.GET["link"]})
     return JsonResponse(res.json())
+from .models import *
+@api_view(['GET'])
+def add_stream(request):
+    response=movierulz(request)
+    total=0
+    items=[]
+    try:
+        data=json.loads(response.content)
+        
+        new_movies=[]
+        for i in data['movies']:
+            link=i["link"]
+            name=i["name"]
+            if not  StreamLink.objects.filter(slug=i['name']).exists():
+                items.append(link)
+                total+=1
+        
+    except Exception as e :
+        print(e)
+
+    return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
+
