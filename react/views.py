@@ -564,7 +564,7 @@ def add_stream(request):
                                 print("edited",res.json())
                                 flag=True
             if flag:
-                new_movies.append(StreamLink(slug=name,link="rsg"))  
+                new_movies.append(StreamLink(slug=name))  
                 items.append(name)
                 total+=1
         StreamLink.objects.bulk_create(new_movies)
@@ -577,22 +577,25 @@ def get_stream(r):
     req=requests.get(f"https://api.streamwish.com/api/file/list?key={key}&per_page=500")
     data=req.json()
     results=[]
+    unique=[]
     if data["result"]["pages"]>1:
         for j in range(1,data["result"]["pages"]+1):
             req=requests.get(f"https://api.streamwish.com/api/file/list?key={key}&page={j}&per_page=500")
             files=req.json()["result"]["files"]
             for i in files:
                 if r.GET["link"] in html.unescape(i["title"]):
-                    x={"name":i["title"].split('-')[-1],"link":i["file_code"]}
-                    if x not in results:
-                        results.append(x)
+                    x=i["title"].split('-')[-1]
+                    if x not in unique:
+                        unique.append(x)
+                        results.append({"name":x,"link":i["file_code"]})
     else:
         files=data["result"]["files"]
         for i in files:
                 if r.GET["link"] in html.unescape(i["title"]):
-                    x={"name":i["title"].split('-')[-1],"link":i["file_code"]}
-                    if x not in results:
-                        results.append(x)
+                    x=i["title"].split('-')[-1]
+                    if x not in unique:
+                        unique.append(x)
+                        results.append({"name":x,"link":i["file_code"]})
     return JsonResponse({"movies":results})
 
 
