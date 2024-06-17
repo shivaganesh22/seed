@@ -560,7 +560,7 @@ def add_stream(request):
                                     if res.json()['result'][0]['status']!=404:
                                         break
                                 print("editing")
-                                res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={filecode}&file_title=RSG MOVIES-{name} {ii['name']}")
+                                res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={filecode}&file_title=RSG MOVIES-{name}-{ii['name']}")
                                 print("edited",res.json())
                                 flag=True
             if flag:
@@ -583,12 +583,12 @@ def get_stream(r):
             files=req.json()["result"]["files"]
             for i in files:
                 if r.GET["link"] in html.unescape(i["title"]):
-                    results.append(i)
+                    results.append({"name":i["title"].split('-')[-1],"link":i["file_code"]})
     else:
         files=data["result"]["files"]
         for i in files:
                 if r.GET["link"] in html.unescape(i["title"]):
-                    results.append(i)
+                    results.append({"name":i["title"].split('-')[-1],"link":i["file_code"]})
     return JsonResponse({"movies":results})
 
 
