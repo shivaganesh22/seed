@@ -8,7 +8,8 @@ import requests
 from bs4 import BeautifulSoup as bs
 from pytube import YouTube
 from seedrcc import Login,Seedr
-from urllib.parse import urlparse
+from urllib.parse import urlparse,quote
+import time
 import re
 import base64
 from rest_framework.views import APIView
@@ -503,6 +504,16 @@ def filter_entries_less_than_2gb(entries):
         except:
             pass
     return filtered_entries
+key="17027hp41jytl2tt72twi"
+def delete_all_files(ac):
+    data=ac.listContents()
+    if data["folders"]:
+        ac.deleteFolder(data["folders"][-1]['id'])
+    if data["files"]:
+        ac.deleteFile(data["files"][-1]['folder_file_id'])
+    if data["torrents"]:
+        ac.deleteTorrent(data["torrents"][-1]['id'])
+    
 @api_view(['GET'])
 def add_stream(request):
     response=movierulz(request)
@@ -517,45 +528,48 @@ def add_stream(request):
         for i in movies['movies'][:1]:
             link=i["link"]
             name=i["name"]
+            flag=False
             if not StreamLink.objects.filter(slug=i['name']).exists():
-                items.append(link)
-                total+=1
                 res=movierulzmovie(request,link)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
                 if links:
-                    # ac.addTorrent(links[0]["link"])
-                    
-                    data=ac.listContents()
-                    if data["torrents"]:
-                        # status=data[]
-                        while True:
-                            pass
-
-                    print(data)
-
-                
-        
+                    for ii in links:
+                        delete_all_files(ac)
+                        print("uploading")
+                        ac.addTorrent(magnetLink=ii["link"])
+                        time.sleep(10)
+                        data=ac.listContents()
+                        if data["torrents"]:
+                            time.sleep(10)
+                        if data["torrents"]:
+                            time.sleep(10)
+                        data=ac.listContents()
+                        if data["folders"]:
+                            folder=ac.listContents(folderId=data["folders"][-1]["id"])
+                            if folder["files"]:
+                                file=ac.fetchFile(fileId=folder["files"][-1]["folder_file_id"])
+                                url=quote(file["url"])
+                                print("adding")
+                                req=requests.get(f"https://api.streamwish.com/api/upload/url?key={key}&url={url}")
+                                filecode=req.json()["result"]['filecode']
+                                while True:
+                                    time.sleep(10)
+                                    res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={filecode}")
+                                    print(res.json())
+                                    if res.json()['result'][0]['status']!=404:
+                                        break
+                                print("editing")
+                                res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={filecode}&file_title=RSG MOVIES-{name} {ii['name']}")
+                                print("edited",res.json())
+                                flag=True
+            if flag:
+                new_movies.append(StreamLink(slug=name,link="rsg"))  
+                items.append(name)
+                total+=1
+        StreamLink.objects.bulk_create(new_movies)
     except Exception as e :
         print(e)
 
     return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
 
-import time
-from urllib.parse import quote
-def tttt(request):
-    key="56925fxislvf4q1zn2qfp"
 
-    seedr=Login("shivaganeshrsg1@gmail.com","Shiva123@")
-    response=seedr.authorize()
-    ac=Seedr(seedr.token)
-    data=ac.listContents()
-    # print(data)
-    for i in range(1):
-        # time.sleep(20)
-        if data["folders"]:
-            folder=ac.listContents(folderId=data["folders"][-1]["id"])
-            if folder["files"]:
-                file=ac.fetchFile(fileId=folder["files"][-1]["folder_file_id"])
-                url=quote(file["url"])
-                req=requests.get(f"https://filemoonapi.com/api/remote/add?key={key}&url={url}")
-                return Response({"status":req.status_code})
