@@ -585,14 +585,14 @@ def get_stream(r):
                 if r.GET["link"] in html.unescape(i["title"]):
                     x={"name":i["title"].split('-')[-1],"link":i["file_code"]}
                     if x not in results:
-                        results.append()
+                        results.append(x)
     else:
         files=data["result"]["files"]
         for i in files:
                 if r.GET["link"] in html.unescape(i["title"]):
                     x={"name":i["title"].split('-')[-1],"link":i["file_code"]}
                     if x not in results:
-                        results.append()
+                        results.append(x)
     return JsonResponse({"movies":results})
 
 
