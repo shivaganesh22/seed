@@ -9,5 +9,11 @@
             "src": "/(.*)",
             "dest": "seed/wsgi.py"
         }
-    ]
+    ],
+    "functions": {
+        
+        "react/(.*)": {
+          "maxDuration": 60 // These functions can run for a maximum of 15 seconds
+        }
+      }
 }
