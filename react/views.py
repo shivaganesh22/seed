@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import json
+import html
 import requests
 from bs4 import BeautifulSoup as bs
 from pytube import YouTube
@@ -571,5 +572,23 @@ def add_stream(request):
         print(e)
 
     return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
+@api_view(["GET"])
+def get_stream(r):
+    req=requests.get(f"https://api.streamwish.com/api/file/list?key={key}&per_page=500")
+    data=req.json()
+    results=[]
+    if data["result"]["pages"]>1:
+        for j in range(1,data["result"]["pages"]+1):
+            req=requests.get(f"https://api.streamwish.com/api/file/list?key={key}&page={j}&per_page=500")
+            files=req.json()["result"]["files"]
+            for i in files:
+                if r.GET["link"] in html.unescape(i["title"]):
+                    results.append(i)
+    else:
+        files=data["result"]["files"]
+        for i in files:
+                if r.GET["link"] in html.unescape(i["title"]):
+                    results.append(i)
+    return JsonResponse({"movies":results})
 
 

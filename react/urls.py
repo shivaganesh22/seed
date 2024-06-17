@@ -9,6 +9,7 @@ urlpatterns = [
     path('movierulz/movie/<str:id>/',movierulzmovie),
     path('movierulz/search/<str:query>/',movierulzsearch),
     path('addstream/',add_stream),
+    path('getstream/',get_stream),
 
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/<str:id>/',tamilmvmovie),
