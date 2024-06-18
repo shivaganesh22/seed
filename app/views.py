@@ -396,15 +396,15 @@ def ibommamovie(r):
     details["dlink"] = r.GET['link']
     return render(r,"ibommamovie.html",{"details":details})
 def sports(r):
-    req=requests.get("https://sports-cricstreaming.pages.dev")
+    req=requests.get("https://sport-cricstreaming.vercel.app/")
     soup=bs(req.content,'html.parser')
-    items=soup.find('head').prettify()
-    return render(r,'sports.html',{"items":items})
+    # items=soup.find('head').prettify()
+    return render(r,'sports.html',{"items":soup.prettify()})
 def sportsplayer(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')
-    items=soup.find('script').prettify()
-    return render(r,'sportsplayer.html',{"items":items})
+    # items=soup.find('script').prettify()
+    return render(r,'sportsplayer.html',{"items":soup.prettify()})
 def contact(r):
     form=ContactForm()
     if r.method=="POST":
@@ -417,7 +417,7 @@ def contact(r):
 
 
 def tv(r):
-    req=requests.get("https://tata-web-by-krotos.vercel.app")
+    req=requests.get("https://sport-cricstreaming.vercel.app/")
     soup=bs(req.content,'html.parser')
     header=soup.find('header')
     header.extract()

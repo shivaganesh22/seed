@@ -404,7 +404,7 @@ def ibomma_fcm(request):
         print(e)
     return Response({'total':total,"items":items}, status=status.HTTP_200_OK)
 def sports(r):
-    req=requests.get("https://sports-cricstreaming.pages.dev")
+    req=requests.get("https://sport-cricstreaming.vercel.app/")
     soup=bs(req.content,'html.parser')
     items=soup.find('head')
     sc=soup.new_tag('script')

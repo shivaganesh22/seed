@@ -564,10 +564,10 @@ def add_stream(request):
                                 print("edited",res.json())
                                 flag=True
             if flag:
-                new_movies.append(StreamLink(slug=name))  
+                StreamLink(slug=name).save()
                 items.append(name)
                 total+=1
-        StreamLink.objects.bulk_create(new_movies)
+        
     except Exception as e :
         print(e)
 
@@ -597,5 +597,37 @@ def get_stream(r):
                         unique.append(x)
                         results.append({"name":x,"link":i["file_code"]})
     return JsonResponse({"movies":results})
+emails=["shivaganeshrsg1@gmail.com","tolokox424@lisoren.com","wanapil403@luravell.com","colivo4654@exeneli.com","ribix96778@luravell.com","yohivob255@exeneli.com"]
+def login_accounts(mail):
+    seedr=Login(mail,"Shiva123@")
+    response=seedr.authorize()
+    return Seedr(seedr.token)
 
+@api_view(['GET'])
+def task1(request,id):
+    response=movierulz(request)
+    op=""
+    try:
+        movies=json.loads(response.content)
+        for i in movies['movies']:
+            link=i["link"]
+            name=i["name"]
+            if not StreamLink.objects.filter(slug=i['name'],status=False).exists():
+                res=movierulzmovie(request,link)
+                stream_link,created=StreamLink.objects.get_or_create(slug=name)
+                links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
+                if id<=len(links):
+                    ac=login_accounts(emails[id])
+                    delete_all_files(ac)
+                    op+="uploading "
+                    ac.addTorrent(magnetLink=links[id]["link"])
+                    EachStream(movie=stream_link,account=id,name=links[id]["name"]).save()
+                    op+=links[id]["name"]
+                    if id==len(links):
+                        stream_link.status=False
+                        stream_link.save()
+                break
+    except Exception as e :
+        print(e)
+    return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
 
