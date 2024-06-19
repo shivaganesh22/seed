@@ -596,8 +596,8 @@ def get_stream(r):
                         results.append({"name":x,"link":i["file_code"]})
     return JsonResponse({"movies":results})
 emails=["shivaganeshrsg1@gmail.com","tolokox424@lisoren.com","wanapil403@luravell.com","colivo4654@exeneli.com","ribix96778@luravell.com","yohivob255@exeneli.com"]
-def login_accounts(mail):
-    seedr=Login(mail,"Shiva123@")
+def login_accounts(id):
+    seedr=Login(emails[id],"Shiva123@")
     response=seedr.authorize()
     return Seedr(seedr.token)
 
@@ -621,4 +621,25 @@ def task1(request):
     except Exception as e :
         print(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
+@api_view(["GET"])
+def task2(request):
+    op=""
+    try:
+        data=EachStream.objects.filter(is_uploaded=False).first()
+        if data:
+            ac=login_accounts(data.account)
+            data.is_uploaded=True
+            data.save()
+            delete_all_files(ac)
+            op+="uploading"
+            ac.addTorrent(magnetLink=data.link)
+            op+="uploaded"
+        else:
+            op+="no data"
+    except Exception as e :
+        print(e)
+        op+="error"
+    return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
+
+
 

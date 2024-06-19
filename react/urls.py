@@ -12,6 +12,7 @@ urlpatterns = [
     path('getstream/',get_stream),
 
     path('task1/',task1),
+    path('task2/',task2),
 
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/<str:id>/',tamilmvmovie),
