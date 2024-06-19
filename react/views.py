@@ -641,5 +641,29 @@ def task2(request):
         op+="error"
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
 
-
-
+@api_view(["GET"])
+def task3(request):
+    op=""
+    try:
+        obj=EachStream.objects.filter(is_uploaded=True).first()
+        if obj:
+            ac=login_accounts(obj.account)
+            data=ac.listContents()
+            if data["folders"]:
+                folder=ac.listContents(folderId=data["folders"][-1]["id"])
+                if folder["files"]:
+                    file=ac.fetchFile(fileId=folder["files"][-1]["folder_file_id"])
+                    url=quote(file["url"])
+                    op+="uploading"
+                    req=requests.get(f"https://api.streamwish.com/api/upload/url?key={key}&url={url}")
+                    filecode=req.json()["result"]['filecode']
+                    obj.link=filecode
+                    obj.save()
+                    op+="uploaded"
+            
+        else:
+            op+="no data"
+    except Exception as e :
+        print(e)
+        op+="error"
+    return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
