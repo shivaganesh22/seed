@@ -610,9 +610,9 @@ def task1(request):
         for i in movies['movies']:
             link=i["link"]
             name=i["name"]
-            if not StreamLink.objects.filter(slug=i['name'],status=False).exists():
+            if not StreamLink.objects.filter(slug=i['name'],status=True).exists():
                 res=movierulzmovie(request,link)
-                stream_link,created=StreamLink.objects.get_or_create(slug=name,status=False)
+                stream_link,created=StreamLink.objects.get_or_create(slug=name,status=True)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
                 for i in range(len(links)):
                     EachStream.objects.create(movie=stream_link,link=links[i]["link"],name=links[i]["name"],account=i)
@@ -645,7 +645,7 @@ def task2(request):
 def task3(request):
     op=""
     try:
-        obj=EachStream.objects.filter(is_uploaded=True).first()
+        obj=EachStream.objects.filter(is_uploaded=True,is_edited=False).first()
         if obj:
             ac=login_accounts(obj.account)
             data=ac.listContents()
@@ -658,11 +658,26 @@ def task3(request):
                     req=requests.get(f"https://api.streamwish.com/api/upload/url?key={key}&url={url}")
                     filecode=req.json()["result"]['filecode']
                     obj.link=filecode
+                    obj.is_edited=True
                     obj.save()
                     op+="uploaded"
             
         else:
             op+="no data"
+    except Exception as e :
+        print(e)
+        op+="error"
+    return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
+@api_view(["GET"])
+def task4(request):
+    op=""
+    try:
+        obj=EachStream.objects.filter(is_edited=True)
+        op+="editing "
+        for i in obj:
+            res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={i.link}&file_title=RSG MOVIES-{i.movie.slug}-{i.name}")
+        op+="edited"
+        obj.delete()
     except Exception as e :
         print(e)
         op+="error"
