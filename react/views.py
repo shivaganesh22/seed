@@ -617,15 +617,16 @@ def task1(request,id):
                 stream_link,created=StreamLink.objects.get_or_create(slug=name)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
                 if id<=len(links):
+                    EachStream(movie=stream_link,account=id,name=links[id]["name"]).save()
+                    if id==len(links):
+                        stream_link.status=False
+                        stream_link.save()
                     ac=login_accounts(emails[id])
                     delete_all_files(ac)
                     op+="uploading "
                     ac.addTorrent(magnetLink=links[id]["link"])
-                    EachStream(movie=stream_link,account=id,name=links[id]["name"]).save()
                     op+=links[id]["name"]
-                    if id==len(links):
-                        stream_link.status=False
-                        stream_link.save()
+                    
                 break
     except Exception as e :
         print(e)
