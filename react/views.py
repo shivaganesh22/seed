@@ -500,7 +500,7 @@ def filter_entries_less_than_2gb(entries):
         try:
             ss=entry["name"].split()
             size_str = ss[0] + ' ' + ss[1]
-            if convert_to_gb(size_str) < 2:
+            if convert_to_gb(size_str) < 2 and len(filtered_entries)<6:
                 filtered_entries.append(entry)
         except:
             pass
@@ -538,12 +538,10 @@ def add_stream(request):
                         delete_all_files(ac)
                         print("uploading")
                         ac.addTorrent(magnetLink=ii["link"])
-                        time.sleep(10)
+                        time.sleep(15)
                         data=ac.listContents()
                         if data["torrents"]:
-                            time.sleep(10)
-                        if data["torrents"]:
-                            time.sleep(10)
+                            time.sleep(15)
                         data=ac.listContents()
                         if data["folders"]:
                             folder=ac.listContents(folderId=data["folders"][-1]["id"])
@@ -604,7 +602,7 @@ def login_accounts(mail):
     return Seedr(seedr.token)
 
 @api_view(['GET'])
-def task1(request,id):
+def task1(request):
     response=movierulz(request)
     op=""
     try:
@@ -614,19 +612,11 @@ def task1(request,id):
             name=i["name"]
             if not StreamLink.objects.filter(slug=i['name'],status=False).exists():
                 res=movierulzmovie(request,link)
-                stream_link,created=StreamLink.objects.get_or_create(slug=name)
+                stream_link,created=StreamLink.objects.get_or_create(slug=name,status=False)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
-                if id<=len(links):
-                    EachStream(movie=stream_link,account=id,name=links[id]["name"]).save()
-                    if id==len(links):
-                        stream_link.status=False
-                        stream_link.save()
-                    ac=login_accounts(emails[id])
-                    delete_all_files(ac)
-                    op+="uploading "
-                    ac.addTorrent(magnetLink=links[id]["link"])
-                    op+=links[id]["name"]
-                    
+                for i in range(len(links)):
+                    EachStream.objects.create(movie=stream_link,link=links[i]["link"],name=links[i]["name"],account=i)
+                op+="added"
                 break
     except Exception as e :
         print(e)

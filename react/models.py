@@ -10,6 +10,6 @@ class EachStream(models.Model):
     movie=models.ForeignKey(StreamLink,on_delete=models.CASCADE)
     name=models.CharField(max_length=50)
     account=models.IntegerField()
-    link=models.CharField(max_length=100,blank=True)
+    link=models.URLField(max_length=1500)
     def __str__(self):
         return self.name+" "+self.movie.slug
