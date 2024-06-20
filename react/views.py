@@ -595,7 +595,7 @@ def get_stream(r):
                         unique.append(x)
                         results.append({"name":x,"link":i["file_code"]})
     return JsonResponse({"movies":results})
-emails=["shivaganeshrsg1@gmail.com","tolokox424@lisoren.com","wanapil403@luravell.com","colivo4654@exeneli.com","ribix96778@luravell.com","yohivob255@exeneli.com"]
+emails=["shivaganeshrsg1@gmail.com","tolokox424@lisoren.com","wanapil403@luravell.com","bepimo8558@dovinou.com","ribix96778@luravell.com","yohivob255@exeneli.com"]
 def login_accounts(id):
     seedr=Login(emails[id],"Shiva123@")
     response=seedr.authorize()
@@ -672,13 +672,17 @@ def task3(request):
 def task4(request):
     op=""
     try:
-        obj=EachStream.objects.filter(is_edited=True)
-        op+="editing "
-        for i in obj:
-            res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={i.link}&file_title=RSG MOVIES-{i.movie.slug}-{i.name}")
-        op+="edited"
-        obj.delete()
+        obj=EachStream.objects.filter(is_edited=True).first()
+        if obj:
+            op+="editing "
+            res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={obj.link}")              
+            if res.json()['result'][0]['status']!=404: 
+                res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
+                op+="edited "+obj.name
+                obj.delete()
+        else:
+            op+="no data"
     except Exception as e :
         print(e)
-        op+="error"
+        op+="error "+str(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
