@@ -500,7 +500,7 @@ def filter_entries_less_than_2gb(entries):
         try:
             ss=entry["name"].split()
             size_str = ss[0] + ' ' + ss[1]
-            if convert_to_gb(size_str) < 2 and len(filtered_entries)<6:
+            if convert_to_gb(size_str) < 2 and len(filtered_entries)<=6:
                 filtered_entries.append(entry)
         except:
             pass
@@ -610,13 +610,13 @@ def task1(request):
         for i in movies['movies']:
             link=i["link"]
             name=i["name"]
-            if not StreamLink.objects.filter(slug=i['name'],status=True).exists():
+            if not StreamLink.objects.filter(slug=i['name']).exists():
                 res=movierulzmovie(request,link)
-                stream_link,created=StreamLink.objects.get_or_create(slug=name,status=True)
+                stream_link,created=StreamLink.objects.get_or_create(slug=name)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
                 for i in range(len(links)):
                     EachStream.objects.create(movie=stream_link,link=links[i]["link"],name=links[i]["name"],account=i)
-                op+="added"
+                op+="added "+name
                 break
     except Exception as e :
         print(e)
@@ -631,14 +631,14 @@ def task2(request):
             data.is_uploaded=True
             data.save()
             delete_all_files(ac)
-            op+="uploading"
+            op+="uploading "
             ac.addTorrent(magnetLink=data.link)
-            op+="uploaded"
+            op+="uploaded "+data.name
         else:
             op+="no data"
     except Exception as e :
         print(e)
-        op+="error"
+        op+="error "+str(e) 
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
@@ -666,7 +666,7 @@ def task3(request):
             op+="no data"
     except Exception as e :
         print(e)
-        op+="error"
+        op+="error "+str(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
 @api_view(["GET"])
 def task4(request):
