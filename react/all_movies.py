@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 import requests
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup as bs
 
 #home
@@ -141,6 +141,17 @@ def allMoviesLink(r):
         links.append({"name":name,"link":link})
     except:
       pass
+    #trendings
+    trendings=[]
+    try:
+      items=soup.find('span',class_='s_trending').find_all('a')
+      for i in items:
+        name=i.get_text()
+        parsed_url = urlparse(i["href"])
+        link = urlunparse(('', '', parsed_url.path, '', parsed_url.query, ''))
+        trendings.append({"name":name,"link":link})
+    except:
+      pass
     #movies
     movies=[]
     try:
@@ -173,7 +184,7 @@ def allMoviesLink(r):
     except:
       pass
     
-    data={"movies":movies,"pagination":pagination,"links":links,"name":title}
+    data={"movies":movies,"pagination":pagination,"links":links,"name":title,"trendings":trendings}
     return JsonResponse(data)
 #movie details
 def allMoviesMovie(r,id):
@@ -276,6 +287,194 @@ def allMoviesMovie(r,id):
     
     data={"name":title,"image":poster,"extra":extra,"genre":genre,"description":description,"download":download,"player":player,"players":players,"images":images,"custom":custom,"director":director_details,"actors":actors,"movies":movies}
     return JsonResponse(data)
+def allMoviestvshows(r,id):
+  #tvshows
+  req=requests.get(domain+"tvshows/"+id+"/")
+  soup=bs(req.content,'html.parser')
+  #details
+  poster = title = extra = description  = trailer  = director_details = ""
+
+  try:
+    poster=soup.find('div',class_='poster').img.get('src')
+    title=soup.find('div',class_='data').h1.get_text()
+    extra=soup.find('span',itemprop="dateCreated").get_text()
+  except:
+    pass
+  #genres
+  genre=[]
+  try:
+    for i in soup.find('div',class_='sgeneros').find_all('a'):
+      link=urlparse(i['href']).path
+      name=i.get_text()
+      genre.append({"link":link,"name":name})
+  except:
+    pass
+  #synposis
+  try:
+    notes=soup.find('div',class_="wp-content")
+    description=notes.get_text(separator='\n').replace("MovierulzHD","rsgmovies")
+  except:
+    pass
+  #images
+  images=[]
+  try:
+    gallery=soup.find('div',id='dt_galery').find_all('img')
+    for i in gallery:
+      images.append(i['src'])
+  except:
+    pass
+  custom=[]
+  try:
+    for i in soup.find_all('div',class_='custom_fields'):
+      name=i.b.get_text()
+      desc=i.span.prettify()
+      custom.append({"name":name,"description":desc})
+  except:
+    pass
+
+  #movies
+  movies=[]
+  try:
+    items=soup.find_all('article')
+    for  i in items:
+      link=urlparse(i.find('a')['href']).path
+      image=i.find('img')['src']
+      movies.append({"image":image,"link":link})
+  except:
+    pass
+
+  #cast
+  try:
+    cast=soup.find('div',id='cast')
+  except:
+    pass
+  #director
+  try:
+    director=cast.find('div',class_='person')
+    link=urlparse(director.find('a')['href']).path
+    image=director.find('img')['src']
+    name=director.find('div',class_='name').get_text()
+    desc=director.find('div',class_='caracter').get_text()
+    director_details={"name":name,"image":image,"description":desc,"link":link}
+  except:
+    pass
+  #actors
+  actors=[]
+  try:
+    for i in cast.find_all('div',itemprop='actor'):
+      link=urlparse(i.find('a')['href']).path
+      image=i.find('img')['src']
+      name=i.find('div',class_='name').get_text()
+      desc=i.find('div',class_='caracter').get_text()
+      actors.append({"name":name,"image":image,"description":desc,"link":link})
+  except:
+    pass
+  #seasons
+  seasons_data=[]
+  seasons=soup.find_all('div',class_='se-c')
+  for i in seasons:
+    eposides=i.find_all('li')
+    eposides_data=[]
+    for j in eposides:
+      link=urlparse(j.a['href']).path
+      name=j.a.get_text()
+      image=j.img['src']
+      date=j.find('span',class_="date").get_text()
+      numerando=j.find('div',class_="numerando").get_text()
+      eposides_data.append({"link":link,"name":name,"image":image,"date":date,"number":numerando})
+    ss=i.find('span',class_="title").get_text(separator="  ")
+    seasons_data.append({"name":ss,"episodes":eposides_data})
+  #trailer
+  try:
+    trailer=soup.find('iframe')['src']
+  except:
+    pass
+  data={"name":title,"image":poster,"extra":extra,"genre":genre,"description":description,"images":images,"custom":custom,"director":director_details,"actors":actors,"movies":movies,"trailer":trailer,"seasons":seasons_data}
+
+  return JsonResponse(data)
+def allMoviesEpisodes(r,id):
+  #episodes
+  req=requests.get(domain+"episodes/"+id+"/")
+  soup=bs(req.content,'html.parser')
+  #details
+  title = description = ""
+  try:
+    title=soup.find('div',id='info').h1.get_text()
+  except:
+    pass
+
+  #synposis
+  download=[]
+  try:
+    notes=soup.find('div',itemprop="description")
+    description=notes.p.get_text().replace("MovierulzHD","rsgmovies")
+    for i in notes.find_all("a",class_='maxbutton-4'):
+      download.append({"name":i.get_text(),"link":i['href']})
+  except:
+    pass
+  #images
+  images=[]
+  try:
+    gallery=soup.find('div',id='dt_galery').find_all('img')
+    for i in gallery:
+      images.append(i['src'])
+  except:
+    pass
+
+  #links
+  players=[]
+
+  try:
+    items=soup.find_all('li',class_="dooplay_player_option")
+    for i in items:
+      players.append({"name":i.find('span',class_="title").get_text(),"id":i["data-post"],"num":i["data-nume"],"type":i["data-type"]})
+  except:
+    pass
+  try:
+    response = requests.post(domain+'/wp-admin/admin-ajax.php', data={'action': 'doo_player_ajax','post': players[0]["id"],'nume': players[0]["num"],'type': players[0]["type"]})
+    player=response.json()["embed_url"]
+  except:
+    pass
+  #movies
+  movies=[]
+  try:
+    items=soup.find_all('article')
+    for  i in items:
+      link=urlparse(i.find('a')['href']).path
+      image=i.find('img')['src']
+      movies.append({"image":image,"link":link})
+  except:
+    pass
+  #pages
+  pages=[]
+  try:
+    items=soup.find('div',class_="pag_episodes").find_all('a')
+    for  i in items:
+      link=urlparse(i['href']).path
+      image=' '.join(j for j in i.find('i')['class'])
+      name=i.get_text()
+      pages.append({"image":image,"link":link,"name":name})
+  except:
+    pass
+
+  #seasons
+  seasons_data=[]
+  seasons=soup.find_all('div',class_='se-c')
+  for i in seasons:
+    eposides=i.find_all('li')
+    eposides_data=[]
+    for j in eposides:
+      link=urlparse(j.a['href']).path
+      name=j.a.get_text()
+      image=j.img['src']
+      date=j.find('span',class_="date").get_text()
+      numerando=j.find('div',class_="numerando").get_text()
+      eposides_data.append({"link":link,"name":name,"image":image,"date":date,"number":numerando})
+    seasons_data.append({"episodes":eposides_data})
+ 
+  data={"name":title,"description":description,"images":images,"movies":movies,"download":download,"players":players,"player":player,"seasons":seasons_data,"pages":pages}
+  return JsonResponse(data)
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import *
