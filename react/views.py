@@ -612,12 +612,15 @@ def task1(request):
             name=i["name"]
             if not StreamLink.objects.filter(slug=i['name']).exists():
                 res=movierulzmovie(request,link)
-                stream_link,created=StreamLink.objects.get_or_create(slug=name)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
-                for i in range(len(links)):
-                    EachStream.objects.create(movie=stream_link,link=links[i]["link"],name=links[i]["name"],account=i)
-                op+="added "+name
-                break
+                if links:
+                    stream_link,created=StreamLink.objects.get_or_create(slug=name)
+                    for i in range(len(links)):
+                        EachStream.objects.create(movie=stream_link,link=links[i]["link"],name=links[i]["name"],account=i)
+                    op+="added "+name
+                    break
+                else:
+                    op+="no stream"+name
     except Exception as e :
         print(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
