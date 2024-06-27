@@ -632,11 +632,11 @@ def task2(request):
         data=EachStream.objects.filter(is_uploaded=False).first()
         if data:
             ac=login_accounts(data.account)
-            data.is_uploaded=True
-            data.save()
             k=delete_all_files(ac)
             op+="uploading "
             if k:
+                data.is_uploaded=True
+                data.save()
                 ac.addTorrent(magnetLink=data.link)
                 op+="uploaded "+data.name
             else:
