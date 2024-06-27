@@ -640,7 +640,7 @@ def task2(request):
                 ac.addTorrent(magnetLink=data.link)
                 op+="uploaded "+data.name
             else:
-                op+"already exists"
+                op+="already exists"
         else:
             op+="no data"
     except Exception as e :
@@ -686,7 +686,7 @@ def task4(request):
             if res.json()['result'][0]['status']!=404: 
                 print("s")
                 res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
-                op+="edited "+obj.name
+                op+="edited "+obj.movie.slug+" "+obj.name
                 obj.delete()
             else:
                 op+="not uploaded"
