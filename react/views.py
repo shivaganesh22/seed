@@ -513,7 +513,8 @@ def delete_all_files(ac):
     if data["files"]:
         ac.deleteFile(data["files"][-1]['folder_file_id'])
     if data["torrents"]:
-        ac.deleteTorrent(data["torrents"][-1]['id'])
+        return False
+    return True
     
 @api_view(['GET'])
 def add_stream(request):
@@ -633,10 +634,13 @@ def task2(request):
             ac=login_accounts(data.account)
             data.is_uploaded=True
             data.save()
-            delete_all_files(ac)
+            k=delete_all_files(ac)
             op+="uploading "
-            ac.addTorrent(magnetLink=data.link)
-            op+="uploaded "+data.name
+            if k:
+                ac.addTorrent(magnetLink=data.link)
+                op+="uploaded "+data.name
+            else:
+                op+"already exists"
         else:
             op+="no data"
     except Exception as e :
@@ -678,11 +682,14 @@ def task4(request):
         obj=EachStream.objects.filter(is_edited=True).first()
         if obj:
             op+="editing "
-            res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={obj.link}")              
+            res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={obj.link}")          
             if res.json()['result'][0]['status']!=404: 
+                print("s")
                 res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
                 op+="edited "+obj.name
                 obj.delete()
+            else:
+                op+="not uploaded"
         else:
             op+="no data"
     except Exception as e :
