@@ -630,7 +630,7 @@ def task2(request):
     try:
         data=EachStream.objects.filter(is_uploaded=False).first()
         if data:
-            k=EachStream.objects.filter(is_uploaded=True,is_edited=False,account=data.account).first()
+            k=EachStream.objects.filter(is_uploaded=True,account=data.account).first()
             if not k:
                 ac=login_accounts(data.account)
                 delete_all_files(ac)
