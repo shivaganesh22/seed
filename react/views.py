@@ -640,7 +640,7 @@ def task2(request):
                 ac.addTorrent(magnetLink=data.link)
                 op+="uploaded "+data.name
             else:
-                op+="already exists "+k.movie.slug
+                op+="already exists "+k.movie.slug+" "+k.name
         else:
             op+="no data"
     except Exception as e :
@@ -658,7 +658,7 @@ def task3(request):
             data=ac.listContents()
             if data["folders"]:
                 folder=ac.listContents(folderId=data["folders"][-1]["id"])
-                if folder["files"]:
+                if len(folder["files"])==1:
                     file=ac.fetchFile(fileId=folder["files"][-1]["folder_file_id"])
                     url=quote(file["url"])
                     op+="uploading"
@@ -667,8 +667,17 @@ def task3(request):
                     obj.link=filecode
                     obj.is_edited=True
                     obj.save()
-                    op+="uploaded"
-            
+                    op+="uploaded"+obj.movie.slug+" "+obj.name
+                elif len(folder["files"])>1:
+                    for i in folder["files"]:
+                        file=ac.fetchFile(fileId=i["folder_file_id"])
+                        url=quote(file["url"])
+                        op+="uploading"
+                        req=requests.get(f"https://api.streamwish.com/api/upload/url?key={key}&url={url}")
+                        filecode=req.json()["result"]['filecode']
+                        EachStream.objects.create(movie=obj.movie.slug,link=filecode,name=file["name"],account=obj.account,is_uploaded=True,is_edited=True)
+                        op+="uploaded"+obj.movie.slug+" "+obj.name+" "+file["name"]
+                    obj.delete()
         else:
             op+="no data"
     except Exception as e :
@@ -689,7 +698,7 @@ def task4(request):
                 op+="edited "+obj.movie.slug+" "+obj.name
                 obj.delete()
             else:
-                op+="not uploaded"
+                op+="not uploaded"+obj.movie.slug+" "+obj.name
         else:
             op+="no data"
     except Exception as e :
