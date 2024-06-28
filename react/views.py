@@ -513,8 +513,7 @@ def delete_all_files(ac):
     if data["files"]:
         ac.deleteFile(data["files"][-1]['folder_file_id'])
     if data["torrents"]:
-        return False
-    return True
+        ac.deleteTorrent(data["torrents"][-1]['id'])
     
 @api_view(['GET'])
 def add_stream(request):
@@ -631,16 +630,17 @@ def task2(request):
     try:
         data=EachStream.objects.filter(is_uploaded=False).first()
         if data:
-            ac=login_accounts(data.account)
-            k=delete_all_files(ac)
-            op+="uploading "
-            if k:
+            k=EachStream.objects.filter(is_uploaded=True,is_edited=False,account=data.account).first()
+            if not k:
+                ac=login_accounts(data.account)
+                delete_all_files(ac)
                 data.is_uploaded=True
                 data.save()
+                op+="uploading "
                 ac.addTorrent(magnetLink=data.link)
                 op+="uploaded "+data.name
             else:
-                op+="already exists"
+                op+="already exists "+k.movie.slug
         else:
             op+="no data"
     except Exception as e :
