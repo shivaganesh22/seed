@@ -678,6 +678,8 @@ def task3(request):
                         EachStream.objects.create(movie=obj.movie.slug,link=filecode,name=file["name"],account=obj.account,is_uploaded=True,is_edited=True)
                         op+="uploaded"+obj.movie.slug+" "+obj.name+" "+file["name"]
                     obj.delete()
+            else:
+                op+="folder not exists"+obj.movie.slug+" "+obj.name
         else:
             op+="no data"
     except Exception as e :
