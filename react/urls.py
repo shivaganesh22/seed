@@ -15,6 +15,8 @@ urlpatterns = [
     path('task2/',task2),
     path('task3/',task3),
     path('task4/',task4),
+    path('task5/<int:id>/',task5),
+    path('listdata/<int:id>/',listdata),
 
     path('tamilmv/',tamilmv),
     path('tamilmv/movie/<str:id>/',tamilmvmovie),

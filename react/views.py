@@ -707,3 +707,14 @@ def task4(request):
         print(e)
         op+="error "+str(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def task5(r,id):
+    ac=login_accounts(id)
+    delete_all_files(ac)
+    return Response({"status":True})
+@api_view(["GET"])
+def listdata(r,id):
+    ac=login_accounts(id)
+    
+    return Response(ac.listContents())
