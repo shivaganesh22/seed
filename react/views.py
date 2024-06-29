@@ -610,7 +610,7 @@ def task1(request):
         for i in movies['movies']:
             link=i["link"]
             name=i["name"]
-            if not StreamLink.objects.filter(slug=i['name']).exists():
+            if not StreamLink.objects.filter(slug=i['name']).exists() and not EachStream.objects.exists():
                 res=movierulzmovie(request,link)
                 links=filter_entries_less_than_2gb(json.loads(res.content)["links"])
                 if links:
@@ -621,6 +621,7 @@ def task1(request):
                     break
                 else:
                     op+="no stream"+name
+            op+="movie exists"
     except Exception as e :
         print(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
@@ -695,7 +696,6 @@ def task4(request):
             op+="editing "
             res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={obj.link}")          
             if res.json()['result'][0]['status']!=404: 
-                print("s")
                 res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
                 op+="edited "+obj.movie.slug+" "+obj.name
                 obj.delete()
