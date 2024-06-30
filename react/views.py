@@ -621,7 +621,7 @@ def task1(request):
                     break
                 else:
                     op+="no stream"+name
-            op+="movie exists"
+            
     except Exception as e :
         print(e)
     return Response({'status':True,"op":op}, status=status.HTTP_200_OK)
@@ -631,17 +631,18 @@ def task2(request):
     try:
         data=EachStream.objects.filter(is_uploaded=False).first()
         if data:
-            k=EachStream.objects.filter(is_uploaded=True,account=data.account).first()
-            if not k:
-                ac=login_accounts(data.account)
-                delete_all_files(ac)
-                data.is_uploaded=True
-                data.save()
-                op+="uploading "
-                ac.addTorrent(magnetLink=data.link)
-                op+="uploaded "+data.name
-            else:
-                op+="already exists "+k.movie.slug+" "+k.name
+            ac=login_accounts(data.account)
+            delete_all_files(ac)
+            data.is_uploaded=True
+            data.save()
+            op+="uploading "
+            ac.addTorrent(magnetLink=data.link)
+            op+="uploaded "+data.name
+            # k=EachStream.objects.filter(is_uploaded=True,account=data.account).first()
+            # if not k:
+                
+            # else:
+            #     op+="already exists "+k.movie.slug+" "+k.name
         else:
             op+="no data"
     except Exception as e :
