@@ -12,5 +12,6 @@ class EachStream(models.Model):
     link=models.CharField(max_length=1500)
     is_uploaded=models.BooleanField(default=False)
     is_edited=models.BooleanField(default=False)
+    count=models.IntegerField(default=0,null=True)
     def __str__(self):
         return self.name+" "+self.movie.slug

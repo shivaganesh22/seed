@@ -508,8 +508,8 @@ def filter_entries_less_than_2gb(entries):
 key="17027hp41jytl2tt72twi"
 def delete_all_files(ac):
     data=ac.listContents()
-    if data["folders"]:
-        ac.deleteFolder(data["folders"][-1]['id'])
+    for i in data["folders"]:
+        ac.deleteFolder(i["id"])
     if data["files"]:
         ac.deleteFile(data["files"][-1]['folder_file_id'])
     if data["torrents"]:
@@ -581,19 +581,23 @@ def get_stream(r):
             req=requests.get(f"https://api.streamwish.com/api/file/list?key={key}&page={j}&per_page=500")
             files=req.json()["result"]["files"]
             for i in files:
-                if r.GET["link"] in html.unescape(i["title"]):
-                    x=i["title"].split('-')[-1]
+                k=r.GET["link"].split()
+                x=html.unescape(i["title"])
+                if ' '.join(k[:2]) in x:
+                    m_i=x.index('-')
                     if x not in unique:
                         unique.append(x)
-                        results.append({"name":x,"link":i["file_code"]})
+                        results.append({"name":x[m_i+1:].strip() if "movierulz" in x[:m_i].lower() else x,"link":i["file_code"]})
     else:
         files=data["result"]["files"]
         for i in files:
-                if r.GET["link"] in html.unescape(i["title"]):
-                    x=i["title"].split('-')[-1]
+                k=r.GET["link"].split()
+                x=html.unescape(i["title"])
+                if ' '.join(k[:2]) in x:
+                    m_i=x.index('-')
                     if x not in unique:
                         unique.append(x)
-                        results.append({"name":x,"link":i["file_code"]})
+                        results.append({"name":x[m_i+1:].strip() if "movierulz" in x[:m_i].lower() else x,"link":i["file_code"]})
     return JsonResponse({"movies":results})
 emails=["shivaganeshrsg1@gmail.com","tolokox424@lisoren.com","wanapil403@luravell.com","bepimo8558@dovinou.com","ribix96778@luravell.com","yohivob255@exeneli.com"]
 def login_accounts(id):
@@ -681,7 +685,9 @@ def task3(request):
                 #         op+="uploaded"+obj.movie.slug+" "+obj.name+" "+file["name"]
                 #     obj.delete()
             else:
-                op+="folder not exists"+obj.movie.slug+" "+obj.name
+                obj.count=obj.count+1
+                obj.save()
+                op+="folder not exists"+str(obj.count)+" "+obj.movie.slug+" "+obj.name
         else:
             op+="no data"
     except Exception as e :
@@ -697,7 +703,7 @@ def task4(request):
             op+="editing "
             res=requests.get(f"https://api.streamwish.com/api/file/info?key={key}&file_code={obj.link}")          
             if res.json()['result'][0]['status']!=404: 
-                res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
+                # res=requests.get(f"https://api.streamwish.com/api/file/edit?key={key}&file_code={obj.link}&file_title=RSG MOVIES-{obj.movie.slug}-{obj.name}")
                 op+="edited "+obj.movie.slug+" "+obj.name
                 obj.delete()
             else:
