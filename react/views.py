@@ -146,7 +146,7 @@ def movierulz_fcm(request):
         for i in data['movies']:
             new_movies.append(Movierulz(name=i['name'],image=i['image'],link=i['link']))
             if not  Movierulz.objects.filter(name=i['name']).exists():
-                items.append(send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movierulz/movie'+i['link']))
+                items.append(send_fcm_notification("Movierulz Movie Update",i['name'],i['image'],'/movie'+i['link']))
                 total+=1
         Movierulz.objects.all().delete()
         Movierulz.objects.bulk_create(new_movies)
