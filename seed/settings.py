@@ -96,8 +96,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'verceldb',
         'USER': 'default',
-        'PASSWORD': 'Rzj6pDnru0ke',
-        'HOST': 'ep-yellow-dust-85172855-pooler.us-east-1.postgres.vercel-storage.com',  # Set to your PostgreSQL host
+        'PASSWORD': 'LtPIw2azxE0o',
+        'HOST': 'ep-dawn-silence-a4krjuo5-pooler.us-east-1.aws.neon.tech',  # Set to your PostgreSQL host
         'PORT': '5432',       # Set to your PostgreSQL port
     }
 }
