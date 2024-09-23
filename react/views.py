@@ -62,7 +62,7 @@ def movierulzsearch(r,query):
     items=soup.find(id='main').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
     return JsonResponse({"movies":movies})
 def special(r):
     req=requests.get(r.GET['link'])
