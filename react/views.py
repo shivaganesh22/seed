@@ -28,7 +28,7 @@ def movierulz(r):
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
     return JsonResponse({"movies":movies})
 def movierulzmovie(r,id):
     req=requests.get(domain+id)
@@ -53,6 +53,7 @@ def movierulzmovie(r,id):
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
+    details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
     return JsonResponse({"links":links,"details":details})
 def movierulzsearch(r,query):
     #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
