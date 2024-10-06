@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://ww2.5movierulz.cab/"
+domain="https://www.5movierulz.skin/"
 def movierulz(r):
     req=requests.get(domain)
     soup=bs(req.content,'html.parser')
@@ -37,10 +37,10 @@ def movierulzmovie(r,id):
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
     for i in items:
-        #b=i.find('small')
-        #links.append({"name":b.get_text(),"link":i.get('href')})
-        b=i.findAll('small')
-        links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
+        b=i.find('small')
+        links.append({"name":b.get_text(),"link":i.get('href')})
+        # b=i.findAll('small')
+        # links.append({"name":b[0].get_text()+" "+b[1].get_text(),"link":i.get('href')})
     items=soup.findAll('p')
     details={}
     details["name"]=soup.find('h2',class_='entry-title').get_text()
@@ -57,7 +57,8 @@ def movierulzmovie(r,id):
     return JsonResponse({"links":links,"details":details})
 def movierulzsearch(r,query):
     #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
-    req=requests.get(f"{domain}?s="+query)
+    req=requests.get(f"{domain}?search_movies="+query)
+    # req=requests.get(f"{domain}?s="+query)
     soup=bs(req.content,'html.parser')
     items=soup.find(id='main').findAll('div',class_='boxed film')
     movies=[]
