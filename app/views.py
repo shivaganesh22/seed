@@ -353,7 +353,7 @@ def renamefilehome(r,id):
     return redirect(f'/files')
 
 def ibomma(r):
-    req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
+    req=requests.get("https://ott.bappam.to/telugu-movies/")
     soup=bs(req.content,'html.parser')
     items=soup.find_all('article')
     movies=[]

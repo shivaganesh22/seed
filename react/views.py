@@ -28,11 +28,11 @@ def movierulz(r):
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),})#"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
     return JsonResponse({"movies":movies})
-def movierulzmovie(r,id):
-    req=requests.get(domain+id)
-    print(domain+id)
+def movierulzmovie(r,id,slug):
+    # req=requests.get(domain+id)
+    req=requests.get(domain+id+"/"+slug)
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
@@ -48,30 +48,39 @@ def movierulzmovie(r,id):
         if "directed" in i.get_text().lower():
             inflinks=i.findAll('a')
             for m in inflinks:
-                m['href']="/movierulz/special/?link="+m['href']
+                m['href']=f"/movierulz/special{urlparse(m['href']).path}"
             details["inf"]=i.prettify()
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
     details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
-    details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
+    # details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
+    try:
+        script_tag = soup.find('script', language="javascript", type="text/javascript")
+        script_content = script_tag.string
+        locations = re.findall(r'(https:\\/\\/.+?)"', script_content)
+        locations = [url.replace('\\/', '/') for url in locations]
+        for location in locations:
+            details["movie_link"]=location
+    except:
+        details["movie_link"]=""
     return JsonResponse({"links":links,"details":details})
 def movierulzsearch(r,query):
     #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
-    req=requests.get(f"{domain}?search_movies="+query)
+    req=requests.get(f"{domain}search_movies?s="+query)
     # req=requests.get(f"{domain}?s="+query)
     soup=bs(req.content,'html.parser')
     items=soup.find(id='main').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})#,"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
     return JsonResponse({"movies":movies})
-def special(r):
-    req=requests.get(r.GET['link'])
+def special(r,id,slug):
+    req=requests.get(domain+id+"/"+slug)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":i.a.get('href'),"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
 def tamilmv(r):
     req=requests.get("https://www.1tamilmv.phd")
@@ -393,7 +402,7 @@ def youtube(r):
     data['audio']=audio
     return JsonResponse(data)
 def ibomma(r):
-    req=requests.get("https://aahs.ibomma.pw/telugu-movies/")
+    req=requests.get("https://ott.bappam.to/telugu-movies/")
     soup=bs(req.content,'html.parser')
     items=soup.find_all('article')
     movies=[]

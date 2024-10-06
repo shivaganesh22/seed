@@ -5,8 +5,9 @@ from .all_movies import *
 urlpatterns = [
     #movierulz
     path('movierulz/',movierulz),
-    path('movierulz/special/',special),
-    path('movierulz/movie/<str:id>/',movierulzmovie),
+    path('movierulz/special/<str:id>/<str:slug>/',special),
+    # path('movierulz/movie/<str:id>/',movierulzmovie),
+    path('movierulz/movie/<str:id>/<str:slug>/',movierulzmovie),
     path('movierulz/search/<str:query>/',movierulzsearch),
     path('addstream/',add_stream),
     path('getstream/',get_stream),
