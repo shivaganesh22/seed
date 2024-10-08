@@ -83,7 +83,7 @@ def special(r,id,slug):
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
 def tamilmv(r):
-    req=requests.get("https://www.1tamilmv.phd")
+    req=requests.get("https://www.1tamilmv.tf/")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
     alinks=items.findAll('a')
