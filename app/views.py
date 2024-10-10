@@ -11,7 +11,7 @@ from pytube import YouTube
 
 #tamilmv
 def tamilmv(r):
-    req=requests.get("https://www.1tamilmv.phd")
+    req=requests.get("https://www.1tamilmv.tf")
     soup=bs(req.content,'html.parser')
     items=soup.findAll('p',style="font-size: 13.1px;")[0]
     alinks=items.findAll('a')
@@ -50,7 +50,7 @@ def doodplay(r):
 #movierulz
 def movierulz(r):
     query=0
-    req=requests.get("https://www.5movierulz.skin/")
+    req=requests.get("https://www.movierulz.dev/")
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
@@ -59,8 +59,8 @@ def movierulz(r):
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
-        req=requests.get(f"https://www.5movierulz.skin/search_movies?s="+query)
-        # req=requests.get(f"https://www.5movierulz.skin/?s="+query)
+        req=requests.get(f"https://www.movierulz.dev/search_movies?s="+query)
+        # req=requests.get(f"https://www.movierulz.dev/?s="+query)
         soup=bs(req.content,'html.parser')
         items=soup.find(id='main').findAll('div',class_='boxed film')
         movies=[]

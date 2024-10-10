@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://www.5movierulz.skin/"
+domain="https://www.movierulz.dev/"
 def movierulz(r):
     req=requests.get(domain)
     soup=bs(req.content,'html.parser')
