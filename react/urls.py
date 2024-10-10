@@ -72,6 +72,5 @@ urlpatterns = [
     path('y2mate/',y2mate),
     path('y2matedownload/',y2matedownload),
 
-    #selenium
-    path('selenium/',selenium_test),
+
 ]
