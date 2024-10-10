@@ -30,9 +30,9 @@ def movierulz(r):
     for i in items:
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),})#"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
     return JsonResponse({"movies":movies})
-def movierulzmovie(r,id,slug):
-    # req=requests.get(domain+id)
-    req=requests.get(domain+id+"/"+slug)
+def movierulzmovie(r,id):
+    req=requests.get(domain+id)
+    # req=requests.get(domain+id+"/"+slug)
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
