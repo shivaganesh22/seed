@@ -736,3 +736,18 @@ def listdata(r,id):
     ac=login_accounts(id)
     
     return Response(ac.listContents())
+@api_view(["GET"])
+def selenium_test(r):
+    from selenium import webdriver
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    browser = webdriver.Chrome(options=chrome_options)
+    try:
+        browser.get("https://www.google.com")
+        return Response(browser.title)
+    except:
+        return Response("failed")
+    finally:
+        browser.quit()
