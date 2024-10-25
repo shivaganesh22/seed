@@ -48,9 +48,23 @@ def doodplay(r):
     return HttpResponseRedirect(r.GET['link'])
 
 #movierulz
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    # 'Accept-Encoding': 'gzip, deflate, br',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+}
+
 def movierulz(r):
     query=0
-    req=requests.get("https://www.movierulz.dev/")
+    req=requests.get("https://www.5movierulz.mom/",headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
@@ -59,7 +73,7 @@ def movierulz(r):
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
-        req=requests.get(f"https://www.movierulz.dev/search_movies?s="+query)
+        req=requests.get(f"https://www.5movierulz.mom/search_movies?s="+query)
         # req=requests.get(f"https://www.movierulz.dev/?s="+query)
         soup=bs(req.content,'html.parser')
         items=soup.find(id='main').findAll('div',class_='boxed film')
@@ -71,7 +85,7 @@ def movierulz(r):
 def special(r):
     query=0
     link=r.GET['link']
-    req=requests.get(link)
+    req=requests.get(link,headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
@@ -80,7 +94,7 @@ def special(r):
     if r.method=="POST":
         query=r.POST['query'].lower()
         movies.clear()
-        req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
+        req=requests.get(f"https://www.5movierulz.mom/search_movies?s="+query)
         soup=bs(req.content,'html.parser')
         items=soup.find(id='main').findAll('div',class_='boxed film')
         movies=[]
@@ -89,7 +103,7 @@ def special(r):
     return render(r,'movierulz.html',{"movies":movies,"query":query})
 
 def movierulzmovie(r):
-    req=requests.get(r.GET.get('link'))
+    req=requests.get(r.GET.get('link'),headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
     links=[]

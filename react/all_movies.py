@@ -188,6 +188,7 @@ def allMoviesLink(r):
     return JsonResponse(data)
 #movie details
 def allMoviesMovie(r,id):
+    global domain
     req=requests.get(domain+"movies/"+id+"/")
     soup=bs(req.content,'html.parser')
     #details
@@ -235,6 +236,8 @@ def allMoviesMovie(r,id):
       pass
 
     #movies
+    parsed_url = urlparse(req.url)
+    domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
     movies=[]
     try:
       items=soup.find_all('article')
