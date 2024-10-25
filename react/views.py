@@ -21,18 +21,32 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://www.movierulz.dev/"
+domain="https://www.5movierulz.mom/"
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    # 'Accept-Encoding': 'gzip, deflate, br',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+}
+
 def movierulz(r):
-    req=requests.get(domain)
+    req=requests.get(domain,headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),})#"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
     return JsonResponse({"movies":movies})
-def movierulzmovie(r,id):
-    req=requests.get(domain+id)
-    # req=requests.get(domain+id+"/"+slug)
+def movierulzmovie(r,id,slug):
+    # req=requests.get(domain+id)
+    req=requests.get(domain+id+"/"+slug,headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.findAll('a',class_='mv_button_css')
     links=[]
@@ -66,7 +80,7 @@ def movierulzmovie(r,id):
     return JsonResponse({"links":links,"details":details})
 def movierulzsearch(r,query):
     #req=requests.get(f"https://www.5movierulz.blog/search_movies?s="+query)
-    req=requests.get(f"{domain}search_movies?s="+query)
+    req=requests.get(f"{domain}search_movies?s="+query,headers=headers)
     # req=requests.get(f"{domain}?s="+query)
     soup=bs(req.content,'html.parser')
     items=soup.find(id='main').findAll('div',class_='boxed film')
@@ -75,7 +89,7 @@ def movierulzsearch(r,query):
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})#,"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
     return JsonResponse({"movies":movies})
 def special(r,id,slug):
-    req=requests.get(domain+id+"/"+slug)
+    req=requests.get(domain+id+"/"+slug,headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
