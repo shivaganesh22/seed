@@ -4,7 +4,7 @@ from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup as bs
 
 #home
-domain="https://movierulzhd.rocks/"
+domain="https://1movierulzhd.bar/"
 def allMovies(r):
     req=requests.get(domain+"movierulz-2024-watch-free-movies-online-hindi-telugu-tamil-english/")
     soup=bs(req.content,'html.parser')
