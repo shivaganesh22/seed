@@ -64,7 +64,7 @@ headers = {
 
 def movierulz(r):
     query=0
-    req=requests.get("https://www.5movierulz.mom/",headers=headers)
+    req=requests.get("https://ww18.4movierulz.io/",headers=headers)
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]

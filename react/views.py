@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://www.5movierulz.mom/"
+domain="https://ww18.4movierulz.io/"
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -66,7 +66,9 @@ def movierulzmovie(r,id,slug):
             details["inf"]=i.prettify()
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
-    details["image"]=soup.find('img',class_='attachment-post-thumbnail').get('src')
+    parsed_url = urlparse(req.url)
+    domainmm = f"{parsed_url.scheme}://{parsed_url.netloc}"
+    details["image"]=domainmm+soup.find('img',class_='attachment-post-thumbnail').get('src')
     # details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
     try:
         script_tag = soup.find('script', language="javascript", type="text/javascript")
