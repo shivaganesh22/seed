@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('login/',LoginApi.as_view()),
     path('login/default/',DefaultLogin.as_view()),
+    path('login/code/rsg/',RSGLogin.as_view()),
 
     path('contact/',contact),
 

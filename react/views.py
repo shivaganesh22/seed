@@ -238,6 +238,13 @@ class DefaultLogin(APIView):
             return Response({"token":"8b564b79a986b849e45e783e87f5dfa4292e4eed","created":False,"status":True})
         except:     
             return Response({"error":"Failed to login"},status=status.HTTP_400_BAD_REQUEST)
+class RSGLogin(APIView):
+    def get(self,r):
+        try: 
+            return Response({"token":"deeb2172aa5f3a4a392c19f66cb557697399d208","created":False,"status":True})
+        except:     
+            return Response({"error":"Failed to login"},status=status.HTTP_400_BAD_REQUEST)
+
 class FilesApi(APIView):
     authentication_classes=[TokenAuthentication]
     permission_classes=[IsAuthenticated]
