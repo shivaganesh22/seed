@@ -408,22 +408,22 @@ def mainsearch(r):
         pass
     return JsonResponse({"name":title,"links":links,"ends":ends,"pages":page})
 
-def youtube(r):
-    url=r.GET['link']
-    yt = YouTube(url)
-    data={}
-    data['title']=yt.title
-    data['thumb']=yt.thumbnail_url
-    videos=[]
-    audio=[]
-    for i in yt.streams.all():
-        if "video" in i.type:
-            videos.append({"audio":i.is_progressive,"codec":i.video_codec.split('.')[0][:-1],"resolution":i.resolution,"size":i.filesize_mb,"url":i.url})
-        if "audio" in i.type:
-            audio.append({"codec":i.audio_codec.split('.')[0],"resolution":i.abr,"size":i.filesize_mb,"url":i.url})
-    data['videos']=videos
-    data['audio']=audio
-    return JsonResponse(data)
+# def youtube(r):
+#     url=r.GET['link']
+#     yt = YouTube(url)
+#     data={}
+#     data['title']=yt.title
+#     data['thumb']=yt.thumbnail_url
+#     videos=[]
+#     audio=[]
+#     for i in yt.streams.all():
+#         if "video" in i.type:
+#             videos.append({"audio":i.is_progressive,"codec":i.video_codec.split('.')[0][:-1],"resolution":i.resolution,"size":i.filesize_mb,"url":i.url})
+#         if "audio" in i.type:
+#             audio.append({"codec":i.audio_codec.split('.')[0],"resolution":i.abr,"size":i.filesize_mb,"url":i.url})
+#     data['videos']=videos
+#     data['audio']=audio
+#     return JsonResponse(data)
 def ibomma(r):
     req=requests.get("https://ott.bappam.to/telugu-movies/")
     soup=bs(req.content,'html.parser')

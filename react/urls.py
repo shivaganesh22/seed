@@ -2,6 +2,7 @@ from django.urls import path
 from react.views import *
 from api.views import ibomma_fcm
 from .all_movies import *
+from .loaderr import youtube,youtube_progress
 urlpatterns = [
     #movierulz
     path('movierulz/',movierulz),
@@ -70,6 +71,7 @@ urlpatterns = [
 
     #youtube
     path('youtube/',youtube),
+    path('youtube/progress/',youtube_progress),
     path('y2mate/',y2mate),
     path('y2matedownload/',y2matedownload),
 
