@@ -425,13 +425,13 @@ def mainsearch(r):
 #     data['audio']=audio
 #     return JsonResponse(data)
 def ibomma(r):
-    req=requests.get("https://ott.bappam.to/telugu-movies/")
+    req=requests.get("https://res.bappam.to/telugu-movies/")
     soup=bs(req.content,'html.parser')
     items=soup.find_all('article')
     movies=[]
     for i in items:
         try:
-            movies.append({"name":i.h2.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content).decode('utf-8'),"link":i.a.get('href')})
+            movies.append({"name":i.h3.a.get_text(),"image":base64.b64encode(requests.get(i.img.get('data-src')).content).decode('utf-8'),"link":i.a.get('href')})
         except:
             pass
     return JsonResponse({"movies":movies})
