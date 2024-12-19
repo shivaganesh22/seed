@@ -99,9 +99,10 @@ def special(r,id,slug):
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
     return JsonResponse({"movies":movies})
 def tamilmv(r):
-    req=requests.get("https://www.1tamilmv.at/")
+    req=requests.get("https://www.1tamilmv.ac/")
     soup=bs(req.content,'html.parser')
-    items=soup.findAll('p',style="font-size: 13.1px;")[0]
+    # items=soup.findAll('p',style="font-size: 13.1px;")[0]
+    items=soup.findAll('p')[2]
     alinks=items.findAll('a')
     for i in alinks:
         try:
@@ -439,7 +440,8 @@ def ibomma(r):
 def ibommamovie(r):
     req=requests.get(r.GET['link'])
     soup=bs(req.content,'html.parser')
-    name=soup.find("div",class_="entry-title-movie")
+    name=soup.find("h2",class_="entry-title-movie")
+    # name=soup.find("div",class_="entry-title-movie")
     genres=soup.find("article",id=r.GET['link'])
     cast=soup.find("div",class_="cast-and-director")
     director=soup.find("div",class_="movies-director")
@@ -463,7 +465,8 @@ def ibommamovie(r):
     details["director"] = director.get_text()
     details["desc"] = description.get_text()
     details["trailer"] = trailer.get('href')
-    details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
+    details["image"] =base64.b64encode(requests.get(image.get('src')).content).decode('utf-8')
+    # details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
     details["link"] = link
     details["dlink"] = r.GET['link']
     return JsonResponse(details)
