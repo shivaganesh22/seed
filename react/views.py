@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://ww18.4movierulz.io/"
+domain="https://ww19.4movierulz.io/"
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -37,12 +37,15 @@ headers = {
 }
 
 def movierulz(r):
+    global domain
     req=requests.get(domain,headers=headers)
+    parsed_url = urlparse(req.url)
+    domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
     soup=bs(req.content,'html.parser')
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),})#"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})#
     return JsonResponse({"movies":movies})
 def movierulzmovie(r,id,slug):
     # req=requests.get(domain+id)
@@ -69,7 +72,7 @@ def movierulzmovie(r,id,slug):
     parsed_url = urlparse(req.url)
     domainmm = f"{parsed_url.scheme}://{parsed_url.netloc}"
     details["image"]=domainmm+soup.find('img',class_='attachment-post-thumbnail').get('src')
-    # details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
+    details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
     try:
         script_tag = soup.find('script', language="javascript", type="text/javascript")
         script_content = script_tag.string
@@ -88,7 +91,7 @@ def movierulzsearch(r,query):
     items=soup.find(id='main').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})#,"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})#,
     return JsonResponse({"movies":movies})
 def special(r,id,slug):
     req=requests.get(domain+id+"/"+slug,headers=headers)
@@ -96,7 +99,7 @@ def special(r,id,slug):
     items=soup.find('div',class_='films').findAll('div',class_='boxed film')
     movies=[]
     for i in items:
-        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src')})
+        movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
     return JsonResponse({"movies":movies})
 def tamilmv(r):
     req=requests.get("https://www.1tamilmv.ac/")
