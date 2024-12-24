@@ -3,6 +3,7 @@ from react.views import *
 from api.views import ibomma_fcm
 from .all_movies import *
 from .loaderr import youtube,youtube_progress
+from . import movie_blast
 urlpatterns = [
     #movierulz
     path('movierulz/',movierulz),
@@ -74,6 +75,33 @@ urlpatterns = [
     path('youtube/progress/',youtube_progress),
     path('y2mate/',y2mate),
     path('y2matedownload/',y2matedownload),
+
+    #movie blast
+    path('blast/home/',movie_blast.home),
+    path('blast/pinned/',movie_blast.pinned),
+    path('blast/top_content/',movie_blast.top_content),
+    path('blast/recently_added/',movie_blast.recently_added),
+    path('blast/latest_series_episodes/',movie_blast.latest_series_episodes),
+    path('blast/recommended/',movie_blast.recommended),
+    path('blast/trending/',movie_blast.trending),
+    path('blast/choosed/',movie_blast.choosed),
+    path('blast/popular_series/',movie_blast.popular_series),
+    path('blast/latest_series/',movie_blast.latest_series),
+    path('blast/next_this_week/',movie_blast.next_this_week),
+    path('blast/most_popular/',movie_blast.most_popular),
+
+    path('blast/search/',movie_blast.search),
+    path('blast/movie/<id>/',movie_blast.movie_details),
+    path('blast/series/<id>/',movie_blast.series_details),
+    
+    path('blast/genres/',movie_blast.genres),
+    path('blast/movies/',movie_blast.movies_all),
+    path('blast/movies_genre/<id>/',movie_blast.movies_genre),
+    path('blast/movies_filter/',movie_blast.movies_filter),
+    path('blast/series/',movie_blast.series_all),
+    path('blast/series_genre/<id>/',movie_blast.series_genre),
+    path('blast/series_filter/',movie_blast.series_filter),
+
 
 
 ]
