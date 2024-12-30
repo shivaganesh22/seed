@@ -38,8 +38,11 @@ urlpatterns = [
 
     path('files/',FilesApi.as_view()),
     path('open/<id>',OpenFolder.as_view()),
+    path('folder/archieve/<id>',FolderArchieve.as_view()),
     path('folder/file/<id>',FolderFile.as_view()),
+    path('folder/file/player/<id>',FolderFilePlayer.as_view()),
     path('file/<id>',GetFile.as_view()),
+    path('file/player/<id>',GetFilePlayer.as_view()),
     path('addtorrent/',AddTorrent.as_view()),
     path('deletetorrent/<id>',DeleteTorrent.as_view()),
     path('deletefolder/<id>',DeleteFolder.as_view()),

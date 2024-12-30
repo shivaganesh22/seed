@@ -218,6 +218,13 @@ def getSeedr(r):
         return ac
     except:
         return None
+def getCookie(r):
+    try:
+        ress=requests.post('https://www.seedr.cc/auth/login', data={'username':r.auth.user.email,"password":r.auth.user.password})
+        cookies=requests.utils.dict_from_cookiejar(ress.cookies)
+        return cookies
+    except:
+        return None
 class LoginApi(APIView):
     def post(self,r):
         serializer=UserSerializer(data=r.data)
@@ -280,8 +287,6 @@ class OpenFolder(APIView):
             return Response(data,status=status.HTTP_200_OK)
         except:
             return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
-    
-
 class FolderFile(APIView):
     authentication_classes=[TokenAuthentication]
     permission_classes=[IsAuthenticated]
@@ -289,12 +294,49 @@ class FolderFile(APIView):
         ac=getSeedr(r)
         if not ac:
             return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
-            
         try:
             files=ac.listContents(id)['files']
-            return Response(ac.fetchFile(files[0]['folder_file_id']),status=status.HTTP_200_OK)
+            data=ac.fetchFile(files[0]['folder_file_id'])
+            return Response(data,status=status.HTTP_200_OK)
         except:
             return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
+        
+class FolderArchieve(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
+    def get(self,r,id):  
+        ac=getCookie(r)
+        if not ac:
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
+        try:
+            res=requests.post("https://www.seedr.cc/download/archive",cookies=ac,data={"archive_arr[0][type]": "folder","archive_arr[0][id]":id})
+            data=res.json()
+            return Response(data,status=status.HTTP_200_OK)
+        except:
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
+        
+
+class FolderFilePlayer(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
+    def get(self,r,id):  
+        ac=getSeedr(r)
+        if not ac:
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
+        data={}
+        files={}    
+        try:
+            files=ac.listContents(id)['files']
+            data=ac.fetchFile(files[0]['folder_file_id'])
+        except:
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
+        try:
+            cookies=getCookie(r)
+            res=requests.get(f"https://www.seedr.cc/presentation/fs/item/{files[0]['folder_file_id']}/video/url",cookies=cookies)
+            data["m3u8"]=res.json()["url"]
+            return Response(data,status=status.HTTP_200_OK)
+        except:
+            return Response(data,status=status.HTTP_200_OK)
 
 class GetFile(APIView):
     authentication_classes=[TokenAuthentication]
@@ -302,14 +344,31 @@ class GetFile(APIView):
     def get(self,r,id):  
         ac=getSeedr(r)
         if not ac:
-            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
-            
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)           
         try:
-            
             return Response(ac.fetchFile(id),status=status.HTTP_200_OK)
         except:
             return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
-    
+class GetFilePlayer(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
+    def get(self,r,id):  
+        ac=getSeedr(r)
+        if not ac:
+            return  Response({"error":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST) 
+        data={}
+        try:
+            data=ac.fetchFile(id)
+        except:
+            return Response({"error":"Falied to get results"},status=status.HTTP_400_BAD_REQUEST)
+        try:
+            cookies=getCookie(r)
+            res=requests.get(f"https://www.seedr.cc/presentation/fs/item/{id}/video/url",cookies=cookies)
+            data["m3u8"]=res.json()["url"]
+            return Response(data,status=status.HTTP_200_OK)
+        except:
+            return Response(data,status=status.HTTP_200_OK)
+
 
 class AddTorrent(APIView):
     authentication_classes=[TokenAuthentication]
