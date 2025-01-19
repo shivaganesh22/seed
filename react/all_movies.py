@@ -4,9 +4,9 @@ from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup as bs
 
 #home
-domain="https://1movierulzhd.bar/"
+domain="https://1movierulzhd.my/"
 def allMovies(r):
-    req=requests.get(domain+"movierulz-2024-watch-free-movies-online-hindi-telugu-tamil-english/")
+    req=requests.get(domain+"movierulz-2025-hindi-telugu-tamil-kannada-malayalam-english/")
     soup=bs(req.content,'html.parser')
     movies=[]
     try:
