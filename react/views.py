@@ -70,7 +70,7 @@ def movierulzmovie(r,id,slug):
             j=i.find_next_sibling()
             details["desc"]=j.prettify()
     parsed_url = urlparse(req.url)
-    domainmm = f"{parsed_url.scheme}://{parsed_url.netloc}"
+    domainmm = f"{parsed_url.scheme}://{parsed_url.netloc}/"
     details["image"]=domainmm+soup.find('img',class_='attachment-post-thumbnail').get('src')
     details["base64"]=base64.b64encode(requests.get(details["image"]).content).decode('utf-8')
     try:
