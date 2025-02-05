@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
 
-domain="https://ww19.4movierulz.io/"
+domain="https://www.5movierulz.vu/"
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -102,10 +102,10 @@ def special(r,id,slug):
         movies.append({"name":i.a.get('title'),"link":urlparse(i.a.get('href')).path,"image":i.img.get('src'),"base64":base64.b64encode(requests.get(i.img.get('src')).content).decode('utf-8')})
     return JsonResponse({"movies":movies})
 def tamilmv(r):
-    req=requests.get("https://www.1tamilmv.ac/")
+    req=requests.get("https://www.1tamilmv.com/")
     soup=bs(req.content,'html.parser')
     # items=soup.findAll('p',style="font-size: 13.1px;")[0]
-    items=soup.findAll('p')[2]
+    items=soup.findAll('p')[3]
     alinks=items.findAll('a')
     for i in alinks:
         try:
