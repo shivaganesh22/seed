@@ -317,22 +317,10 @@ class JWTLockFolder( APIView):
         if r.user.is_superuser:
             try:
                 LockFolder.objects.create(folder_id=id)
-                return Response({"message":"Successfully Locked"})
+                return Response({"message":"Locked Folder"})
             except:
-                return  Response({ "detail":"Already Locked"},status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return  Response({ "detail":"You dont have permission"},status=status.HTTP_400_BAD_REQUEST)
-class JWTUnLockFolder( APIView):
-    authentication_classes=[CustomTokenAuthentication]
-    def get(self,r,id):  
-        ac=getSeedr(r)
-        if not ac:
-            return  Response({ "detail":"Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
-        if r.user.is_superuser:
-            try:
                 LockFolder.objects.get(folder_id=id).delete()
-                return Response({"message":"Successfully Unlocked"})
-            except:
-                return  Response({ "detail":"Already Unlocked"},status=status.HTTP_400_BAD_REQUEST)
+                return  Response({ "detail":"Unlocked Folder"})
         else:
             return  Response({ "detail":"You dont have permission"},status=status.HTTP_400_BAD_REQUEST)
+

@@ -54,6 +54,10 @@ class UserToken(models.Model):
         """Extend expiry by 7 days from now (rolling expiration)."""
         self.expiry = timezone.now() + timezone.timedelta(days=self.DEFAULT_EXPIRY_DAYS)
         self.save(update_fields=["expiry"])
+    def __str__(self):
+        return self.user.email +" "+ str(self.created) + " "+self.browser_info
 class LockFolder(models.Model):
     folder_id=models.CharField(max_length=30,unique=True)
     created = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.folder_id + "   " + str (self.created)

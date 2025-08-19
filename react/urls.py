@@ -25,7 +25,6 @@ urlpatterns = [
     path('jwt/rename/folder/<id>/',JWTRenameFolder.as_view()),
     path('jwt/rename/file/<id>/',JWTRenameFile.as_view()),
     path('jwt/lock/folder/<id>/',JWTLockFolder.as_view()),
-    path('jwt/unlock/folder/<id>/',JWTUnLockFolder.as_view()),
 
     #movierulz
     path('movierulz/',movierulz),
