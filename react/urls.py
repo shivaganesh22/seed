@@ -4,7 +4,29 @@ from api.views import ibomma_fcm
 from .all_movies import *
 from .loaderr import youtube,youtube_progress
 from . import movie_blast
+from react.jwt import *
 urlpatterns = [
+    #jwt
+    path('jwt/login/', JWTLoginApi.as_view(), name='login'),
+    path('jwt/login/default/',JWTDefaultLogin.as_view()),
+    path('jwt/login/code/<code>/',JWTCodeLogin.as_view()),
+    path('jwt/logout/', JWTLogoutApi.as_view(), name='logout'),
+    path('jwt/files/',JWTFilesApi.as_view()),
+    path('jwt/open/<id>',JWTOpenFolder.as_view()),
+    path('jwt/folder/archieve/<id>',JWTFolderArchieve.as_view()),
+    path('jwt/folder/file/<id>',JWTFolderFile.as_view()),
+    path('jwt/folder/file/player/<id>',JWTFolderFilePlayer.as_view()),
+    path('jwt/file/<id>',JWTGetFile.as_view()),
+    path('jwt/file/player/<id>',JWTGetFilePlayer.as_view()),
+    path('jwt/addtorrent/',JWTAddTorrent.as_view()),
+    path('jwt/deletetorrent/<id>',JWTDeleteTorrent.as_view()),
+    path('jwt/deletefolder/<id>',JWTDeleteFolder.as_view()),
+    path('jwt/deletefile/<id>/<fid>',JWTDeleteFile.as_view()),
+    path('jwt/rename/folder/<id>/',JWTRenameFolder.as_view()),
+    path('jwt/rename/file/<id>/',JWTRenameFile.as_view()),
+    path('jwt/lock/folder/<id>/',JWTLockFolder.as_view()),
+    path('jwt/unlock/folder/<id>/',JWTUnLockFolder.as_view()),
+
     #movierulz
     path('movierulz/',movierulz),
     path('movierulz/special/<str:id>/<str:slug>/',special),
