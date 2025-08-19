@@ -317,7 +317,7 @@ class JWTLockFolder( APIView):
         if r.user.is_superuser:
             try:
                 LockFolder.objects.create(folder_id=id)
-                return Response({"message":"Locked Folder"})
+                return Response({"detail":"Locked Folder"})
             except:
                 LockFolder.objects.get(folder_id=id).delete()
                 return  Response({ "detail":"Unlocked Folder"})
