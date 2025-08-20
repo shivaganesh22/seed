@@ -57,16 +57,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWED_ORIGINS = [
+# CORS_ALLOWED_ORIGINS = [
     
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:3000",
-    "https://rsgmovies.vercel.app",
-    "http://192.168.187.208:3000",
-]
-
+#     "http://localhost:3000",
+#     "http://localhost:8000",
+#     "http://127.0.0.1:8000",
+#     "http://127.0.0.1:3000",
+#     "https://rsgmovies.vercel.app",
+#     "http://192.168.187.208:3000",
+# ]
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'seed.urls'
 import os
 TEMPLATES = [
