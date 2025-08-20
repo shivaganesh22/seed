@@ -411,7 +411,7 @@ class JWTFetchShareFolder(APIView):
             access.page = f"access file {file_obj.get('name', id)}"
             access.last_used = timezone.now()
             access.save(update_fields=["ip_address", "location", "page", "last_used"])
-
+            file_obj["link"]=f"https://rsgmovies.vercel.app/share/{access.share.link}"
             return Response(file_obj, status=status.HTTP_200_OK)
 
         except AccessFolder.DoesNotExist:
