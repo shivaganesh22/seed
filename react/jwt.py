@@ -12,6 +12,7 @@ from .utils import DeviceInfoManager
 from .authentication import CustomTokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 import requests
+from django.utils.crypto import get_random_string
 class JWTLoginApi(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -370,6 +371,7 @@ class JWTGetShareFolder(APIView):
             data["files"] = sorted(data['files'], key=lambda x: x['name'])
 
             k=AccessFolder.objects.create(
+                link=get_random_string(30),
                 share=share,
                 device_info=device_info,
                 browser_info=browser_info,
@@ -386,7 +388,7 @@ class JWTGetShareFolder(APIView):
         except ShareFolder.DoesNotExist:
             return Response({"detail": "Invalid Share Link"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"detail": f"Failed to get results"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": f"Failed to get results "}, status=status.HTTP_400_BAD_REQUEST)
 
 class JWTFetchShareFolder(APIView):
     def get(self, request, id,link):
