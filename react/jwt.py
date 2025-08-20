@@ -46,6 +46,7 @@ class JWTLoginApi(APIView):
                     ip_address=ip_address,
                     location=location,
                     user_agent=user_agent,
+                    page="login"
                 )
                 
                 return Response({
@@ -324,3 +325,94 @@ class JWTLockFolder( APIView):
         else:
             return  Response({ "detail":"You dont have permission"},status=status.HTTP_400_BAD_REQUEST)
 
+class JWTShareFolder(APIView):
+    authentication_classes = [CustomTokenAuthentication]
+    def get(self, request, id):  
+        try:
+            session = request.auth  
+            share, created = ShareFolder.objects.get_or_create(
+                folder_id=id,
+                session=session,
+                defaults={
+                    "name": request.GET.get("name")
+                }
+            )
+            return Response({ "name": share.name,"link": f"https://rsgmovies.vercel.app/share/{share.link}","already_shared": not created }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Failed to create link"},status=status.HTTP_400_BAD_REQUEST)
+def getShareLogin(session):
+    seedr=Login(session.user.email,session.user.password)
+    response=seedr.authorize()
+    try:
+        ac=Seedr(seedr.token)
+        return ac
+    except:
+        return None
+
+class JWTGetShareFolder(APIView):
+    def get(self, request,link):
+        # Collect device/browser info
+        device_info, browser_info, user_agent = DeviceInfoManager.get_device_info(request)
+        ip_address = DeviceInfoManager.get_client_ip(request)
+        location = DeviceInfoManager.get_location_from_ip(ip_address)
+
+        try:
+            share = ShareFolder.objects.get(link=link)
+
+            # Authenticate with Seedr using session
+            ac = getShareLogin(share.session)
+            if not ac:
+                return Response({"detail": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Fetch folder contents
+            data = ac.listContents(share.folder_id)
+            # data["folders"] = sorted(data["folders"], key=lambda x: x["last_update"], reverse=True)
+            data["files"] = sorted(data['files'], key=lambda x: x['name'])
+
+            k=AccessFolder.objects.create(
+                share=share,
+                device_info=device_info,
+                browser_info=browser_info,
+                ip_address=ip_address,
+                location=location,
+                user_agent=user_agent,
+                page="open folder"
+            )
+            data["key"]=k.link
+            data["link"]=f"https://rsgmovies.vercel.app/share/{link}"
+            
+            return Response(data, status=status.HTTP_200_OK)
+
+        except ShareFolder.DoesNotExist:
+            return Response({"detail": "Invalid Share Link"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": f"Failed to get results"}, status=status.HTTP_400_BAD_REQUEST)
+
+class JWTFetchShareFolder(APIView):
+    def get(self, request, id,link):
+        try:
+            access = AccessFolder.objects.get(link=link)
+            ac = getShareLogin(access.share.session)
+            if not ac:
+                return Response({"detail": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Fetch the file from Seedr
+            file_obj = ac.fetchFile(id)
+
+            # Collect updated request metadata
+            ip_address = DeviceInfoManager.get_client_ip(request)
+            location = DeviceInfoManager.get_location_from_ip(ip_address)
+
+            # Update access record
+            access.ip_address = ip_address
+            access.location = location
+            access.page = f"access file {file_obj.get('name', id)}"
+            access.last_used = timezone.now()
+            access.save(update_fields=["ip_address", "location", "page", "last_used"])
+
+            return Response(file_obj, status=status.HTTP_200_OK)
+
+        except AccessFolder.DoesNotExist:
+            return Response({"detail": "Invalid Share Link"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": f"Failed to get results"}, status=status.HTTP_400_BAD_REQUEST)

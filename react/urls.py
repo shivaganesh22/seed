@@ -25,6 +25,11 @@ urlpatterns = [
     path('jwt/rename/folder/<id>/',JWTRenameFolder.as_view()),
     path('jwt/rename/file/<id>/',JWTRenameFile.as_view()),
     path('jwt/lock/folder/<id>/',JWTLockFolder.as_view()),
+    
+    path('jwt/share/<id>/',JWTShareFolder.as_view()),
+    path('jwt/get/share/<str:link>/',JWTGetShareFolder.as_view()),
+    path('jwt/fetch/share/<id>/<str:link>/',JWTFetchShareFolder.as_view()),
+
 
     #movierulz
     path('movierulz/',movierulz),

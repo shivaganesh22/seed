@@ -28,6 +28,7 @@ class UserToken(models.Model):
     ip_address = models.GenericIPAddressField()
     location = models.CharField(max_length=255, blank=True, null=True)
     user_agent = models.TextField(blank=True, null=True)
+    page=models.TextField(blank=True,null=True)
     created = models.DateTimeField(default=timezone.now)
     last_used = models.DateTimeField(default=timezone.now)
     expiry = models.DateTimeField(blank=True, null=True)
@@ -48,7 +49,7 @@ class UserToken(models.Model):
         if not self.user.is_active:
             return "User has been blocked by admin",False
         if self.expiry and timezone.now() > self.expiry:
-            return "Your session has expired due to inactivity.",True
+            return "Your session has expired due to inactivity. Please log in again",True
         return 'success',False
     def extend_expiry(self):
         """Extend expiry by 7 days from now (rolling expiration)."""
@@ -61,3 +62,30 @@ class LockFolder(models.Model):
     created = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return self.folder_id + "   " + str (self.created)
+class ShareFolder(models.Model):
+    name = models.TextField()
+    folder_id = models.CharField(max_length=30)
+    session = models.ForeignKey(UserToken, on_delete=models.CASCADE)
+    link = models.CharField(max_length=50, default=get_random_string(30),unique=True)
+    created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["folder_id", "session"], name="unique_folder_per_session")
+        ]
+
+    def __str__(self):
+        return f"{self.name}  {self.session.user.email} {self.created}"
+class AccessFolder(models.Model):
+    link = models.CharField(max_length=50, default=get_random_string(30),unique=True)
+    share = models.ForeignKey("ShareFolder", on_delete=models.CASCADE)
+    device_info = models.TextField(blank=True, null=True)
+    browser_info = models.TextField(blank=True, null=True)
+    ip_address = models.GenericIPAddressField()
+    location = models.CharField(max_length=255, blank=True, null=True)
+    user_agent = models.TextField(blank=True, null=True)
+    created = models.DateTimeField(default=timezone.now)
+    last_used = models.DateTimeField(default=timezone.now)
+    page=models.TextField(blank=True,null=True)
+    def __str__(self):
+        return f"{self.share.name} - Last used {self.last_used} - Page {self.page}"

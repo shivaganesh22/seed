@@ -4,5 +4,7 @@ from django.contrib import admin
 from .models import *
 admin.site.register(UserToken)
 admin.site.register(LockFolder)
+admin.site.register(ShareFolder)
+admin.site.register(AccessFolder)
 admin.site.register(StreamLink)
 admin.site.register(EachStream)
