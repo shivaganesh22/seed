@@ -489,7 +489,7 @@ def mainsearch(r):
 #     data['audio']=audio
 #     return JsonResponse(data)
 def ibomma(r):
-    req=requests.get("https://res.bappam.to/telugu-movies/")
+    req=requests.get("https://rto.bappam.eu/telugu-movies/")
     soup=bs(req.content,'html.parser')
     items=soup.find_all('article')
     movies=[]
@@ -505,7 +505,7 @@ def ibommamovie(r):
     soup=bs(req.content,'html.parser')
     name=soup.find("h2",class_="entry-title-movie")
     # name=soup.find("div",class_="entry-title-movie")
-    genres=soup.find("article",id=r.GET['link'])
+    genres=soup.findAll("div",class_="entry-tags-movies")
     cast=soup.find("div",class_="cast-and-director")
     director=soup.find("div",class_="movies-director")
     description=soup.find("div",class_="additional-info")
@@ -519,16 +519,14 @@ def ibommamovie(r):
         match = re.search(r"lazyIframe\.src\s*=\s*'([^']*)'", i.string)
         if match:
             link = match.group(1)
-    for i in genres.get('class'):
-        if "tag-" in i:
-            genre+=i.replace("tag-","")+" "
     details["name"] = name.get_text()
-    details["genre"] = genre.title()
+    details["genre"] = genres[-1].get_text()
     details["cast"] = cast.get_text()
     details["director"] = director.get_text()
     details["desc"] = description.get_text()
     details["trailer"] = trailer.get('href')
-    details["image"] =base64.b64encode(requests.get(image.get('src')).content).decode('utf-8')
+    details["base64"] =base64.b64encode(requests.get(image.get('src')).content).decode('utf-8')
+    details["image"] =image.get('src')
     # details["image"] =base64.b64encode(requests.get(image.get('data-src')).content).decode('utf-8')
     details["link"] = link
     details["dlink"] = r.GET['link']
