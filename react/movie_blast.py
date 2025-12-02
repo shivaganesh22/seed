@@ -3,10 +3,10 @@ import requests
 from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup as bs
 
-domain="https://mb.cloud-stream.tech"
+domain="https://app.cloud-mb.xyz"
 headers = {"Authorization": "Bearer jaanuismylove143and143myloveisjaanu"}
 def get_data(url):
-    res=requests.get(domain+url,headers=headers)
+    res=requests.get(domain+url)
     return res.json() 
 
 def home(r):
