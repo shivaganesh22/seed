@@ -57,8 +57,22 @@ def search(r):
     query=r.GET.get('query','')
     return JsonResponse(get_data(f"/api/search/{query}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
 
-def movie_details(r,id):
-    return JsonResponse(get_data(f"/api/media/detail/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
+def movie_details(request, id):
+    path = f"/api/media/detail/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"
+    res = requests.get(domain+path)  # make get_data return the response object
+
+    print("DEBUG movie_details",
+          "id:", id,
+          "url:", res.url,
+          "status:", res.status_code,
+          "body:", res.text[:500])  # trim to avoid huge logs
+
+    try:
+        data = res.json()
+    except Exception:
+        data = {"error": "Invalid JSON from upstream", "raw": res.text[:200]}
+
+    return JsonResponse(data, status=res.status_code)
 
 def series_details(r,id):
     return JsonResponse(get_data(f"/api/series/show/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
