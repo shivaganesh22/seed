@@ -108,7 +108,7 @@ urlpatterns = [
     #movie blast
     path('blast/home/',movie_blast.home),
     path('blast/pinned/',movie_blast.pinned),
-    path('blast/top_content/',movie_blast.top_content),
+    path('blast/new_hd/',movie_blast.new_hd),
     path('blast/recently_added/',movie_blast.recently_added),
     path('blast/latest_series_episodes/',movie_blast.latest_series_episodes),
     path('blast/recommended/',movie_blast.recommended),
@@ -116,6 +116,7 @@ urlpatterns = [
     path('blast/choosed/',movie_blast.choosed),
     path('blast/popular_series/',movie_blast.popular_series),
     path('blast/latest_series/',movie_blast.latest_series),
+    path('blast/latest_movies/',movie_blast.latest_movies),
     path('blast/next_this_week/',movie_blast.next_this_week),
     path('blast/most_popular/',movie_blast.most_popular),
 
