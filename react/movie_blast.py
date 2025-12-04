@@ -23,7 +23,19 @@ PROXY_LIST = [
 USER = "fqjdeeqq"
 PASS = "r63dies6krlg"
 def get_data(url):
-    res=requests.get(domain+url)
+    chosen_ip = random.choice(PROXY_LIST)
+    formatted_proxy = f"http://{USER}:{PASS}@{chosen_ip}"
+    
+    proxies = {
+        "http": formatted_proxy,
+        "https": formatted_proxy,
+    }
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+    }
+
+    res=requests.get(domain+url,headers=headers,proxies=proxies)
     return res.json() 
 
 def home(r):
@@ -92,8 +104,8 @@ def movie_details(request, id):
     }
 
     try:
-        # response = requests.get(domain+path, headers=headers, proxies=proxies)
-        response = requests.get(domain+path, headers=headers, )
+        response = requests.get(domain+path, headers=headers, proxies=proxies)
+        # response = requests.get(domain+path, headers=headers, )
         return JsonResponse(response.json())
     except Exception as e:
         return JsonResponse({"error": "Failed to fetch"}, status=500)
@@ -112,8 +124,8 @@ def series_details(r,id):
     }
 
     try:
-        # response = requests.get(domain+path, headers=headers, proxies=proxies)
-        response = requests.get(domain+path, headers=headers,)
+        response = requests.get(domain+path, headers=headers, proxies=proxies)
+        # response = requests.get(domain+path, headers=headers,)
         return JsonResponse(response.json())
     except Exception as e:
         return JsonResponse({"error": "Failed to fetch"}, status=500)
