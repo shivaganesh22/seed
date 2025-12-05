@@ -20,10 +20,11 @@ PROXY_LIST = [
   
 ]
 
-USER = "fqjdeeqq"
-PASS = "r63dies6krlg"
+USER = "shivaganesh"
+PASS = "Shiva123"
 def get_data(url):
     chosen_ip = random.choice(PROXY_LIST)
+    print("Using proxy:", chosen_ip)
     formatted_proxy = f"http://{USER}:{PASS}@{chosen_ip}"
     
     proxies = {
@@ -36,6 +37,7 @@ def get_data(url):
     }
 
     res=requests.get(domain+url,headers=headers,proxies=proxies)
+    print("Response Status Code:", res.status_code)
     return res.json() 
 
 def home(r):
@@ -90,45 +92,11 @@ def search(r):
     return JsonResponse(get_data(f"/api/search/{query}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
 
 def movie_details(request, id):
-    path = f"/api/media/detail/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"
-    chosen_ip = random.choice(PROXY_LIST)
-    formatted_proxy = f"http://{USER}:{PASS}@{chosen_ip}"
-    
-    proxies = {
-        "http": formatted_proxy,
-        "https": formatted_proxy,
-    }
+    return JsonResponse(get_data(f"/api/media/detail/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-    }
-
-    try:
-        response = requests.get(domain+path, headers=headers, proxies=proxies)
-        # response = requests.get(domain+path, headers=headers, )
-        return JsonResponse(response.json())
-    except Exception as e:
-        return JsonResponse({"error": "Failed to fetch"}, status=500)
 def series_details(r,id):
-    path=f"/api/series/show/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"
-    chosen_ip = random.choice(PROXY_LIST)
-    formatted_proxy = f"http://{USER}:{PASS}@{chosen_ip}"
+    return JsonResponse(get_data(f"/api/series/show/{id}/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
     
-    proxies = {
-        "http": formatted_proxy,
-        "https": formatted_proxy,
-    }
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-    }
-
-    try:
-        response = requests.get(domain+path, headers=headers, proxies=proxies)
-        # response = requests.get(domain+path, headers=headers,)
-        return JsonResponse(response.json())
-    except Exception as e:
-        return JsonResponse({"error": "Failed to fetch"}, status=500)
 
 def genres(r):
     return JsonResponse(get_data("/api/genres/list/jdvhhjv255vghhgdhvfch2565656jhdcghfdf"))
